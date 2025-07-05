@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { fetchCaseStudies } from '../../../utils/airtable';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   try {
     console.log('🔄 Fetching case studies from Airtable...');
@@ -13,44 +15,83 @@ export async function GET() {
     
     console.log(`✅ Retrieved ${caseStudies.length} case studies from Airtable`);
     
-    // Process records using exact Airtable field structure
-    const processedRecords = caseStudies.map((record) => {
-      // Log the first record to see available fields
-      if (caseStudies.indexOf(record) === 0) {
-        console.log('Sample Airtable record fields:', Object.keys(record));
-        console.log('Sample record data:', record);
+    // Process records using dynamic field mapping to capture ALL Airtable data
+    const processedRecords = caseStudies.map((record, index) => {
+      // Log ALL available fields from the first few records
+      if (index < 3) {
+        console.log(`🔍 Airtable record ${index + 1} fields:`, Object.keys(record));
+        console.log(`🔍 Airtable record ${index + 1} data:`, JSON.stringify(record, null, 2));
       }
       
-      return {
+      // Start with the record ID and then dynamically add ALL fields
+      const processedRecord = {
         id: record.id || `case-study-${Date.now()}-${Math.random()}`,
-        // Primary fields from Airtable
-        Title: record['Case Study Title'] || record['Title'] || 'Untitled Study',
-        Author: record['Name'] || record['Author'] || record['Authors'] || 'Unknown Author',
-        Type: record['Section'] || record['Type'] || record['Study Type'] || 'Case Study',
-        Date: record['Date'] || record['Publication Date'] || new Date().toISOString().split('T')[0],
-        Description: record['Short Description'] || record['Description'] || record['Abstract'] || 'No description available',
-        Focus: record['Study Focus'] || record['Focus'] || record['Research Focus'] || '',
-        Dimensions: record['Resilient Dimensions'] || record['Dimensions'] || record['Resilience Dimensions'] || '',
-        Relevance: record['Relevance to Community/Societal Resilience'] || record['Relevance'] || '',
+        // Copy ALL fields from Airtable record directly
+        ...record
+      };
+      
+      // Add normalized/computed fields for consistent access
+      // But preserve original field names too
+      const normalizedFields = {
+        // Primary identification fields
+        Title: record['Case Study Title'] || record['Title'] || record['Study Title'] || record['Name'] || 'Untitled Study',
+        Author: record['Name'] || record['Author'] || record['Authors'] || record['Researcher'] || record['Principal Investigator'] || 'Unknown Author',
+        Type: record['Section'] || record['Type'] || record['Study Type'] || record['Research Type'] || 'Case Study',
+        Date: record['Date'] || record['Publication Date'] || record['Study Date'] || record['Submission Date'] || new Date().toISOString().split('T')[0],
         
-        // Additional fields that might be available
-        Institution: record['Institution'] || record['Organization'] || record['Affiliation'] || '',
-        Keywords: record['Keywords'] || record['Tags'] || '',
-        Methodology: record['Methodology'] || record['Methods'] || record['Research Methods'] || '',
-        Findings: record['Key Findings'] || record['Findings'] || record['Results'] || '',
-        Recommendations: record['Recommendations'] || record['Policy Recommendations'] || '',
-        Status: record['Status'] || record['Publication Status'] || 'Published',
-        URL: record['URL'] || record['Link'] || record['External Link'] || '',
+        // Content fields
+        Description: record['Short Description'] || record['Description'] || record['Abstract'] || record['Summary'] || 'No description available',
+        Focus: record['Study Focus'] || record['Focus'] || record['Research Focus'] || record['Main Focus'] || '',
+        Dimensions: record['Resilient Dimensions'] || record['Dimensions'] || record['Resilience Dimensions'] || record['Focus Areas'] || '',
+        Relevance: record['Relevance to Community/Societal Resilience'] || record['Relevance'] || record['Impact'] || '',
+        
+        // Research fields
+        Methodology: record['Methodology'] || record['Methods'] || record['Research Methods'] || record['Approach'] || '',
+        Findings: record['Key Findings'] || record['Findings'] || record['Results'] || record['Main Findings'] || record['Outcomes'] || '',
+        Recommendations: record['Recommendations'] || record['Policy Recommendations'] || record['Key Recommendations'] || record['Conclusions'] || '',
+        
+        // Metadata fields
+        Institution: record['Institution'] || record['Organization'] || record['Affiliation'] || record['University'] || '',
+        Keywords: record['Keywords'] || record['Tags'] || record['Key Terms'] || '',
+        Status: record['Status'] || record['Publication Status'] || record['Study Status'] || 'Published',
+        URL: record['URL'] || record['Link'] || record['External Link'] || record['Website'] || '',
         DOI: record['DOI'] || record['doi'] || '',
         
-        // Additional metadata
-        Email: record['Email'] || record['Contact Email'] || '',
-        Location: record['Location'] || record['Geographic Focus'] || '',
-        DataSources: record['Data Sources'] || record['Data'] || '',
-        Limitations: record['Limitations'] || '',
-        FutureResearch: record['Future Research'] || record['Next Steps'] || '',
-        Funding: record['Funding'] || record['Funding Source'] || '',
-        Acknowledgments: record['Acknowledgments'] || ''
+        // Contact and location
+        Email: record['Email'] || record['Contact Email'] || record['Contact'] || '',
+        Location: record['Location'] || record['Geographic Focus'] || record['Region'] || record['Country'] || '',
+        
+        // Additional research metadata
+        DataSources: record['Data Sources'] || record['Data'] || record['Sources'] || '',
+        Limitations: record['Limitations'] || record['Study Limitations'] || '',
+        FutureResearch: record['Future Research'] || record['Next Steps'] || record['Future Work'] || '',
+        Funding: record['Funding'] || record['Funding Source'] || record['Grant'] || '',
+        Acknowledgments: record['Acknowledgments'] || record['Credits'] || '',
+        
+        // Publication info
+        Journal: record['Journal'] || record['Publication'] || record['Publisher'] || '',
+        Volume: record['Volume'] || '',
+        Issue: record['Issue'] || '',
+        Pages: record['Pages'] || '',
+        ISSN: record['ISSN'] || '',
+        
+        // Additional descriptive fields
+        Background: record['Background'] || record['Context'] || '',
+        Objectives: record['Objectives'] || record['Goals'] || record['Research Questions'] || '',
+        Participants: record['Participants'] || record['Sample'] || record['Population'] || '',
+        Timeline: record['Timeline'] || record['Duration'] || '',
+        Ethics: record['Ethics'] || record['Ethical Considerations'] || '',
+        
+        // Impact and dissemination
+        Impact: record['Impact'] || record['Policy Impact'] || '',
+        Dissemination: record['Dissemination'] || record['Outreach'] || '',
+        Media: record['Media'] || record['Press Coverage'] || ''
+      };
+      
+      // Merge original fields with normalized fields (normalized fields take precedence for consistency)
+      return {
+        ...processedRecord,
+        ...normalizedFields
       };
     });
     

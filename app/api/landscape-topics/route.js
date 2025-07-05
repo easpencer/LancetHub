@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { fetchLandscapeData } from '../../../utils/airtable';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   try {
     console.log('🔄 Fetching landscape topics data...');

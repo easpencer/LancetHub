@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { fetchPapers } from '../../../utils/airtable';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   try {
     console.log('🔄 Fetching bibliography data from Airtable...');

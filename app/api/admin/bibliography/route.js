@@ -8,6 +8,8 @@ import {
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '../../auth/[...nextauth]/route';
 
+export const dynamic = 'force-dynamic';
+
 // Get bibliography entries
 export async function GET(request) {
   try {

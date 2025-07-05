@@ -3,6 +3,8 @@ import Airtable from 'airtable';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '../../auth/[...nextauth]/route';
 
+export const dynamic = 'force-dynamic';
+
 /**
  * API route to check system status and connectivity
  */

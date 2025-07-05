@@ -161,27 +161,131 @@ export default function PeoplePage() {
                     <div className={styles.personRole}>{person.Role}</div>
                   )}
                   
+                  {person.JobTitle && person.JobTitle !== person.Role && (
+                    <div className={styles.personJobTitle}>{person.JobTitle}</div>
+                  )}
+                  
                   {person.Affiliation && (
                     <div className={styles.personAffiliation}>{person.Affiliation}</div>
                   )}
                   
+                  {person.Department && (
+                    <div className={styles.personDepartment}>{person.Department}</div>
+                  )}
+                  
                   {person.Expertise && (
                     <div className={styles.expertiseTags}>
-                      {person.Expertise.split(',').map((expertise, i) => (
-                        <span key={i} className={styles.expertiseTag}>{expertise.trim()}</span>
-                      ))}
+                      <h4>Expertise:</h4>
+                      <div className={styles.tagsContainer}>
+                        {person.Expertise.split(',').map((expertise, i) => (
+                          <span key={i} className={styles.expertiseTag}>{expertise.trim()}</span>
+                        ))}
+                      </div>
                     </div>
                   )}
                   
-                  {person.Biography && (
-                    <p className={styles.personBio}>{person.Biography}</p>
+                  {person.ResearchInterests && (
+                    <div className={styles.researchSection}>
+                      <h4>Research Interests:</h4>
+                      <p>{person.ResearchInterests}</p>
+                    </div>
                   )}
                   
-                  {person.Email && (
-                    <a href={`mailto:${person.Email}`} className={styles.contactButton}>
-                      <FaEnvelope /> Contact
-                    </a>
+                  {person.Bio && (
+                    <div className={styles.bioSection}>
+                      <h4>Biography:</h4>
+                      <p className={styles.personBio}>{person.Bio}</p>
+                    </div>
                   )}
+                  
+                  {person.Education && (
+                    <div className={styles.educationSection}>
+                      <h4>Education:</h4>
+                      <p>{person.Education}</p>
+                    </div>
+                  )}
+                  
+                  {person.YearsExperience && (
+                    <div className={styles.experienceSection}>
+                      <h4>Experience:</h4>
+                      <p>{person.YearsExperience} years</p>
+                    </div>
+                  )}
+                  
+                  {person.Awards && (
+                    <div className={styles.awardsSection}>
+                      <h4>Awards & Recognition:</h4>
+                      <p>{person.Awards}</p>
+                    </div>
+                  )}
+                  
+                  {person.CurrentProjects && (
+                    <div className={styles.projectsSection}>
+                      <h4>Current Projects:</h4>
+                      <p>{person.CurrentProjects}</p>
+                    </div>
+                  )}
+                  
+                  {person.Publications && (
+                    <div className={styles.publicationsSection}>
+                      <h4>Publications:</h4>
+                      <p>{person.Publications}</p>
+                    </div>
+                  )}
+                  
+                  {person.Location && (
+                    <div className={styles.locationSection}>
+                      <h4>Location:</h4>
+                      <p>{person.Location}{person.Country && `, ${person.Country}`}</p>
+                    </div>
+                  )}
+                  
+                  {person.CommissionRole && person.CommissionRole !== person.Role && (
+                    <div className={styles.commissionSection}>
+                      <h4>Commission Role:</h4>
+                      <p>{person.CommissionRole}</p>
+                    </div>
+                  )}
+                  
+                  {person.WorkingGroups && (
+                    <div className={styles.workingGroupsSection}>
+                      <h4>Working Groups:</h4>
+                      <p>{person.WorkingGroups}</p>
+                    </div>
+                  )}
+                  
+                  {person.Contributions && (
+                    <div className={styles.contributionsSection}>
+                      <h4>Key Contributions:</h4>
+                      <p>{person.Contributions}</p>
+                    </div>
+                  )}
+                  
+                  <div className={styles.contactSection}>
+                    {person.Email && (
+                      <a href={`mailto:${person.Email}`} className={styles.contactButton}>
+                        <FaEnvelope /> Email
+                      </a>
+                    )}
+                    
+                    {person.Website && (
+                      <a href={person.Website} target="_blank" rel="noopener noreferrer" className={styles.websiteButton}>
+                        🌐 Website
+                      </a>
+                    )}
+                    
+                    {person.LinkedIn && (
+                      <a href={person.LinkedIn} target="_blank" rel="noopener noreferrer" className={styles.linkedinButton}>
+                        💼 LinkedIn
+                      </a>
+                    )}
+                    
+                    {person.ORCID && (
+                      <a href={`https://orcid.org/${person.ORCID}`} target="_blank" rel="noopener noreferrer" className={styles.orcidButton}>
+                        🔬 ORCID
+                      </a>
+                    )}
+                  </div>
                 </div>
               </AnimatedSection>
             ))}

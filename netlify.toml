@@ -1,0 +1,21 @@
+[build]
+  publish = ".next"
+  command = "npm run build"
+
+[build.environment]
+  NODE_VERSION = "18"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Environment variable configuration for Netlify
+# The following environment variables need to be set in Netlify dashboard:
+# AIRTABLE_API_KEY
+# AIRTABLE_BASE_ID=appyi4hm7RK1inUnq  
+# NEXTAUTH_URL
+# NEXTAUTH_SECRET
+# ADMIN_EMAIL
+# ADMIN_PASSWORD
+# USE_MOCK_DATA=false

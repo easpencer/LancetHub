@@ -3,6 +3,8 @@ import { fetchResilienceDimensions } from '../../../../utils/airtable';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '../../auth/[...nextauth]/route';
 
+export const dynamic = 'force-dynamic';
+
 // Get resilience dimensions
 export async function GET(request) {
   try {
