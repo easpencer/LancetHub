@@ -1,0 +1,344 @@
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.backLinkContainer {
+  margin: 2rem 0;
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  color: var(--primary-color);
+  font-weight: 500;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+  padding: 0.5rem 1rem;
+  border-radius: var(--border-radius-md);
+}
+
+.backLink:hover {
+  background-color: var(--primary-light);
+  transform: translateX(-5px);
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.metaInfo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.category {
+  background-color: var(--primary-light);
+  color: var(--primary-color);
+  padding: 0.4rem 1rem;
+  border-radius: var(--border-radius-round);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.date {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--light-text);
+  font-size: 0.9rem;
+}
+
+.dateIcon {
+  font-size: 0.9rem;
+}
+
+.header h1 {
+  font-size: clamp(2rem, 5vw, 2.8rem);
+  margin-bottom: 1.5rem;
+  background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.downloadAnnouncement {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--primary-color);
+  color: var(--text-color);
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--border-radius-round);
+  font-weight: 600;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+}
+
+.downloadAnnouncement:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+.heroImage {
+  margin-bottom: 3rem;
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+}
+
+.heroImage img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.content {
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  gap: 3rem;
+  margin-bottom: 4rem;
+}
+
+.mainContent {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: var(--text-color);
+}
+
+.introduction {
+  font-size: 1.2rem;
+  margin-bottom: 2.5rem;
+  color: var(--primary-color);
+  font-weight: 500;
+}
+
+.introduction p {
+  border-left: 4px solid var(--primary-color);
+  padding-left: 1.5rem;
+}
+
+.mainContent h2 {
+  font-size: 1.8rem;
+  margin-top: 2.5rem;
+  margin-bottom: 1.5rem;
+  color: var(--primary-color);
+  position: relative;
+  padding-bottom: 0.5rem;
+}
+
+.mainContent h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 50px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+  border-radius: 3px;
+}
+
+.calloutBox {
+  background-color: var(--highlight-bg);
+  padding: 2rem;
+  border-radius: var(--border-radius-lg);
+  margin: 2.5rem 0;
+  border-left: 4px solid var(--primary-color);
+}
+
+.calloutBox h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: var(--primary-color);
+}
+
+.objectivesList {
+  padding-left: 2rem;
+  margin-bottom: 2.5rem;
+}
+
+.objectivesList li {
+  margin-bottom: 1rem;
+}
+
+.bannerImage {
+  margin: 3rem 0;
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+
+.bannerImage img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.focusAreas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin: 2.5rem 0;
+}
+
+.focusCard {
+  background-color: var(--highlight-bg);
+  padding: 2rem;
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-md);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.3s ease;
+}
+
+.focusCard:hover {
+  transform: translateY(-7px);
+  box-shadow: var(--shadow-lg);
+}
+
+.focusIcon {
+  width: 60px;
+  height: 60px;
+  background-color: var(--primary-light);
+  color: var(--primary-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+}
+
+.focusCard h3 {
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+  color: var(--text-color);
+}
+
+.downloadSection {
+  background-color: var(--highlight-bg);
+  padding: 2rem;
+  border-radius: var(--border-radius-lg);
+  margin-top: 4rem;
+  text-align: center;
+}
+
+.downloadSection h3 {
+  font-size: 1.6rem;
+  margin-bottom: 1rem;
+  color: var(--text-color);
+}
+
+.downloadSection p {
+  max-width: 600px;
+  margin: 0 auto 1.5rem;
+}
+
+.downloadButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: var(--border-radius-round);
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow-md);
+}
+
+.downloadButton:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+}
+
+.sidebar {
+  position: sticky;
+  top: 2rem;
+  align-self: start;
+}
+
+.sidebarWidget {
+  background-color: var(--highlight-bg);
+  padding: 1.5rem;
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-md);
+  margin-bottom: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.sidebarWidget h3 {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  color: var(--primary-color);
+}
+
+.sidebarButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  background-color: var(--primary-color);
+  color: var(--text-color);
+  padding: 0.75rem 0;
+  border-radius: var(--border-radius-md);
+  font-weight: 500;
+  margin-top: 1rem;
+  transition: all 0.3s ease;
+}
+
+.sidebarButton:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+.resourceLinks {
+  list-style: none;
+  padding: 0;
+}
+
+.resourceLinks li {
+  margin-bottom: 0.8rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.resourceLinks a {
+  display: block;
+  padding: 0.75rem 0;
+  color: var(--text-color);
+  transition: all 0.2s ease;
+}
+
+.resourceLinks a:hover {
+  color: var(--primary-color);
+  transform: translateX(5px);
+}
+
+@media (max-width: 992px) {
+  .content {
+    grid-template-columns: 1fr;
+  }
+  
+  .sidebar {
+    position: static;
+  }
+}
+
+@media (max-width: 768px) {
+  .metaInfo {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .focusAreas {
+    grid-template-columns: 1fr;
+  }
+}

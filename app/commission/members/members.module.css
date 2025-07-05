@@ -1,0 +1,266 @@
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem 4rem 1.5rem;
+}
+
+.container h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.intro {
+  font-size: 1.2rem;
+  color: var(--light-text);
+  max-width: 800px;
+  margin-bottom: 3rem;
+}
+
+.loading, .error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  text-align: center;
+}
+
+.error {
+  color: var(--danger-color);
+}
+
+.roleSection {
+  margin-bottom: 4rem;
+}
+
+.roleTitle {
+  font-size: 1.8rem;
+  margin-bottom: 2rem;
+  color: var(--text-color);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 0.75rem;
+}
+
+.membersGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 2rem;
+}
+
+.memberCard {
+  background-color: var(--highlight-bg);
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.cardImageContainer {
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  background-color: var(--card-background);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.cardImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cardPlaceholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 3rem;
+  font-weight: bold;
+  color: var(--text-color);
+}
+
+.cardContent {
+  padding: 1.5rem;
+}
+
+.cardContent h3 {
+  font-size: 1.25rem;
+  margin: 0 0 0.5rem 0;
+  color: var(--text-color);
+}
+
+.cardAffiliation {
+  color: var(--light-text);
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+/* Member Detail Styles */
+.memberDetail {
+  padding: 0 0 3rem 0;
+}
+
+.backButton {
+  background: none;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--primary-color);
+  font-size: 1rem;
+  cursor: pointer;
+  margin-bottom: 2rem;
+  padding: 0.5rem 0;
+  transition: transform 0.3s ease;
+}
+
+.backButton:hover {
+  transform: translateX(-5px);
+}
+
+.memberProfile {
+  background-color: var(--highlight-bg);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-md);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  overflow: hidden;
+}
+
+.profileHeader {
+  display: flex;
+  padding: 2rem;
+  gap: 2rem;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.profileImageContainer {
+  flex: 0 0 200px;
+}
+
+.profileImage {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-md);
+}
+
+.profilePlaceholder {
+  width: 200px;
+  height: 200px;
+  background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 4rem;
+  font-weight: bold;
+  color: var(--text-color);
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-md);
+}
+
+.profileInfo {
+  flex-grow: 1;
+}
+
+.profileInfo h2 {
+  font-size: 2rem;
+  margin: 0 0 0.5rem 0;
+  color: var(--text-color);
+}
+
+.role {
+  font-size: 1.2rem;
+  color: var(--primary-color);
+  margin: 0 0 0.5rem 0;
+  font-weight: 500;
+}
+
+.affiliation {
+  font-size: 1.1rem;
+  color: var(--light-text);
+  margin: 0 0 1.5rem 0;
+}
+
+.socialLinks {
+  display: flex;
+  gap: 1rem;
+}
+
+.socialLink {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--card-background);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--light-text);
+  transition: all 0.3s ease;
+  font-size: 1.1rem;
+}
+
+.socialLink:hover {
+  background-color: var(--primary-color);
+  color: var(--text-color);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+.profileContent {
+  padding: 2rem;
+}
+
+.expertise {
+  margin-bottom: 2rem;
+}
+
+.expertise h3, .bio h3 {
+  font-size: 1.4rem;
+  margin: 0 0 1rem 0;
+  color: var(--text-color);
+}
+
+.expertiseTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.expertiseTag {
+  padding: 0.5rem 1rem;
+  background-color: var(--card-background);
+  border-radius: var(--border-radius-round);
+  font-size: 0.95rem;
+  color: var(--light-text);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.bioText {
+  color: var(--light-text);
+  line-height: 1.7;
+  font-size: 1.1rem;
+}
+
+@media (max-width: 768px) {
+  .profileHeader {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .socialLinks {
+    justify-content: center;
+  }
+}

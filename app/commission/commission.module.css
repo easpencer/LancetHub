@@ -1,0 +1,402 @@
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem 4rem 1.5rem;
+}
+
+.container h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.introCard {
+  display: flex;
+  background-color: var(--highlight-bg);
+  border-radius: var(--border-radius-lg);
+  margin: 2rem 0 3rem 0;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: var(--shadow-md);
+}
+
+.cardContent {
+  flex: 1;
+  padding: 2rem;
+}
+
+.commissionHeader {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.commissionLogo {
+  flex-shrink: 0;
+}
+
+.logoDesign {
+  width: 80px;
+  height: 80px;
+  position: relative;
+}
+
+.logoCircle {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.logoCircle::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
+  z-index: -1;
+}
+
+.logoInner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  text-align: center;
+}
+
+.logoText {
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  margin-bottom: 2px;
+}
+
+.logoSubtext {
+  font-size: 0.5rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+  opacity: 0.9;
+}
+
+.logoPlaceholder {
+  width: 80px;
+  height: 80px;
+  background-color: var(--highlight-bg);
+  border: 2px dashed var(--primary-color);
+  border-radius: var(--border-radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  color: var(--light-text);
+  text-align: center;
+}
+
+.commissionLogoImage {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  border-radius: var(--border-radius-md);
+}
+
+.cardContent h2 {
+  font-size: 1.8rem;
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  color: var(--text-color);
+}
+
+.publishedInfo {
+  color: var(--light-text);
+  font-size: 0.95rem;
+  font-style: italic;
+  margin-bottom: 1.5rem;
+}
+
+.imageContainer {
+  flex: 1;
+  background-color: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+}
+
+.commissionImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.buttonContainer {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.buttonPrimary, .buttonSecondary {
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--border-radius-round);
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.3s ease;
+}
+
+.buttonPrimary {
+  background-color: var(--primary-color);
+  color: var(--text-color);
+}
+
+.buttonPrimary:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+.buttonSecondary {
+  background-color: var(--card-background);
+  color: var(--light-text);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.buttonSecondary:hover {
+  background-color: var(--highlight-bg);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+  color: var(--text-color);
+}
+
+.section {
+  margin-bottom: 4rem;
+}
+
+.section h2 {
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  color: var(--text-color);
+}
+
+.section p {
+  color: var(--light-text);
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.quoteBox {
+  background-color: var(--highlight-bg);
+  padding: 2rem;
+  border-radius: var(--border-radius-md);
+  margin: 2rem 0;
+  border-left: 5px solid var(--primary-color);
+}
+
+.quoteBox blockquote {
+  color: var(--text-color);
+  font-size: 1.2rem;
+  line-height: 1.6;
+  font-style: italic;
+  margin: 0;
+}
+
+.focusGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.focusCard {
+  background-color: var(--highlight-bg);
+  padding: 1.5rem;
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-md);
+  transition: transform 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.focusCard:hover {
+  transform: translateY(-5px);
+}
+
+.focusCard h3 {
+  font-size: 1.3rem;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: var(--accent-color);
+}
+
+.focusCard p {
+  color: var(--light-text);
+  font-size: 1rem;
+  margin: 0;
+}
+
+.objectivesList {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.objectivesList li {
+  margin-bottom: 1rem;
+  padding-left: 2rem;
+  position: relative;
+  color: var(--light-text);
+  font-size: 1.05rem;
+}
+
+.objectivesList li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.5rem;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--primary-color);
+}
+
+.timeline {
+  margin-top: 2rem;
+  position: relative;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 120px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--primary-color), var(--accent-color));
+}
+
+.timelineItem {
+  position: relative;
+  margin-bottom: 2rem;
+  display: flex;
+}
+
+.timelineDate {
+  width: 120px;
+  padding-right: 2rem;
+  text-align: right;
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+.timelineContent {
+  flex-grow: 1;
+  background: white;
+  padding: 1.5rem;
+  margin-left: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.timelineContent::before {
+  content: '';
+  position: absolute;
+  left: 119px;
+  top: 0.5rem;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--accent-color);
+  transform: translateX(-50%);
+}
+
+.timelineContent h3 {
+  font-size: 1.2rem;
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  color: var(--text-color);
+}
+
+.timelineContent p {
+  color: var(--light-text);
+  font-size: 1rem;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .introCard {
+    flex-direction: column;
+  }
+  
+  .imageContainer {
+    min-height: 200px;
+    order: -1;
+  }
+  
+  .commissionHeader {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1rem;
+  }
+  
+  .timeline::before {
+    left: 80px;
+  }
+  
+  .timelineDate {
+    width: 80px;
+    font-size: 0.9rem;
+  }
+  
+  .timelineContent {
+    margin-left: 3rem;
+  }
+  
+  .timelineContent::before {
+    left: 79px;
+  }
+}
+
+@media (max-width: 500px) {
+  .timeline::before {
+    display: none;
+  }
+  
+  .timelineItem {
+    flex-direction: column;
+  }
+  
+  .timelineDate {
+    width: 100%;
+    text-align: left;
+    padding: 0;
+    margin-bottom: 0.5rem;
+  }
+  
+  .timelineContent {
+    padding: 0;
+  }
+  
+  .timelineContent::before {
+    display: none;
+  }
+}

@@ -1,0 +1,559 @@
+.main {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Home Page Styles */
+
+/* Container */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem 1.5rem;
+}
+
+/* Hero Section */
+.hero {
+  margin-bottom: 4rem;
+  text-align: center;
+}
+
+.title {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.subtitle {
+  font-size: 1.2rem;
+  max-width: 800px;
+  margin: 0 auto 2rem;
+  color: var(--light-text);
+}
+
+.ctaButton {
+  display: inline-block;
+  padding: 1rem 2rem;
+  background-color: var(--primary-color);
+  color: var(--text-color);
+  border-radius: var(--border-radius-round);
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.ctaButton:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Add more styles as needed for the home page */
+
+/* Hero Section */
+.hero {
+  min-height: 90vh;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  padding: 4rem 0;
+}
+
+.heroContent {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 3rem;
+  position: relative;
+  z-index: 2;
+}
+
+.heroTextContainer {
+  flex: 6;
+}
+
+.title {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.gradientText {
+  background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: 800;
+}
+
+.accentText {
+  color: var(--secondary-color);
+  font-weight: 700;
+}
+
+.subtitle {
+  font-size: clamp(1.1rem, 2vw, 1.3rem);
+  color: var(--light-text);
+  max-width: 650px;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.heroCta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.primaryButton {
+  background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+  color: var(--text-color);
+  border: none;
+  border-radius: var(--border-radius-round);
+  padding: 1rem 2rem;
+  font-weight: 600;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  box-shadow: var(--shadow-md);
+}
+
+.primaryButton:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+}
+
+.secondaryButton {
+  background: transparent;
+  color: var(--text-color);
+  border: 1px solid var(--accent-color);
+  border-radius: var(--border-radius-round);
+  padding: 1rem 2rem;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.secondaryButton:hover {
+  background-color: rgba(44, 120, 115, 0.1);
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Hero visual element */
+.heroVisual {
+  flex: 5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  position: relative;
+}
+
+.circleContainer {
+  position: relative;
+  width: 400px;
+  height: 400px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.circle {
+  position: absolute;
+  border-radius: 50%;
+}
+
+.primaryCircle {
+  width: 350px;
+  height: 350px;
+  background: radial-gradient(
+    circle,
+    rgba(0, 102, 204, 0.05) 0%,
+    rgba(0, 102, 204, 0.15) 50%,
+    rgba(0, 102, 204, 0.05) 100%
+  );
+}
+
+.secondaryCircle {
+  width: 280px;
+  height: 280px;
+  background: radial-gradient(
+    circle,
+    rgba(44, 120, 115, 0.05) 0%,
+    rgba(44, 120, 115, 0.15) 50%,
+    rgba(44, 120, 115, 0.05) 100%
+  );
+}
+
+.accentCircle {
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(
+    circle,
+    rgba(43, 80, 170, 0.05) 0%,
+    rgba(43, 80, 170, 0.15) 50%,
+    rgba(43, 80, 170, 0.05) 100%
+  );
+}
+
+.globeImage {
+  font-size: 8rem;
+  color: rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Background particles */
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Mission Section */
+.missionSection {
+  padding: 6rem 0;
+  background-color: var(--card-background);
+  position: relative;
+}
+
+.missionContent {
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.missionContent h2 {
+  font-size: clamp(2rem, 4vw, 3rem);
+  margin-bottom: 2rem;
+  background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  display: inline-block;
+}
+
+.missionContent p {
+  font-size: clamp(1.1rem, 1.5vw, 1.3rem);
+  line-height: 1.8;
+  color: var(--light-text);
+}
+
+/* Key Areas Section */
+.keyAreasSection {
+  padding: 6rem 0;
+  background: linear-gradient(180deg, var(--background-color) 0%, var(--highlight-bg) 100%);
+}
+
+.sectionHeader {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.sectionHeader h2 {
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+  margin-bottom: 1rem;
+}
+
+.sectionHeader p {
+  font-size: clamp(1rem, 1.5vw, 1.2rem);
+  color: var(--light-text);
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.areasGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.areaCard {
+  background-color: var(--highlight-bg);
+  border-radius: var(--border-radius-lg);
+  padding: 2.5rem;
+  box-shadow: var(--shadow-md);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.areaCard:hover {
+  transform: translateY(-10px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--accent-color);
+}
+
+.areaIcon {
+  width: 70px;
+  height: 70px;
+  background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  color: var(--text-color);
+  margin-bottom: 1.5rem;
+  box-shadow: var(--shadow-md);
+}
+
+.areaCard h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  background: linear-gradient(90deg, var(--text-color), var(--light-text));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.areaCard p {
+  color: var(--light-text);
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+  flex-grow: 1;
+}
+
+.areaLink {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--primary-color);
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition: gap 0.3s ease;
+  width: fit-content;
+}
+
+.areaLink:hover {
+  gap: 0.8rem;
+}
+
+/* CTA Section */
+.ctaSection {
+  padding: 6rem 0;
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.ctaContent {
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+
+.ctaContent h2 {
+  font-size: clamp(2rem, 4vw, 3rem);
+  margin-bottom: 1.5rem;
+  color: var(--text-color);
+}
+
+.ctaContent p {
+  font-size: clamp(1.1rem, 1.5vw, 1.2rem);
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 2rem;
+  line-height: 1.7;
+}
+
+.ctaContent .primaryButton {
+  background: var(--text-color);
+  color: var(--primary-color);
+  margin: 0 auto;
+  display: inline-flex;
+}
+
+.ctaContent .primaryButton:hover {
+  background: var(--text-color);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* Publications Section */
+.publicationsSection {
+  padding: 6rem 0;
+  background-color: var(--background-color);
+}
+
+.publicationsSection .sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 3rem;
+  text-align: left;
+}
+
+.viewAllLink {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--primary-color);
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 1rem;
+  transition: gap 0.3s ease;
+}
+
+.viewAllLink:hover {
+  gap: 0.8rem;
+}
+
+.publicationsList {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.publicationCard {
+  background-color: var(--highlight-bg);
+  border-radius: var(--border-radius-lg);
+  padding: 2rem;
+  box-shadow: var(--shadow-md);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.3s ease;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.publicationCard:hover {
+  border-color: var(--primary-color);
+  box-shadow: var(--shadow-lg);
+}
+
+.publicationType {
+  display: inline-block;
+  background-color: rgba(0, 102, 204, 0.1);
+  color: var(--primary-color);
+  padding: 0.4rem 0.8rem;
+  border-radius: var(--border-radius-round);
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.publicationCard h3 {
+  font-size: 1.3rem;
+  margin-bottom: 0.8rem;
+  line-height: 1.5;
+  flex-grow: 1;
+}
+
+.publicationDate {
+  color: var(--light-text);
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+}
+
+.readMoreLink {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--primary-color);
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: gap 0.3s ease;
+  width: fit-content;
+}
+
+.readMoreLink:hover {
+  gap: 0.8rem;
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+  .heroContent {
+    flex-direction: column;
+  }
+  
+  .heroTextContainer {
+    text-align: center;
+  }
+  
+  .subtitle {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .heroCta {
+    justify-content: center;
+  }
+  
+  .circleContainer {
+    width: 300px;
+    height: 300px;
+  }
+  
+  .primaryCircle {
+    width: 280px;
+    height: 280px;
+  }
+  
+  .secondaryCircle {
+    width: 220px;
+    height: 220px;
+  }
+  
+  .accentCircle {
+    width: 160px;
+    height: 160px;
+  }
+  
+  .globeImage {
+    font-size: 6rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero {
+    min-height: 80vh;
+    padding: 3rem 0;
+  }
+  
+  .heroCta {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .heroCta a {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .publicationsSection .sectionHeader {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+  
+  .areasGrid {
+    grid-template-columns: 1fr;
+  }
+}

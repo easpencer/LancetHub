@@ -1,0 +1,164 @@
+.networkContainer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 500px;
+  overflow: hidden;
+  background-color: var(--highlight-bg);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-md);
+}
+
+.networkVisualization {
+  width: 100%;
+  height: 100%;
+  min-height: 500px;
+}
+
+.networkSvg {
+  width: 100%;
+  height: 100%;
+}
+
+.networkGroup {
+  width: 100%;
+  height: 100%;
+}
+
+.nodeGroup {
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.nodeCircle {
+  transition: stroke 0.2s ease, stroke-width 0.2s ease;
+}
+
+.nodeCircle:hover {
+  stroke: var(--primary-color);
+  stroke-width: 3px;
+}
+
+.nodeLabel {
+  fill: var(--text-color);
+  font-size: 12px;
+  pointer-events: none;
+  user-select: none;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.link {
+  transition: stroke 0.2s ease, stroke-opacity 0.2s ease;
+  cursor: pointer;
+}
+
+.link:hover {
+  stroke: var(--primary-color) !important;
+  stroke-opacity: 1 !important;
+}
+
+.tooltip {
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.85);
+  color: white;
+  padding: 8px 12px;
+  border-radius: var(--border-radius-md);
+  pointer-events: none;
+  font-size: 0.85rem;
+  z-index: 1000;
+  max-width: 250px;
+  box-shadow: var(--shadow-md);
+}
+
+.tooltipContent {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.loadingState {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--highlight-bg);
+}
+
+.loadingState p {
+  color: var(--light-text);
+  margin-top: 1rem;
+  font-size: 0.95rem;
+}
+
+.errorState {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--danger-color);
+  padding: 2rem;
+  text-align: center;
+  background-color: var(--highlight-bg);
+}
+
+.nodeDetails {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  background-color: var(--card-background);
+  border-radius: var(--border-radius-lg);
+  padding: 1rem;
+  max-width: 300px;
+  width: 100%;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  z-index: 10;
+}
+
+.nodeDetails h4 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  color: var(--primary-color);
+  font-size: 1.1rem;
+}
+
+.nodeDetails p {
+  margin: 0.5rem 0;
+  color: var(--light-text);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.nodeStats {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 0.8rem;
+}
+
+.statItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.statValue {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--accent-color);
+}
+
+.statLabel {
+  font-size: 0.8rem;
+  color: var(--light-text);
+}

@@ -1,0 +1,174 @@
+.container {
+  width: 100%;
+}
+
+.visualizationContainer {
+  margin: 2rem 0;
+  background-color: white;
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  height: 400px;
+}
+
+.sunburstChart {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sunburstPlaceholder {
+  text-align: center;
+  color: var(--light-text);
+}
+
+.fakeSunburst {
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+  background: conic-gradient(
+    #3498db 0% 15%, 
+    #e74c3c 15% 30%, 
+    #2ecc71 30% 45%, 
+    #f1c40f 45% 60%, 
+    #9b59b6 60% 75%, 
+    #e67e22 75% 90%,
+    #1abc9c 90% 100%
+  );
+  position: relative;
+  margin: 2rem auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sunburstInner {
+  width: 120px;
+  height: 120px;
+  background-color: white;
+  border-radius: 50%;
+}
+
+.filtersContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+  background-color: #f5f5f5;
+  padding: 1.5rem;
+  border-radius: 8px;
+}
+
+.filterGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.filterGroup label {
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.filterGroup select {
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: white;
+}
+
+.topicsGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+.topicCard {
+  background-color: white;
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.topicHeader {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.dimension, .context {
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.dimension {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.context {
+  background-color: #f0f0f0;
+  color: #666;
+}
+
+.topicTitle {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  color: var(--text-color);
+}
+
+.topicCategories {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.categoryColumn h3 {
+  font-size: 1rem;
+  color: var(--primary-color);
+  margin-bottom: 0.75rem;
+}
+
+.categoryColumn p {
+  font-size: 0.95rem;
+  color: var(--text-color);
+}
+
+.relatedCaseStudies {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #eee;
+}
+
+.relatedCaseStudies h3 {
+  font-size: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.relatedCaseStudies a {
+  color: var(--primary-color);
+  text-decoration: underline;
+}
+
+.loading {
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.2rem;
+  color: var(--light-text);
+}
+
+.noResults {
+  text-align: center;
+  padding: 2rem;
+  color: var(--light-text);
+}
+
+@media (max-width: 768px) {
+  .topicCategories {
+    grid-template-columns: 1fr;
+  }
+}

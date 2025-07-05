@@ -1,0 +1,151 @@
+.footer {
+  background-color: var(--card-background);
+  padding: 4rem 1.5rem 2rem 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  color: var(--light-text);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.branding {
+  grid-column: span 1;
+}
+
+.logoLink {
+  text-decoration: none;
+}
+
+.logo {
+  font-size: 1.8rem;
+  margin: 0 0 1rem 0;
+  background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.tagline {
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+  font-size: 0.95rem;
+}
+
+.socialLinks {
+  display: flex;
+  gap: 1rem;
+}
+
+.socialLinks a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: var(--highlight-bg);
+  color: var(--light-text);
+  transition: all 0.3s ease;
+}
+
+.socialLinks a:hover {
+  background-color: var(--primary-color);
+  color: var(--text-color);
+  transform: translateY(-3px);
+}
+
+.linksSection {
+  grid-column: span 1;
+}
+
+.linksSection h3 {
+  font-size: 1.1rem;
+  margin: 0 0 1rem 0;
+  color: var(--text-color);
+}
+
+.linksSection ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.linksSection li {
+  margin-bottom: 0.75rem;
+}
+
+.linksSection a {
+  color: var(--light-text);
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: color 0.2s ease;
+}
+
+.linksSection a:hover {
+  color: var(--accent-color);
+}
+
+.bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  font-size: 0.9rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.legalLinks {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.legalLinks a {
+  color: var(--light-text);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.legalLinks a:hover {
+  color: var(--accent-color);
+}
+
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .branding {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 600px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .branding {
+    grid-column: span 1;
+  }
+  
+  .bottom {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .legalLinks {
+    margin-top: 1rem;
+    justify-content: center;
+  }
+}

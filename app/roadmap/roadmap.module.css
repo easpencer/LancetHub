@@ -1,0 +1,323 @@
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem 4rem 1.5rem;
+}
+
+.container h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.intro {
+  font-size: 1.2rem;
+  color: var(--light-text);
+  max-width: 800px;
+  margin-bottom: 2.5rem;
+}
+
+.phasesNavigation {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 3rem;
+}
+
+.phaseButton {
+  padding: 0.75rem 1.5rem;
+  background-color: var(--highlight-bg);
+  border: none;
+  border-radius: var(--border-radius-round);
+  color: var(--light-text);
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.phaseButton:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+  background-color: var(--primary-light);
+  color: var(--primary-color);
+}
+
+.activePhase {
+  background-color: var(--primary-color);
+  color: var(--text-color);
+}
+
+.activePhase:hover {
+  background-color: var(--primary-dark);
+  color: var(--text-color);
+}
+
+.phaseContent {
+  background-color: var(--highlight-bg);
+  border-radius: var(--border-radius-lg);
+  padding: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: var(--shadow-md);
+  margin-bottom: 2rem;
+}
+
+.phaseHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.phaseHeader h2 {
+  font-size: 1.8rem;
+  margin: 0;
+}
+
+.timeline {
+  background-color: var(--card-background);
+  padding: 0.5rem 1rem;
+  border-radius: var(--border-radius-md);
+  font-weight: 500;
+  color: var(--accent-color);
+}
+
+.phaseDescription {
+  font-size: 1.1rem;
+  color: var(--light-text);
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.phaseDetails {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.detailColumn h3 {
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+  color: var(--text-color);
+}
+
+.detailColumn ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.detailColumn li {
+  margin-bottom: 0.75rem;
+  padding-left: 1.5rem;
+  position: relative;
+  color: var(--light-text);
+}
+
+.detailColumn li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.5rem;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--primary-color);
+}
+
+.phaseHighlight {
+  background-color: var(--card-background);
+  padding: 2rem;
+  border-radius: var(--border-radius-md);
+  margin-top: 2rem;
+}
+
+.phaseHighlight h3 {
+  font-size: 1.3rem;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: var(--primary-color);
+}
+
+.phaseHighlight p {
+  color: var(--light-text);
+  margin-bottom: 1.5rem;
+}
+
+.progressBar {
+  height: 10px;
+  background-color: var(--highlight-bg);
+  border-radius: var(--border-radius-round);
+  overflow: hidden;
+  margin-bottom: 0.75rem;
+}
+
+.progressFill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+  border-radius: var(--border-radius-round);
+}
+
+.progressInfo {
+  display: flex;
+  justify-content: space-between;
+  color: var(--light-text);
+  font-size: 0.9rem;
+}
+
+.roadmapVisual {
+  position: relative;
+  height: 100px;
+  margin: 3rem 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.roadmapLine {
+  position: absolute;
+  top: 30px;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background-color: #e0e0e0;
+  z-index: 1;
+}
+
+.roadmapNode {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 2;
+  cursor: pointer;
+  width: 25%;
+}
+
+.nodePoint {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: white;
+  border: 2px solid #e0e0e0;
+  margin-top: 20px;
+  transition: all 0.2s ease;
+}
+
+.activeNode .nodePoint {
+  border-color: var(--primary-color);
+  background-color: var(--primary-color);
+  transform: scale(1.2);
+}
+
+.completedNode .nodePoint {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.nodeLabel {
+  margin-top: 0.75rem;
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.activeNode .nodeLabel {
+  color: var(--primary-color);
+}
+
+.callToAction {
+  background-color: #f9f9f9;
+  padding: 2rem;
+  border-radius: 8px;
+  text-align: center;
+  margin: 3rem 0;
+}
+
+.callToAction h3 {
+  margin-bottom: 1rem;
+  color: var(--text-color);
+}
+
+.callToAction p {
+  max-width: 600px;
+  margin: 0 auto 1.5rem auto;
+}
+
+.ctaButton {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 0.75rem 2rem;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.ctaButton:hover {
+  background-color: #0051a2;
+}
+
+@media (max-width: 768px) {
+  .phasesNavigation {
+    flex-direction: column;
+  }
+  
+  .phaseHeader {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .timeline {
+    margin-top: 0.5rem;
+  }
+  
+  .roadmapVisual {
+    flex-direction: column;
+    height: auto;
+    gap: 2rem;
+    margin: 2rem 0;
+  }
+  
+  .roadmapLine {
+    top: 0;
+    left: 30px;
+    right: auto;
+    width: 4px;
+    height: 100%;
+  }
+  
+  .roadmapNode {
+    flex-direction: row;
+    width: 100%;
+    gap: 1.5rem;
+  }
+  
+  .nodeLabel {
+    margin-top: 0;
+  }
+  
+  .phaseDetails {
+    grid-template-columns: 1fr;
+  }
+  
+  .phaseHeader {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .phasesNavigation {
+    flex-direction: column;
+  }
+  
+  .phaseButton {
+    width: 100%;
+  }
+}

@@ -1,0 +1,353 @@
+.container {
+  min-height: 100vh;
+  background-color: var(--background-color);
+}
+
+.header {
+  background-color: var(--card-background);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 1rem 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  box-shadow: var(--shadow-sm);
+}
+
+.headerContent {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header h1 {
+  font-size: 1.8rem;
+  margin: 0;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  color: var(--light-text);
+}
+
+.logoutButton {
+  background-color: transparent;
+  color: var(--light-text);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--border-radius-md);
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all var(--transition-bounce);
+  cursor: pointer;
+}
+
+.logoutButton:hover {
+  background-color: rgba(255, 59, 92, 0.1);
+  color: var(--danger-color);
+  border-color: var(--danger-color);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-sm);
+}
+
+.content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.contentHeader {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.contentHeader h2 {
+  font-size: 2.2rem;
+  margin-bottom: 0.5rem;
+  color: var(--text-color);
+}
+
+.contentHeader p {
+  color: var(--light-text);
+  font-size: 1.1rem;
+}
+
+.contentGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.contentCard {
+  background-color: var(--highlight-bg);
+  border-radius: var(--border-radius-lg);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  box-shadow: var(--shadow-md);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.3s ease;
+  text-decoration: none;
+  color: inherit;
+  height: 100%;
+}
+
+.contentCard:hover {
+  transform: translateY(-10px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--primary-color);
+}
+
+.contentIcon {
+  background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+  color: var(--text-color);
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  box-shadow: var(--shadow-md);
+}
+
+.contentInfo h3 {
+  font-size: 1.4rem;
+  margin-bottom: 0.5rem;
+  color: var(--text-color);
+}
+
+.contentInfo p {
+  color: var(--light-text);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.contentCount {
+  background-color: var(--card-background);
+  border-radius: var(--border-radius-round);
+  padding: 0.75rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  align-self: flex-start;
+  margin-top: auto;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.contentCount span:first-child {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+.contentCountLabel {
+  font-size: 0.9rem;
+  color: var(--light-text);
+}
+
+.noteSection {
+  margin-top: 3rem;
+}
+
+.noteCard {
+  background-color: rgba(255, 210, 63, 0.1);
+  border: 1px solid var(--accent-color);
+  border-radius: var(--border-radius-lg);
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.noteIcon {
+  font-size: 1.8rem;
+  color: var(--accent-color);
+  flex-shrink: 0;
+}
+
+.noteCard h3 {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+  color: var(--accent-color);
+}
+
+.noteCard p {
+  color: var(--light-text);
+  margin: 0;
+}
+
+.loadingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  gap: 2rem;
+}
+
+.loadingContainer h2 {
+  color: var(--text-color);
+}
+
+/* System management section */
+.systemSection {
+  margin: 4rem 0;
+}
+
+.systemSection h3 {
+  font-size: 1.6rem;
+  margin-bottom: 2rem;
+  color: var(--text-color);
+  text-align: center;
+}
+
+.systemGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+.systemCard {
+  background-color: var(--highlight-bg);
+  border-radius: var(--border-radius-lg);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  box-shadow: var(--shadow-md);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all var(--transition-normal);
+}
+
+.systemIcon {
+  background: linear-gradient(135deg, var(--accent-color), var(--secondary-color));
+  width: 50px;
+  height: 50px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: var(--text-color);
+  box-shadow: var(--shadow-md);
+}
+
+.systemInfo h4 {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+  color: var(--text-color);
+}
+
+.systemInfo p {
+  color: var(--light-text);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.systemButton {
+  margin-top: auto;
+  background-color: var(--highlight-bg);
+  color: var(--accent-color);
+  border: 1px solid var(--accent-color);
+  border-radius: var(--border-radius-md);
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-normal);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.systemButton:hover {
+  background-color: var(--accent-color);
+  color: var(--text-color);
+}
+
+/* Airtable status indicator */
+.airtableStatus {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--card-background);
+  padding: 0.4rem 0.8rem;
+  border-radius: var(--border-radius-round);
+  font-size: 0.85rem;
+}
+
+.dbIcon {
+  color: var(--accent-color);
+}
+
+.statusIndicator {
+  font-weight: 500;
+}
+
+.statusIndicator.connected {
+  color: var(--success-color);
+}
+
+.statusIndicator.disconnected {
+  color: var(--warning-color);
+}
+
+.statusIndicator.error {
+  color: var(--danger-color);
+}
+
+.statusIndicator.checking {
+  color: var(--accent-color);
+}
+
+.refreshButton {
+  background: none;
+  border: none;
+  color: var(--light-text);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.2rem;
+  transition: all 0.2s ease;
+}
+
+.refreshButton:hover {
+  color: var(--accent-color);
+  transform: rotate(180deg);
+}
+
+@media (max-width: 768px) {
+  .headerContent {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+  
+  .userInfo {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .contentGrid, .systemGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .noteCard {
+    flex-direction: column;
+    text-align: center;
+  }
+}

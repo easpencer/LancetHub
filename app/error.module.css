@@ -1,0 +1,157 @@
+.container {
+  width: 100%;
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.errorCard {
+  background-color: var(--highlight-bg);
+  padding: 3rem;
+  border-radius: var(--border-radius-lg);
+  max-width: 600px;
+  width: 100%;
+  text-align: center;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.errorIcon {
+  color: var(--danger-color);
+  font-size: 4rem;
+  margin-bottom: 2rem;
+}
+
+.errorCard h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+  color: var(--text-color);
+}
+
+.message {
+  color: var(--light-text);
+  font-size: 1.2rem;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.suggestions {
+  text-align: left;
+  margin-bottom: 2rem;
+  color: var(--light-text);
+}
+
+.suggestions p {
+  margin-bottom: 0.5rem;
+}
+
+.suggestions ul {
+  padding-left: 1.5rem;
+  margin-top: 0.5rem;
+}
+
+.suggestions li {
+  margin-bottom: 0.5rem;
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.primaryButton, .secondaryButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--border-radius-round);
+  font-weight: 600;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+  text-decoration: none;
+}
+
+.primaryButton {
+  background-color: var(--primary-color);
+  color: var(--text-color);
+  border: none;
+  cursor: pointer;
+}
+
+.primaryButton:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+.secondaryButton {
+  background-color: transparent;
+  color: var(--light-text);
+  border: 1px solid var(--light-text);
+  cursor: pointer;
+}
+
+.secondaryButton:hover {
+  background-color: var(--card-background);
+  color: var(--text-color);
+  border-color: var(--text-color);
+  transform: translateY(-3px);
+}
+
+.errorDetails {
+  margin: 1.5rem 0;
+  text-align: left;
+}
+
+.errorDetails summary {
+  cursor: pointer;
+  color: var(--light-text);
+  padding: 0.5rem 0;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.errorDetails summary:hover {
+  color: var(--primary-color);
+}
+
+.errorDetails pre {
+  margin-top: 0.5rem;
+  padding: 1rem;
+  background-color: var(--card-background);
+  border-radius: var(--border-radius-md);
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  color: var(--danger-color);
+  font-size: 0.85rem;
+  text-align: left;
+  border: 1px solid rgba(255, 59, 92, 0.2);
+}
+
+@media (max-width: 600px) {
+  .errorCard {
+    padding: 2rem 1rem;
+  }
+  
+  .errorCard h1 {
+    font-size: 2rem;
+  }
+  
+  .message {
+    font-size: 1rem;
+  }
+  
+  .actions {
+    flex-direction: column;
+  }
+  
+  .primaryButton, .secondaryButton {
+    width: 100%;
+    justify-content: center;
+  }
+}

@@ -1,0 +1,111 @@
+.errorContainer {
+  width: 100%;
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.errorContent {
+  max-width: 600px;
+  background-color: var(--highlight-bg);
+  border-radius: var(--border-radius-lg);
+  padding: 2.5rem;
+  text-align: center;
+  box-shadow: var(--shadow-md);
+  border: 1px solid rgba(255, 59, 92, 0.2);
+}
+
+.errorIcon {
+  font-size: 3rem;
+  color: var(--danger-color);
+  margin-bottom: 1.5rem;
+}
+
+.errorContent h2 {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  color: var(--text-color);
+}
+
+.errorMessage {
+  color: var(--light-text);
+  margin-bottom: 2rem;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.primaryButton, .secondaryButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--border-radius-md);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  font-size: 1rem;
+}
+
+.primaryButton {
+  background-color: var(--primary-color);
+  color: var(--text-color);
+}
+
+.primaryButton:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+.secondaryButton {
+  background-color: transparent;
+  color: var(--light-text);
+  border: 1px solid var(--light-text);
+}
+
+.secondaryButton:hover {
+  background-color: var(--highlight-bg);
+  border-color: var(--text-color);
+  color: var(--text-color);
+  transform: translateY(-3px);
+}
+
+.errorDetails {
+  margin-top: 1.5rem;
+  text-align: left;
+}
+
+.errorDetails summary {
+  cursor: pointer;
+  color: var(--light-text);
+  padding: 0.5rem 0;
+  font-size: 0.9rem;
+}
+
+.errorDetails summary:hover {
+  color: var(--primary-color);
+}
+
+.errorDetails pre {
+  margin-top: 0.5rem;
+  padding: 1rem;
+  background-color: var(--card-background);
+  border-radius: var(--border-radius-md);
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  color: var(--danger-color);
+  font-size: 0.85rem;
+  border: 1px solid rgba(255, 59, 92, 0.2);
+}

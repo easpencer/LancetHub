@@ -1,0 +1,91 @@
+.container {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.backButton {
+  background-color: transparent;
+  color: var(--primary-color);
+  border: 1px solid var(--primary-color);
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  margin-bottom: 2rem;
+  display: inline-block;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.backButton:hover {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.caseStudyHeader {
+  margin-bottom: 2rem;
+}
+
+.section {
+  background-color: var(--primary-color);
+  color: white;
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  margin-bottom: 0.75rem;
+}
+
+.author {
+  font-size: 1rem;
+  color: var(--light-text);
+  margin-bottom: 0.5rem;
+}
+
+.date {
+  font-size: 0.9rem;
+  color: var(--light-text);
+}
+
+.dimensions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.dimension {
+  background-color: #f0f0f0;
+  color: #666;
+  padding: 0.2rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+}
+
+.mainContent {
+  background-color: white;
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.mainContent section {
+  margin-bottom: 2rem;
+}
+
+.mainContent section:last-child {
+  margin-bottom: 0;
+}
+
+.mainContent h2 {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  color: var(--primary-color);
+}
+
+.loading {
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.2rem;
+  color: var(--light-text);
+}

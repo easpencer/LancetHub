@@ -1,0 +1,42 @@
+{
+  "name": "pandemic-resilience-hub",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "npm run create-favicon && next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "setup": "node setup-documents.js",
+    "init-airtable": "node scripts/init-airtable.js",
+    "verify-airtable": "node scripts/verify-airtable.js",
+    "prepare-images": "bash scripts/create-placeholders.sh",
+    "create-favicon": "node scripts/create-favicon.js"
+  },
+  "dependencies": {
+    "@vercel/analytics": "^1.5.0",
+    "airtable": "^0.12.2",
+    "chart.js": "^4.2.1",
+    "csv-parse": "^5.3.6",
+    "dotenv": "^16.3.1",
+    "framer-motion": "^10.10.0",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^2.5.1",
+    "leaflet": "^1.9.4",
+    "next": "latest",
+    "next-auth": "^4.24.5",
+    "plotly.js": "^2.20.0",
+    "plotly.js-dist-min": "^2.20.0",
+    "react": "latest",
+    "react-chartjs-2": "^5.2.0",
+    "react-dom": "latest",
+    "react-icons": "^4.8.0",
+    "react-intersection-observer": "^9.4.3",
+    "react-leaflet": "^4.2.1",
+    "react-plotly.js": "^2.6.0"
+  },
+  "devDependencies": {
+    "eslint": "latest",
+    "eslint-config-next": "latest"
+  }
+}

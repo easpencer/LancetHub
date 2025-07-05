@@ -1,0 +1,85 @@
+.resourceCard {
+  background-color: var(--highlight-bg);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: 2.5rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.resourceCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 5px;
+  height: 100%;
+  background: linear-gradient(to bottom, var(--primary-color), var(--accent-color));
+}
+
+.resourceCard:hover {
+  transform: translateY(-12px) !important;
+  box-shadow: var(--shadow-lg);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.resourceCard h3 {
+  font-size: 1.6rem;
+  margin-bottom: 1.2rem;
+  color: var(--text-color);
+  line-height: 1.3;
+  font-family: var(--font-heading);
+  font-weight: 700;
+}
+
+.resourceCard p {
+  color: var(--light-text);
+  font-size: 1.05rem;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+  flex-grow: 1;
+}
+
+.resourceLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  color: var(--accent-color);
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 0.7rem 1.2rem;
+  transition: all 0.3s ease;
+  position: relative;
+  width: fit-content;
+  border-radius: var(--border-radius-round);
+  background-color: rgba(217, 180, 143, 0.15);
+}
+
+.resourceLink:hover {
+  color: var(--background-color);
+  background-color: var(--accent-color);
+}
+
+.icon {
+  font-size: 0.85rem;
+  transition: transform 0.3s ease;
+}
+
+.resourceLink:hover .icon {
+  transform: translateX(5px);
+}
+
+@media (max-width: 768px) {
+  .resourceCard {
+    padding: 2rem;
+  }
+  
+  .resourceCard h3 {
+    font-size: 1.4rem;
+  }
+}
