@@ -1,22 +1,54 @@
 [build]
-  publish = ".next"
   command = "npm run build"
+  publish = ".next"
 
 [build.environment]
+  # Force Next.js to use standalone output for better Netlify compatibility
+  NEXT_PRIVATE_STANDALONE = "true"
+  # Set Node version
   NODE_VERSION = "18"
+  # Increase timeout for build
+  AWS_LAMBDA_JS_RUNTIME = "nodejs18.x"
 
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+# Headers for security and performance
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+# Redirect from Netlify URL to custom domain (if applicable)
 [[redirects]]
-  from = "/*"
-  to = "/index.html"
+  from = "https://pancemic-resilience-hub.netlify.app/*"
+  to = "https://pandemic-resilience-hub.org/:splat"
+  status = 301
+  force = true
+
+# Handle Next.js API routes
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/___netlify-handler"
   status = 200
 
-# Environment variable configuration for Netlify
-# The following environment variables need to be set in Netlify dashboard:
-# AIRTABLE_API_KEY
-# AIRTABLE_BASE_ID=appyi4hm7RK1inUnq  
-# NEXTAUTH_URL
-# NEXTAUTH_SECRET
-# ADMIN_EMAIL
-# ADMIN_PASSWORD
-# USE_MOCK_DATA=false
-# FORCE_CASE_STUDY_FALLBACK=true  # Set to true to use comprehensive fallback data for case studies
+# Handle Next.js image optimization
+[[redirects]]
+  from = "/_next/image"
+  to = "/.netlify/functions/___netlify-handler"
+  status = 200
+
+# Environment-specific build settings
+[context.production.environment]
+  # Use mock data if Airtable is not configured
+  USE_MOCK_DATA = "true"
+  # Or force comprehensive fallback for case studies
+  # FORCE_CASE_STUDY_FALLBACK = "true"
+
+[context.deploy-preview.environment]
+  USE_MOCK_DATA = "true"
+
+[context.branch-deploy.environment]
+  USE_MOCK_DATA = "true"

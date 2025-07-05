@@ -463,7 +463,14 @@ export const fetchRecords = async (tableName, options = {}) => {
         }
         
         console.log(`🔄 Executing Airtable query on ${tableName}:`, JSON.stringify(query));
-        const records = await base(tableName).select(query).all();
+        
+        // Add timeout to prevent hanging during build
+        const timeoutPromise = new Promise((_, reject) => {
+          setTimeout(() => reject(new Error('Airtable request timeout after 10s')), 10000);
+        });
+        
+        const recordsPromise = base(tableName).select(query).all();
+        const records = await Promise.race([recordsPromise, timeoutPromise]);
         
         console.log(`✅ Retrieved ${records.length} records from Airtable ${tableName}`);
         return records.map(record => ({
