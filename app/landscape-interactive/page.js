@@ -94,7 +94,17 @@ export default function LandscapeInteractivePage() {
         (topic.Leadership || '').toLowerCase().includes(term) ||
         (topic.Teamwork || '').toLowerCase().includes(term) ||
         (topic.Data || '').toLowerCase().includes(term) ||
-        (topic.Resources || '').toLowerCase().includes(term)
+        (topic.Resources || '').toLowerCase().includes(term) ||
+        (topic.Description || '').toLowerCase().includes(term) ||
+        (topic.Examples || '').toLowerCase().includes(term) ||
+        (topic.Implementation || '').toLowerCase().includes(term) ||
+        (topic.Challenges || '').toLowerCase().includes(term) ||
+        (topic.Solutions || '').toLowerCase().includes(term) ||
+        (topic.Impact || '').toLowerCase().includes(term) ||
+        (topic.Stakeholders || '').toLowerCase().includes(term) ||
+        (topic.BestPractices || '').toLowerCase().includes(term) ||
+        (topic.Recommendations || '').toLowerCase().includes(term) ||
+        (topic.Priority || '').toLowerCase().includes(term)
       );
     }
     
@@ -493,6 +503,94 @@ export default function LandscapeInteractivePage() {
                       <div>
                         <h3>Resources</h3>
                         <p>{selectedTopic.Resources}</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {selectedTopic.Examples && (
+                    <div className={styles.modalSection}>
+                      <FaLayerGroup className={styles.modalIcon} />
+                      <div>
+                        <h3>Examples</h3>
+                        <p>{selectedTopic.Examples}</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {selectedTopic.Implementation && (
+                    <div className={styles.modalSection}>
+                      <FaProjectDiagram className={styles.modalIcon} />
+                      <div>
+                        <h3>Implementation</h3>
+                        <p>{selectedTopic.Implementation}</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {selectedTopic.Challenges && (
+                    <div className={styles.modalSection}>
+                      <FaTools className={styles.modalIcon} />
+                      <div>
+                        <h3>Challenges</h3>
+                        <p>{selectedTopic.Challenges}</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {selectedTopic.Solutions && (
+                    <div className={styles.modalSection}>
+                      <FaHandshake className={styles.modalIcon} />
+                      <div>
+                        <h3>Solutions</h3>
+                        <p>{selectedTopic.Solutions}</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {selectedTopic.Impact && (
+                    <div className={styles.modalSection}>
+                      <FaChartPie className={styles.modalIcon} />
+                      <div>
+                        <h3>Impact</h3>
+                        <p>{selectedTopic.Impact}</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {selectedTopic.Stakeholders && (
+                    <div className={styles.modalSection}>
+                      <FaUsers className={styles.modalIcon} />
+                      <div>
+                        <h3>Stakeholders</h3>
+                        <p>{selectedTopic.Stakeholders}</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {selectedTopic.BestPractices && (
+                    <div className={styles.modalSection}>
+                      <FaDatabase className={styles.modalIcon} />
+                      <div>
+                        <h3>Best Practices</h3>
+                        <p>{selectedTopic.BestPractices}</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {selectedTopic.Recommendations && (
+                    <div className={styles.modalSection}>
+                      <FaLayerGroup className={styles.modalIcon} />
+                      <div>
+                        <h3>Recommendations</h3>
+                        <p>{selectedTopic.Recommendations}</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {selectedTopic.Priority && selectedTopic.Priority !== 'Medium' && (
+                    <div className={styles.modalSection}>
+                      <div className={styles.priorityBadge} data-priority={selectedTopic.Priority.toLowerCase()}>
+                        Priority: {selectedTopic.Priority}
                       </div>
                     </div>
                   )}

@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { fetchLandscapeData } from '../../../utils/airtable';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   try {
     console.log('🔄 Fetching landscape data from Airtable...');
@@ -13,21 +15,82 @@ export async function GET() {
     
     console.log(`✅ Retrieved ${landscapeTopics.length} landscape topics from Airtable`);
     
-    // Process records to ensure consistent field names
-    const processedTopics = landscapeTopics.map((record) => ({
-      id: record.id || `landscape-${Date.now()}-${Math.random()}`,
-      Dimension: record['Dimension'] || '',
-      Topic: record['Topic'] || record['Topic / Sub-Dimension'] || '',
-      Context: record['Context'] || '',
-      Leadership: record['Leadership'] || record['People & Leadership'] || '',
-      Teamwork: record['Teamwork'] || record['Teamwork & Organizations'] || '',
-      Data: record['Data'] || record['Data & Knowledge'] || '',
-      Resources: record['Resources'] || record['Resources & Products'] || '',
-      // Additional fields that might be available
-      Description: record['Description'] || '',
-      Examples: record['Examples'] || '',
-      Priority: record['Priority'] || 'Medium'
-    }));
+    // Process records using dynamic field mapping to capture ALL Airtable data
+    const processedTopics = landscapeTopics.map((record, index) => {
+      // Log ALL available fields from the first few records
+      if (index < 3) {
+        console.log(`🔍 Landscape record ${index + 1} fields:`, Object.keys(record));
+        console.log(`🔍 Landscape record ${index + 1} data:`, JSON.stringify(record, null, 2));
+      }
+      
+      // Start with the record ID and then dynamically add ALL fields
+      const processedRecord = {
+        id: record.id || `landscape-${Date.now()}-${Math.random()}`,
+        // Copy ALL fields from Airtable record directly
+        ...record
+      };
+      
+      // Add normalized/computed fields for consistent access
+      const normalizedFields = {
+        // Core landscape fields
+        Dimension: record['Dimension'] || record['Resilience Dimension'] || '',
+        Topic: record['Topic'] || record['Topic / Sub-Dimension'] || record['Sub-Dimension'] || record['Subject'] || '',
+        Context: record['Context'] || record['Background'] || record['Description'] || '',
+        
+        // People and organizations
+        Leadership: record['Leadership'] || record['People & Leadership'] || record['Leaders'] || record['Key People'] || '',
+        Teamwork: record['Teamwork'] || record['Teamwork & Organizations'] || record['Organizations'] || record['Collaboration'] || '',
+        
+        // Information and resources
+        Data: record['Data'] || record['Data & Knowledge'] || record['Information'] || record['Evidence'] || '',
+        Resources: record['Resources'] || record['Resources & Products'] || record['Tools'] || record['Assets'] || '',
+        
+        // Additional descriptive fields
+        Description: record['Description'] || record['Summary'] || record['Overview'] || '',
+        Examples: record['Examples'] || record['Case Examples'] || record['Use Cases'] || '',
+        Priority: record['Priority'] || record['Importance'] || record['Level'] || 'Medium',
+        
+        // Implementation details
+        Implementation: record['Implementation'] || record['How To'] || record['Steps'] || '',
+        Challenges: record['Challenges'] || record['Barriers'] || record['Obstacles'] || '',
+        Solutions: record['Solutions'] || record['Approaches'] || record['Strategies'] || '',
+        
+        // Impact and outcomes
+        Impact: record['Impact'] || record['Outcomes'] || record['Results'] || '',
+        Metrics: record['Metrics'] || record['Indicators'] || record['Measures'] || '',
+        Timeline: record['Timeline'] || record['Duration'] || record['Timeframe'] || '',
+        
+        // Stakeholders and relationships
+        Stakeholders: record['Stakeholders'] || record['Key Players'] || record['Participants'] || '',
+        Partnerships: record['Partnerships'] || record['Alliances'] || record['Networks'] || '',
+        Community: record['Community'] || record['Community Role'] || record['Local Involvement'] || '',
+        
+        // Geographic and demographic considerations
+        Geography: record['Geography'] || record['Location'] || record['Region'] || '',
+        Demographics: record['Demographics'] || record['Population'] || record['Target Groups'] || '',
+        
+        // Resilience-specific fields
+        ResilienceCapacity: record['Resilience Capacity'] || record['Capacity Building'] || '',
+        Vulnerability: record['Vulnerability'] || record['Risks'] || record['Threats'] || '',
+        Adaptation: record['Adaptation'] || record['Adaptive Capacity'] || '',
+        
+        // Quality and validation
+        EvidenceBase: record['Evidence Base'] || record['Research'] || record['Studies'] || '',
+        BestPractices: record['Best Practices'] || record['Lessons Learned'] || '',
+        Recommendations: record['Recommendations'] || record['Guidance'] || '',
+        
+        // Cross-cutting themes
+        Equity: record['Equity'] || record['Social Justice'] || record['Inclusion'] || '',
+        Sustainability: record['Sustainability'] || record['Long-term Viability'] || '',
+        Innovation: record['Innovation'] || record['Novel Approaches'] || ''
+      };
+      
+      // Merge original fields with normalized fields
+      return {
+        ...processedRecord,
+        ...normalizedFields
+      };
+    });
     
     return NextResponse.json({ landscape: processedTopics });
   } catch (error) {

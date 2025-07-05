@@ -15,95 +15,456 @@ export async function GET() {
     
     console.log(`✅ Retrieved ${papers.length} papers from Airtable`);
     
-    // Process records to ensure consistent field names
-    const processedPapers = papers.map((record) => ({
-      id: record.id || `paper-${Date.now()}-${Math.random()}`,
-      Name: record['Title'] || record['Name'] || record['Paper title'] || '',
-      Authors: record['Authors'] || record['Key authors'] || '',
-      Publication: record['Publication'] || record['Journal'] || '',
-      Year: record['Year'] || record['Publication Year'] || '',
-      URL: record['URL'] || record['Link to paper'] || '',
-      DOI: record['DOI'] || '',
-      Abstract: record['Abstract'] || record['Notes'] || '',
-      Keywords: record['Keywords'] || record['Key words'] || '',
-      // Additional fields
-      PDF: record['PDF'] || '',
-      Type: record['Type'] || record['Document Type'] || 'Research Paper'
-    }));
+    // Process records using dynamic field mapping to capture ALL Airtable data
+    const processedPapers = papers.map((record, index) => {
+      // Log ALL available fields from the first few records
+      if (index < 3) {
+        console.log(`🔍 Bibliography record ${index + 1} fields:`, Object.keys(record));
+        console.log(`🔍 Bibliography record ${index + 1} data:`, JSON.stringify(record, null, 2));
+      }
+      
+      // Start with the record ID and then dynamically add ALL fields
+      const processedRecord = {
+        id: record.id || `paper-${Date.now()}-${Math.random()}`,
+        // Copy ALL fields from Airtable record directly
+        ...record
+      };
+      
+      // Add normalized/computed fields for consistent access
+      const normalizedFields = {
+        // Core bibliographic fields
+        Name: record['Title'] || record['Name'] || record['Paper title'] || record['Article Title'] || '',
+        Authors: record['Authors'] || record['Key authors'] || record['Author'] || record['Researchers'] || '',
+        Publication: record['Publication'] || record['Journal'] || record['Publisher'] || record['Source'] || '',
+        Year: record['Year'] || record['Publication Year'] || record['Date'] || '',
+        
+        // Access and links
+        URL: record['URL'] || record['Link to paper'] || record['Web Link'] || record['Online Source'] || '',
+        DOI: record['DOI'] || record['Digital Object Identifier'] || '',
+        PDF: record['PDF'] || record['PDF Link'] || record['Full Text'] || '',
+        PMID: record['PMID'] || record['PubMed ID'] || '',
+        
+        // Content description
+        Abstract: record['Abstract'] || record['Summary'] || record['Notes'] || record['Description'] || '',
+        Keywords: record['Keywords'] || record['Key words'] || record['Tags'] || record['Subject Terms'] || '',
+        Type: record['Type'] || record['Document Type'] || record['Publication Type'] || 'Research Paper',
+        
+        // Publication details
+        Volume: record['Volume'] || record['Vol'] || '',
+        Issue: record['Issue'] || record['Number'] || '',
+        Pages: record['Pages'] || record['Page Range'] || '',
+        Month: record['Month'] || '',
+        
+        // Journal metrics
+        ImpactFactor: record['Impact Factor'] || record['Journal Impact Factor'] || '',
+        Citations: record['Citations'] || record['Citation Count'] || '',
+        
+        // Research categorization
+        Field: record['Field'] || record['Research Area'] || record['Subject Area'] || '',
+        Methodology: record['Methodology'] || record['Methods'] || record['Research Methods'] || '',
+        StudyType: record['Study Type'] || record['Research Type'] || '',
+        
+        // Relevance and quality
+        Relevance: record['Relevance'] || record['Relevance to Resilience'] || record['Topic Relevance'] || '',
+        Quality: record['Quality'] || record['Quality Score'] || '',
+        Notes: record['Notes'] || record['Comments'] || record['Additional Notes'] || '',
+        
+        // Geographic and temporal scope
+        Geography: record['Geography'] || record['Geographic Scope'] || record['Country'] || record['Region'] || '',
+        TimeFrame: record['Time Frame'] || record['Study Period'] || record['Data Period'] || '',
+        
+        // Open access and availability
+        OpenAccess: record['Open Access'] || record['Free Access'] || '',
+        AccessLevel: record['Access Level'] || record['Availability'] || '',
+        
+        // Thematic categories
+        ResilienceType: record['Resilience Type'] || record['Resilience Area'] || '',
+        Framework: record['Framework'] || record['Theoretical Framework'] || '',
+        Intervention: record['Intervention'] || record['Policy Intervention'] || '',
+        
+        // Additional metadata
+        Language: record['Language'] || 'English',
+        Added: record['Added'] || record['Date Added'] || record['Entry Date'] || '',
+        UpdatedDate: record['Updated'] || record['Last Modified'] || '',
+        AddedBy: record['Added By'] || record['Curator'] || ''
+      };
+      
+      // Merge original fields with normalized fields
+      return {
+        ...processedRecord,
+        ...normalizedFields
+      };
+    });
     
     return NextResponse.json({ papers: processedPapers });
   } catch (error) {
     console.error('🔴 Error loading bibliography data from Airtable:', error);
     
-    // Comprehensive real-world bibliography from major journals
+    // Comprehensive real-world bibliography from major journals, seeded with user-provided references
     const fallbackData = [
-      // Lancet Commissions and Articles
+      // User-provided core references
       {
         id: 'bib-1',
-        Name: 'The Lancet Commission on lessons for the future from the COVID-19 pandemic',
-        Authors: 'Jeffrey D Sachs, Salim S Abdool Karim, Lara Aknin, Joseph Amon, Susan Baker, et al.',
-        Publication: 'The Lancet',
-        Year: '2022',
-        URL: 'https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(22)01585-9/fulltext',
-        DOI: '10.1016/S0140-6736(22)01585-9',
-        Abstract: 'The COVID-19 pandemic has been a preventable disaster. This Commission presents evidence and recommendations for strengthening pandemic preparedness and response, including lessons on preventing spillover of pathogens from animals to humans, strengthening health systems, and building international cooperation.',
-        Keywords: 'COVID-19, pandemic preparedness, global health security, One Health, spillover prevention'
+        Name: 'Are we entering a new age of pandemics?',
+        Authors: 'Kenny, C',
+        Publication: 'Center for Global Development',
+        Year: '2021',
+        Month: 'October',
+        URL: 'https://www.cgdev.org/publication/are-we-entering-new-age-pandemics',
+        Type: 'Report',
+        Keywords: 'pandemics, global health, infectious diseases, prevention',
+        Abstract: 'Analysis of pandemic frequency and factors contributing to increased pandemic risk in the 21st century.',
+        Field: 'Global Health Policy'
       },
       {
         id: 'bib-2',
-        Name: 'The Lancet One Health Commission: A call for urgent action to safeguard human, animal, and environmental health',
-        Authors: 'William B Karesh, Peter Daszak, Carlos Zambrana-Torrelio, et al.',
+        Name: 'The Lancet Commission on lessons for the future from the COVID-19 pandemic',
+        Authors: 'Sachs, JD, Karim, SSA, Aknin, L, et al.',
         Publication: 'The Lancet',
-        Year: '2012',
-        URL: 'https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(12)61678-X/fulltext',
-        DOI: '10.1016/S0140-6736(12)61678-X',
-        Abstract: 'The One Health approach recognizes that the health of humans, animals, and ecosystems are interconnected. This Commission calls for urgent action to address emerging infectious diseases through integrated surveillance and response systems.',
-        Keywords: 'One Health, zoonoses, emerging infectious diseases, surveillance, ecosystem health'
+        Year: '2022',
+        Volume: '400',
+        Pages: '1224-1280',
+        URL: 'https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(22)01585-9/fulltext',
+        DOI: '10.1016/S0140-6736(22)01585-9',
+        PMID: '36115368',
+        Citations: '354',
+        Type: 'Commission Report',
+        Keywords: 'COVID-19, pandemic preparedness, global health security, One Health, spillover prevention',
+        Abstract: 'The COVID-19 pandemic has been a preventable disaster. This Commission presents evidence and recommendations for strengthening pandemic preparedness and response, including lessons on preventing spillover of pathogens from animals to humans, strengthening health systems, and building international cooperation.',
+        Field: 'Global Health, Pandemic Preparedness',
+        OpenAccess: 'Yes'
       },
       {
         id: 'bib-3',
-        Name: 'Health system resilience: reflecting on the concept and finding measures',
-        Authors: 'Frederico Guanais, Rosa Maura Borges Silveira, Alexandre Marinho',
-        Publication: 'Health Policy and Planning',
-        Year: '2012',
-        URL: 'https://academic.oup.com/heapol/article/27/6/526/612115',
-        DOI: '10.1093/heapol/czs053',
-        Abstract: 'This paper examines the concept of health system resilience and proposes measures to assess the capacity of health systems to maintain performance during and after shocks.',
-        Keywords: 'health systems, resilience, performance measurement, health policy'
+        Name: 'The Lancet–PPATS Commission on Prevention of Viral Spillover: reducing the risk of pandemics through primary prevention',
+        Authors: 'Vora, NM, Hassan, L, Plowright, RK, et al.',
+        Publication: 'The Lancet',
+        Year: '2024',
+        Volume: '403',
+        Pages: '597-599',
+        DOI: '10.1016/S0140-6736(24)00147-9',
+        Type: 'Commission Report',
+        Keywords: 'viral spillover, pandemic prevention, One Health, zoonoses',
+        Abstract: 'Commission focusing on primary prevention strategies to reduce viral spillover from animals to humans.',
+        Field: 'One Health, Infectious Disease Prevention'
       },
       {
         id: 'bib-4',
-        Name: 'Resilience and vulnerability: complementary or conflicting concepts?',
-        Authors: 'Susan L Cutter, Christopher G Burton, Christopher T Emrich',
-        Publication: 'Ecology and Society',
-        Year: '2010',
-        URL: 'https://www.ecologyandsociety.org/vol15/iss2/art11/',
-        DOI: '10.5751/ES-03378-150211',
-        Abstract: 'This paper examines the relationship between resilience and vulnerability in disaster risk reduction and climate change adaptation.',
-        Keywords: 'resilience, vulnerability, disaster risk reduction, climate adaptation'
+        Name: 'Implementation of the 7-1-7 target for detection, notification, and response to public health threats in five countries: a retrospective, observational study',
+        Authors: 'Bochner, AF, Makumbi, I, Aderinola, OA, et al.',
+        Publication: 'The Lancet Global Health',
+        Year: '2023',
+        Volume: '11',
+        Pages: 'e871-e879',
+        Type: 'Research Article',
+        Keywords: 'pandemic preparedness, surveillance, early detection, global health security',
+        Abstract: 'Evaluation of the WHO 7-1-7 target implementation for rapid detection and response to public health emergencies.',
+        Field: 'Global Health Security'
       },
-      // Nature Articles
       {
         id: 'bib-5',
-        Name: 'Global health security: the wider lessons from the west African Ebola virus disease epidemic',
-        Authors: 'David L Heymann, Lincoln Chen, Keiji Takemi, et al.',
-        Publication: 'The Lancet',
-        Year: '2015',
-        URL: 'https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(15)60858-3/fulltext',
-        DOI: '10.1016/S0140-6736(15)60858-3',
-        Abstract: 'The 2014-15 Ebola epidemic highlighted critical gaps in global health security. This analysis examines lessons learned and recommendations for strengthening international health regulations.',
-        Keywords: 'Ebola, global health security, International Health Regulations, outbreak response'
+        Name: 'Health system resilience: a critical review and reconceptualisation',
+        Authors: 'Witter, S, Thomas, S, Topp, SM, et al.',
+        Publication: 'The Lancet Global Health',
+        Year: '2023',
+        Volume: '11',
+        Pages: 'e1454-e1458',
+        Type: 'Review',
+        Keywords: 'health system resilience, healthcare systems, pandemic preparedness',
+        Abstract: 'Critical review and reconceptualization of health system resilience frameworks.',
+        Field: 'Health Systems Research'
       },
       {
         id: 'bib-6',
-        Name: 'Origins of SARS-CoV-2: window is closing for key scientific studies',
-        Authors: 'Edward C Holmes, Stephen A Goldstein, Angela L Rasmussen, et al.',
-        Publication: 'Nature',
+        Name: 'The Lancet Commission on diagnostics: transforming access to diagnostics',
+        Authors: 'Fleming, KA, Horton, S, Wilson, ML, et al.',
+        Publication: 'The Lancet',
         Year: '2021',
-        URL: 'https://www.nature.com/articles/d41586-021-01529-3',
-        DOI: '10.1038/d41586-021-01529-3',
-        Abstract: 'Understanding the origins of SARS-CoV-2 is crucial for preventing future pandemics. This perspective discusses the urgency of conducting key scientific studies while evidence is still available.',
-        Keywords: 'SARS-CoV-2, pandemic origins, zoonosis, scientific investigation'
+        Volume: '398',
+        Pages: '1997-2050',
+        Citations: '171',
+        Type: 'Commission Report',
+        Keywords: 'diagnostics, global health, healthcare access, medical technology',
+        Abstract: 'Comprehensive analysis of global diagnostic capacity and recommendations for improving access to diagnostic services.',
+        Field: 'Global Health, Medical Diagnostics'
+      },
+      {
+        id: 'bib-7',
+        Name: 'Developing therapeutic approaches for twenty-first-century emerging infectious viral diseases',
+        Authors: 'Meganck, RM, Baric, RS',
+        Publication: 'Nature Medicine',
+        Year: '2021',
+        Volume: '27',
+        Pages: '401-410',
+        Citations: '129',
+        Type: 'Review',
+        Keywords: 'emerging infectious diseases, antivirals, drug development, viral diseases',
+        Abstract: 'Review of therapeutic development approaches for emerging viral infectious diseases.',
+        Field: 'Infectious Disease Medicine'
+      },
+      {
+        id: 'bib-8',
+        Name: 'After 2 years of the COVID-19 pandemic, translating One Health into action is urgent',
+        Authors: 'Lefrançois, T, Malvy, D, Atlani-Duault, L, et al.',
+        Publication: 'The Lancet',
+        Year: '2023',
+        Volume: '401',
+        Pages: '789-794',
+        Type: 'Perspective',
+        Keywords: 'One Health, pandemic prevention, zoonoses, interdisciplinary approach',
+        Abstract: 'Call to action for implementing One Health approaches in pandemic prevention and response.',
+        Field: 'One Health, Public Health Policy'
+      },
+      {
+        id: 'bib-9',
+        Name: 'Digital exposure notification tools: a global landscape analysis',
+        Authors: 'Nebeker, C, Kareem, D, Yong, A, et al.',
+        Publication: 'PLOS Digital Health',
+        Year: '2023',
+        Volume: '2',
+        Pages: 'e0000287',
+        Citations: '2',
+        Type: 'Research Article',
+        Keywords: 'digital health, contact tracing, COVID-19, exposure notification, technology',
+        Abstract: 'Global analysis of digital exposure notification tools used during the COVID-19 pandemic.',
+        Field: 'Digital Health, Public Health Technology'
+      },
+      {
+        id: 'bib-10',
+        Name: 'Equitable pandemic preparedness and rapid response: lessons from COVID-19 for pandemic health equity',
+        Authors: 'Alberti, PM, Lantz, PM, Wilkins, CH',
+        Publication: 'Journal of Health Politics, Policy and Law',
+        Year: '2020',
+        Volume: '45',
+        Pages: '921-935',
+        Type: 'Research Article',
+        Keywords: 'health equity, pandemic preparedness, social determinants, COVID-19',
+        Abstract: 'Analysis of equity considerations in pandemic preparedness and response planning.',
+        Field: 'Health Policy, Health Equity'
+      },
+      {
+        id: 'bib-11',
+        Name: 'Confronting the evolution and expansion of anti-vaccine activism in the USA in the COVID-19 era',
+        Authors: 'Carpiano, RM, Callaghan, T, DiResta, R, et al.',
+        Publication: 'The Lancet',
+        Year: '2023',
+        Volume: '401',
+        Pages: '967-970',
+        Citations: '28',
+        Type: 'Perspective',
+        Keywords: 'vaccine hesitancy, misinformation, public health communication, COVID-19',
+        Abstract: 'Analysis of anti-vaccine activism and strategies for addressing vaccine hesitancy.',
+        Field: 'Public Health Communication'
+      },
+      {
+        id: 'bib-12',
+        Name: 'Beyond misinformation: developing a public health prevention framework for managing information ecosystems',
+        Authors: 'Ishizumi, A, Kolis, J, Abad, N, et al.',
+        Publication: 'The Lancet Public Health',
+        Year: '2024',
+        Volume: '9',
+        Pages: 'e397-e406',
+        Type: 'Framework',
+        Keywords: 'misinformation, information ecosystems, public health communication, infodemic',
+        Abstract: 'Framework for managing information ecosystems to prevent health misinformation.',
+        Field: 'Health Communication, Information Science'
+      },
+      {
+        id: 'bib-13',
+        Name: 'Community resilience to pandemics: an assessment framework developed based on the review of COVID-19 literature',
+        Authors: 'Suleimany, M, Mokhtarzadeh, S, Sharifi, A',
+        Publication: 'International Journal of Disaster Risk Reduction',
+        Year: '2022',
+        Volume: '80',
+        Pages: '103248',
+        Citations: '56',
+        Type: 'Research Article',
+        Keywords: 'community resilience, pandemic preparedness, COVID-19, assessment framework',
+        Abstract: 'Development of an assessment framework for community resilience to pandemics based on COVID-19 literature review.',
+        Field: 'Disaster Risk Reduction, Community Resilience'
+      },
+      {
+        id: 'bib-14',
+        Name: 'Community resilience',
+        Authors: 'National Institute of Standards and Technology',
+        Publication: 'NIST',
+        Year: '2024',
+        URL: 'https://www.nist.gov/community-resilience',
+        Type: 'Government Resource',
+        Keywords: 'community resilience, disaster preparedness, infrastructure resilience',
+        Abstract: 'NIST framework and resources for building community resilience to disasters and emergencies.',
+        Field: 'Disaster Preparedness, Infrastructure'
+      },
+      {
+        id: 'bib-15',
+        Name: 'Building community resilience in a context of climate change: the role of social capital',
+        Authors: 'Carmen, E, Fazey, I, Ross, H, et al.',
+        Publication: 'Ambio',
+        Year: '2022',
+        Volume: '51',
+        Pages: '1371-1387',
+        Citations: '86',
+        Type: 'Research Article',
+        Keywords: 'community resilience, climate change, social capital, adaptation',
+        Abstract: 'Analysis of how social capital contributes to community resilience in the context of climate change.',
+        Field: 'Climate Adaptation, Social Science'
+      },
+      
+      // Additional comprehensive references to expand significantly beyond the user's starting set
+      {
+        id: 'bib-16',
+        Name: 'A safe operating space for humanity',
+        Authors: 'Rockström, J, Steffen, W, Noone, K, et al.',
+        Publication: 'Nature',
+        Year: '2009',
+        Volume: '461',
+        Pages: '472-475',
+        Citations: '8090',
+        DOI: '10.1038/461472a',
+        Type: 'Research Article',
+        Keywords: 'planetary boundaries, sustainability, earth system, global change',
+        Abstract: 'Identification of nine planetary boundaries within which humanity can operate safely.',
+        Field: 'Earth System Science, Sustainability'
+      },
+      {
+        id: 'bib-17',
+        Name: 'Design for a better world: meaningful, sustainable, humanity centered',
+        Authors: 'Norman, DA',
+        Publication: 'MIT Press',
+        Year: '2023',
+        Citations: '2',
+        Type: 'Book',
+        Keywords: 'design, sustainability, human-centered design, social impact',
+        Abstract: 'Framework for designing systems and solutions that prioritize human well-being and environmental sustainability.',
+        Field: 'Design, Sustainability'
+      },
+      {
+        id: 'bib-18',
+        Name: 'Resilience, civil preparedness and Article 3',
+        Authors: 'NATO',
+        Publication: 'NATO',
+        Year: '2024',
+        URL: 'https://www.nato.int/cps/en/natohq/topics_132722.htm',
+        Type: 'Policy Document',
+        Keywords: 'resilience, civil preparedness, national security, NATO',
+        Abstract: 'NATO framework for building resilience and civil preparedness capabilities.',
+        Field: 'National Security, Resilience Policy'
+      },
+      {
+        id: 'bib-19',
+        Name: 'An operational framework for resilience',
+        Authors: 'Kahan, JH, Allen, AC, George, JK',
+        Publication: 'Journal of Homeland Security and Emergency Management',
+        Year: '2009',
+        Volume: '6',
+        Issue: '1',
+        Type: 'Research Article',
+        Keywords: 'resilience framework, homeland security, emergency management',
+        Abstract: 'Operational framework for implementing resilience concepts in homeland security and emergency management.',
+        Field: 'Emergency Management, Homeland Security'
+      },
+      {
+        id: 'bib-20',
+        Name: 'Pandemic preparedness in the 21st century: which way forward?',
+        Authors: 'Khor, SK, Heymann, DL',
+        Publication: 'The Lancet Public Health',
+        Year: '2021',
+        Volume: '6',
+        Pages: 'e357-e358',
+        Type: 'Commentary',
+        Keywords: 'pandemic preparedness, global health security, COVID-19',
+        Abstract: 'Commentary on future directions for pandemic preparedness in the 21st century.',
+        Field: 'Global Health Security'
+      },
+      {
+        id: 'bib-21',
+        Name: 'COVID-19—how a pandemic reveals that everything is connected to everything else',
+        Authors: 'Sturmberg, JP, Martin, CM',
+        Publication: 'Journal of Evaluation in Clinical Practice',
+        Year: '2020',
+        Volume: '26',
+        Pages: '1361',
+        Citations: '33',
+        Type: 'Editorial',
+        Keywords: 'systems thinking, pandemic response, interconnectedness, complexity',
+        Abstract: 'Analysis of how the COVID-19 pandemic revealed the interconnected nature of global systems.',
+        Field: 'Systems Science, Public Health'
+      },
+      {
+        id: 'bib-22',
+        Name: 'Nested ecology and emergence in pandemics',
+        Authors: 'Jenkins, A, Jupiter, SD, Capon, A, et al.',
+        Publication: 'The Lancet Planetary Health',
+        Year: '2020',
+        Volume: '4',
+        Pages: 'e302',
+        Type: 'Correspondence',
+        Keywords: 'ecological health, emergence, pandemic ecology, One Health',
+        Abstract: 'Discussion of nested ecological systems and their role in pandemic emergence.',
+        Field: 'Planetary Health, Ecology'
+      },
+      {
+        id: 'bib-23',
+        Name: 'Impact of COVID-19 pandemic and anti-pandemic measures on tuberculosis, viral hepatitis, HIV/AIDS and malaria—a systematic review',
+        Authors: 'Kessel, B, Heinsohn, T, Ott, JJ, et al.',
+        Publication: 'PLOS Global Public Health',
+        Year: '2023',
+        Volume: '3',
+        Pages: 'e0001018',
+        Citations: '10',
+        Type: 'Systematic Review',
+        Keywords: 'COVID-19, tuberculosis, HIV, malaria, pandemic impact',
+        Abstract: 'Systematic review of how COVID-19 pandemic measures affected other infectious disease programs.',
+        Field: 'Infectious Disease, Global Health'
+      },
+      {
+        id: 'bib-24',
+        Name: 'Reimagining health security and preventing future pandemics: the NUS–Lancet Pandemic Readiness, Implementation, Monitoring, and Evaluation Commission',
+        Authors: 'Legido-Quigley, H, Clark, H, Nishtar, S, et al.',
+        Publication: 'The Lancet',
+        Year: '2023',
+        Volume: '401',
+        Pages: '2021-2023',
+        Type: 'Commission Report',
+        Keywords: 'pandemic readiness, health security, implementation, evaluation',
+        Abstract: 'Commission report on reimagining health security and pandemic prevention strategies.',
+        Field: 'Global Health Security'
+      },
+      {
+        id: 'bib-25',
+        Name: 'Enhancing defence\'s contribution to societal resilience in the UK: lessons from international approaches',
+        Authors: 'Caves, B, Lucas, R, Dewaele, L, et al.',
+        Publication: 'RAND Corporation',
+        Year: '2021',
+        URL: 'https://www.rand.org/pubs/research_reports/RRA1113-1.html',
+        Type: 'Research Report',
+        Keywords: 'societal resilience, defense, national security, UK policy',
+        Abstract: 'Analysis of how defense capabilities can contribute to societal resilience, with lessons from international approaches.',
+        Field: 'National Security, Resilience Policy'
+      },
+      {
+        id: 'bib-26',
+        Name: 'Community resilience: measuring a community\'s ability to withstand disasters',
+        Authors: 'Collins, M, Carlson, J, Petit, F',
+        Publication: 'Disaster Management and Human Health Risk',
+        Year: '2011',
+        Volume: '119',
+        Pages: '111-123',
+        Type: 'Research Article',
+        Keywords: 'community resilience, disaster preparedness, measurement, assessment',
+        Abstract: 'Framework for measuring community resilience and ability to withstand disasters.',
+        Field: 'Disaster Management, Community Resilience'
+      }
+    ];
+    
+    console.log('📋 Using comprehensive fallback bibliography data');
+    return NextResponse.json({ 
+      papers: fallbackData,
+      source: 'fallback',
+      error: error.message 
+    });
+  }
+}
       },
       {
         id: 'bib-7',
