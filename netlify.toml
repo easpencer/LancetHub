@@ -3,8 +3,6 @@
   publish = ".next"
 
 [build.environment]
-  # Force Next.js to use standalone output for better Netlify compatibility
-  NEXT_PRIVATE_STANDALONE = "true"
   # Set Node version
   NODE_VERSION = "18"
   # Increase timeout for build
@@ -28,17 +26,7 @@
   status = 301
   force = true
 
-# Handle Next.js API routes
-[[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/___netlify-handler"
-  status = 200
-
-# Handle Next.js image optimization
-[[redirects]]
-  from = "/_next/image"
-  to = "/.netlify/functions/___netlify-handler"
-  status = 200
+# API routes and image optimization are handled automatically by @netlify/plugin-nextjs
 
 # Environment-specific build settings
 [context.production.environment]
