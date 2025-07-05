@@ -30,6 +30,8 @@ export default function Bibliography() {
         
         const data = await res.json();
         console.log("Bibliography data:", data);
+        console.log("Total papers received:", data.total);
+        console.log("Papers array length:", data.papers?.length);
         
         const papersData = data.papers || [];
         setPapers(papersData);

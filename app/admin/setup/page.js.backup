@@ -72,7 +72,7 @@ function AdminSetupContent() {
     <div className={styles.container}>
       <header className={styles.header}>
         <Link href="/admin/dashboard" className={styles.backLink}>
-          ‚Üê Back to Dashboard
+          ê Back to Dashboard
         </Link>
         <h1>System Setup & Status</h1>
         <p>Check your system configuration and connectivity</p>

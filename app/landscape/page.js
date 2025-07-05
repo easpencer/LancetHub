@@ -104,6 +104,11 @@ export default function LandscapePage() {
               View Interactive Visualization
             </a>
           </div>
+          {landscape.length > 0 && (
+            <p className={styles.dataSource}>
+              Displaying {landscape.length} topics from Airtable Landscape Topics
+            </p>
+          )}
         </AnimatedSection>
         
         <div className={styles.filtersContainer}>
@@ -136,13 +141,78 @@ export default function LandscapePage() {
           </div>
         </div>
         
+        {/* Stats Overview */}
+        <div className={styles.statsSection}>
+          <div className={styles.statsGrid}>
+            <motion.div 
+              className={styles.statCard}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+            >
+              <div className={styles.statIcon}>
+                <FaLayerGroup />
+              </div>
+              <div className={styles.statInfo}>
+                <div className={styles.statValue}>{dimensions.length - 1}</div>
+                <div className={styles.statLabel}>Resilience Dimensions</div>
+              </div>
+            </motion.div>
+            
+            <motion.div 
+              className={styles.statCard}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+            >
+              <div className={styles.statIcon}>
+                <FaDatabase />
+              </div>
+              <div className={styles.statInfo}>
+                <div className={styles.statValue}>{filteredTopics.length}</div>
+                <div className={styles.statLabel}>Framework Topics</div>
+              </div>
+            </motion.div>
+            
+            <motion.div 
+              className={styles.statCard}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+            >
+              <div className={styles.statIcon}>
+                <FaUsers />
+              </div>
+              <div className={styles.statInfo}>
+                <div className={styles.statValue}>{filteredTopics.filter(t => t.Leadership).length}</div>
+                <div className={styles.statLabel}>Leadership Areas</div>
+              </div>
+            </motion.div>
+            
+            <motion.div 
+              className={styles.statCard}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+            >
+              <div className={styles.statIcon}>
+                <FaTools />
+              </div>
+              <div className={styles.statInfo}>
+                <div className={styles.statValue}>{filteredTopics.filter(t => t.Resources).length}</div>
+                <div className={styles.statLabel}>Resource Categories</div>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+        
         {filteredTopics.length === 0 ? (
           <div className={styles.noResults}>
             <h3>No results found</h3>
             <p>Try adjusting your search or filters.</p>
           </div>
         ) : (
-          <div className={styles.landscapeGrid}>
+          <div className={styles.topicsGrid}>
             {filteredTopics.map((topic, index) => (
               <AnimatedSection 
                 key={topic.id || index} 
@@ -151,59 +221,118 @@ export default function LandscapePage() {
                 className={styles.topicCard}
               >
                 <div className={styles.topicHeader}>
-                  <div className={styles.dimensionLabel}>{topic.Dimension}</div>
-                  <h2>{topic.Topic}</h2>
+                  <div className={styles.topicMeta}>
+                    <div className={styles.topicDimension}>{topic.Dimension}</div>
+                    {topic.Priority && topic.Priority !== 'Medium' && (
+                      <div className={styles.topicContext}>{topic.Priority} Priority</div>
+                    )}
+                  </div>
+                  <h2 className={styles.topicTitle}>{topic.Topic}</h2>
                 </div>
                 
-                {topic.Context && (
-                  <div className={styles.topicSection}>
-                    <FaLayerGroup className={styles.sectionIcon} />
-                    <div>
-                      <h3>Context</h3>
-                      <p>{topic.Context}</p>
+                <div className={styles.topicDetails}>
+                  {topic.Context && (
+                    <div className={styles.topicDetail}>
+                      <div className={styles.detailLabel}>
+                        <FaLayerGroup className={styles.sectionIcon} /> Context
+                      </div>
+                      <div className={styles.detailValue}>{topic.Context}</div>
                     </div>
-                  </div>
-                )}
-                
-                {topic.Leadership && (
-                  <div className={styles.topicSection}>
-                    <FaUsers className={styles.sectionIcon} />
-                    <div>
-                      <h3>Leadership</h3>
-                      <p>{topic.Leadership}</p>
+                  )}
+                  
+                  {topic.Leadership && (
+                    <div className={styles.topicDetail}>
+                      <div className={styles.detailLabel}>
+                        <FaUsers className={styles.sectionIcon} /> Leadership
+                      </div>
+                      <div className={styles.detailValue}>{topic.Leadership}</div>
                     </div>
-                  </div>
-                )}
-                
-                {topic.Teamwork && (
-                  <div className={styles.topicSection}>
-                    <FaHandshake className={styles.sectionIcon} />
-                    <div>
-                      <h3>Teamwork</h3>
-                      <p>{topic.Teamwork}</p>
+                  )}
+                  
+                  {topic.Teamwork && (
+                    <div className={styles.topicDetail}>
+                      <div className={styles.detailLabel}>
+                        <FaHandshake className={styles.sectionIcon} /> Teamwork
+                      </div>
+                      <div className={styles.detailValue}>{topic.Teamwork}</div>
                     </div>
-                  </div>
-                )}
-                
-                {topic.Data && (
-                  <div className={styles.topicSection}>
-                    <FaDatabase className={styles.sectionIcon} />
-                    <div>
-                      <h3>Data</h3>
-                      <p>{topic.Data}</p>
+                  )}
+                  
+                  {topic.Data && (
+                    <div className={styles.topicDetail}>
+                      <div className={styles.detailLabel}>
+                        <FaDatabase className={styles.sectionIcon} /> Data
+                      </div>
+                      <div className={styles.detailValue}>{topic.Data}</div>
                     </div>
-                  </div>
-                )}
-                
-                {topic.Resources && (
-                  <div className={styles.topicSection}>
-                    <FaTools className={styles.sectionIcon} />
-                    <div>
-                      <h3>Resources</h3>
-                      <p>{topic.Resources}</p>
+                  )}
+                  
+                  {topic.Resources && (
+                    <div className={styles.topicDetail}>
+                      <div className={styles.detailLabel}>
+                        <FaTools className={styles.sectionIcon} /> Resources
+                      </div>
+                      <div className={styles.detailValue}>{topic.Resources}</div>
                     </div>
-                  </div>
-                )}
+                  )}
+                  
+                  {/* Show additional fields if available */}
+                  {topic.Examples && (
+                    <div className={styles.topicDetail}>
+                      <div className={styles.detailLabel}>Examples</div>
+                      <div className={styles.detailValue}>{topic.Examples}</div>
+                    </div>
+                  )}
+                  
+                  {topic.Implementation && (
+                    <div className={styles.topicDetail}>
+                      <div className={styles.detailLabel}>Implementation</div>
+                      <div className={styles.detailValue}>{topic.Implementation}</div>
+                    </div>
+                  )}
+                  
+                  {topic.Challenges && (
+                    <div className={styles.topicDetail}>
+                      <div className={styles.detailLabel}>Challenges</div>
+                      <div className={styles.detailValue}>{topic.Challenges}</div>
+                    </div>
+                  )}
+                  
+                  {topic.Solutions && (
+                    <div className={styles.topicDetail}>
+                      <div className={styles.detailLabel}>Solutions</div>
+                      <div className={styles.detailValue}>{topic.Solutions}</div>
+                    </div>
+                  )}
+                  
+                  {topic.Impact && (
+                    <div className={styles.topicDetail}>
+                      <div className={styles.detailLabel}>Impact</div>
+                      <div className={styles.detailValue}>{topic.Impact}</div>
+                    </div>
+                  )}
+                  
+                  {topic.Stakeholders && (
+                    <div className={styles.topicDetail}>
+                      <div className={styles.detailLabel}>Stakeholders</div>
+                      <div className={styles.detailValue}>{topic.Stakeholders}</div>
+                    </div>
+                  )}
+                  
+                  {topic.BestPractices && (
+                    <div className={styles.topicDetail}>
+                      <div className={styles.detailLabel}>Best Practices</div>
+                      <div className={styles.detailValue}>{topic.BestPractices}</div>
+                    </div>
+                  )}
+                  
+                  {topic.Recommendations && (
+                    <div className={styles.topicDetail}>
+                      <div className={styles.detailLabel}>Recommendations</div>
+                      <div className={styles.detailValue}>{topic.Recommendations}</div>
+                    </div>
+                  )}
+                </div>
               </AnimatedSection>
             ))}
           </div>
