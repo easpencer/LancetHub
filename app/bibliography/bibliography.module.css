@@ -1,8 +1,10 @@
+/* Bibliography Styles */
+
 .container {
-  width: 100%;
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 0 1rem;
+  min-height: 100vh;
+  background: var(--primary-background);
+  color: var(--primary-text);
+  padding: 2rem 1rem;
 }
 
 .pageHeader {
@@ -11,36 +13,56 @@
 }
 
 .pageHeader h1 {
-  font-size: 2.5rem;
-  color: var(--text-color);
-  margin-bottom: 0.5rem;
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, var(--primary-accent), var(--secondary-accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .subtitle {
-  font-size: 1.1rem;
-  color: var(--light-text);
-  max-width: 600px;
-  margin: 0 auto;
-  line-height: 1.6;
+  font-size: 1.25rem;
+  color: var(--secondary-text);
+  margin-bottom: 2rem;
+  max-width: 800px;
+  margin: 0 auto 2rem auto;
+}
+
+.stats {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.statItem {
+  background: var(--card-background);
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  border: var(--card-border);
+  font-weight: 600;
+  color: var(--primary-accent);
+  font-size: 0.875rem;
 }
 
 .filtersContainer {
   background: var(--card-background);
-  padding: 1.5rem;
-  border-radius: 12px;
-  box-shadow: var(--shadow-md);
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: var(--shadow-lg);
   border: var(--card-border);
   margin-bottom: 2rem;
   display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  align-items: center;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
 .searchContainer {
   position: relative;
   flex: 1;
-  min-width: 300px;
 }
 
 .searchIcon {
@@ -48,95 +70,194 @@
   left: 1rem;
   top: 50%;
   transform: translateY(-50%);
-  color: var(--light-text);
-  font-size: 1rem;
+  color: var(--secondary-text);
+  z-index: 2;
 }
 
 .searchInput {
   width: 100%;
-  padding: 0.75rem 1rem 0.75rem 2.5rem;
-  border: var(--card-border);
-  border-radius: 8px;
+  padding: 1rem 1rem 1rem 2.5rem;
+  border: 2px solid var(--input-border);
+  border-radius: 12px;
+  background: var(--input-background);
+  color: var(--primary-text);
   font-size: 1rem;
-  transition: border-color 0.2s ease;
-  background: var(--highlight-bg);
-  color: var(--text-color);
+  transition: all 0.3s ease;
 }
 
 .searchInput:focus {
   outline: none;
-  border-color: var(--primary-color);
-  background: var(--alt-bg);
+  border-color: var(--primary-accent);
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+}
+
+.viewModeToggle {
+  display: flex;
+  gap: 0.5rem;
+  background: var(--input-background);
+  border-radius: 8px;
+  padding: 0.25rem;
+  width: fit-content;
+  margin: 0 auto;
+}
+
+.viewModeBtn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--secondary-text);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.viewModeBtn.active {
+  background: var(--primary-accent);
+  color: white;
+  transform: scale(1.02);
+}
+
+.viewModeBtn:hover:not(.active) {
+  background: var(--hover-background);
+  color: var(--primary-text);
 }
 
 .filterOptions {
   display: flex;
   gap: 1rem;
   align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .filterGroup {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  background: var(--input-background);
+  padding: 0.5rem;
+  border-radius: 8px;
+  border: var(--input-border);
 }
 
 .filterIcon {
-  color: var(--light-text);
-  font-size: 1rem;
+  color: var(--secondary-text);
+  font-size: 0.875rem;
 }
 
 .filterSelect {
-  padding: 0.5rem 1rem;
-  border: var(--card-border);
+  padding: 0.5rem 0.75rem;
+  border: none;
   border-radius: 6px;
-  background: var(--highlight-bg);
-  color: var(--text-color);
-  font-size: 0.9rem;
+  background: transparent;
+  color: var(--primary-text);
+  font-size: 0.875rem;
   cursor: pointer;
-  transition: border-color 0.2s ease;
+  transition: all 0.3s ease;
+  min-width: 120px;
 }
 
 .filterSelect:focus {
   outline: none;
-  border-color: var(--primary-color);
+  background: var(--hover-background);
 }
 
 .papersGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.dimensionsView {
+  margin-top: 2rem;
+}
+
+.dimensionSection {
   margin-bottom: 3rem;
+}
+
+.dimensionHeader {
+  background: var(--card-background);
+  border: var(--card-border);
+  border-left: 4px solid var(--primary-accent);
+  border-radius: 0 12px 12px 0;
+  padding: 1.5rem 2rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: var(--shadow-sm);
+}
+
+.dimensionHeader h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0;
+  color: var(--primary-text);
+  flex: 1;
+}
+
+.paperCount {
+  background: var(--primary-accent);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.dimensionPapers {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: 1.5rem;
+  padding-left: 1rem;
 }
 
 .paperCard {
   background: var(--card-background);
-  border-radius: 12px;
-  padding: 2rem;
-  box-shadow: var(--shadow-md);
   border: var(--card-border);
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: var(--shadow-md);
   transition: all 0.3s ease;
-  height: 100%;
   display: flex;
   flex-direction: column;
+  position: relative;
+  overflow: hidden;
 }
 
 .paperCard:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-lg);
-  border-color: rgba(255, 255, 255, 0.15);
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-xl);
+  border-color: var(--primary-accent);
+}
+
+.paperCard:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary-accent), var(--secondary-accent));
 }
 
 .paperHeader {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 }
 
 .paperHeader h2 {
-  font-size: 1.1rem;
-  color: var(--text-color);
-  margin-bottom: 0.75rem;
-  line-height: 1.5;
+  font-size: 1.25rem;
   font-weight: 600;
+  line-height: 1.4;
+  margin-bottom: 0.75rem;
+  color: var(--primary-text);
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
@@ -146,250 +267,324 @@
 .paperMeta {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: 0.5rem;
   margin-bottom: 0.5rem;
+  align-items: center;
 }
 
 .authors {
-  font-size: 0.9rem;
-  color: var(--primary-color);
+  font-size: 0.875rem;
+  color: var(--secondary-text);
   font-weight: 500;
-  line-height: 1.4;
+  flex: 1;
 }
 
 .year {
-  font-size: 0.9rem;
-  color: var(--text-color);
-  background: var(--primary-light);
-  padding: 0.2rem 0.6rem;
+  font-size: 0.75rem;
+  color: var(--accent-text);
+  background: var(--tag-background);
+  padding: 0.25rem 0.5rem;
   border-radius: 4px;
-  font-weight: 500;
+  font-weight: 600;
+  border: 1px solid var(--tag-border);
+}
+
+.type {
+  font-size: 0.75rem;
+  color: white;
+  background: var(--primary-accent);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-weight: 600;
 }
 
 .publication {
-  font-size: 0.85rem;
-  color: var(--light-text);
+  font-size: 0.875rem;
+  color: var(--accent-text);
   font-style: italic;
   margin-top: 0.5rem;
-  line-height: 1.4;
+  font-weight: 500;
+}
+
+.dimension {
+  font-size: 0.75rem;
+  color: var(--secondary-accent);
+  background: rgba(59, 130, 246, 0.1);
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  margin-top: 0.5rem;
+  font-weight: 600;
+  border: 1px solid rgba(59, 130, 246, 0.2);
 }
 
 .paperBody {
-  margin-bottom: 1.5rem;
+  flex: 1;
+  margin-bottom: 1rem;
 }
 
 .abstract {
-  background: var(--highlight-bg);
-  padding: 1rem;
-  border-radius: 8px;
-  margin-bottom: 1rem;
-  border-left: 3px solid var(--primary-color);
   position: relative;
-  flex-grow: 1;
+  margin-bottom: 1rem;
 }
 
 .quoteIcon {
   position: absolute;
-  top: 0.75rem;
-  right: 0.75rem;
-  color: var(--accent-color);
+  top: 0.25rem;
+  left: 0;
+  color: var(--primary-accent);
   opacity: 0.3;
-  font-size: 1.2rem;
+  font-size: 1.25rem;
 }
 
 .abstract p {
-  margin: 0;
   font-size: 0.875rem;
   line-height: 1.6;
-  color: var(--light-text);
+  color: var(--secondary-text);
+  padding-left: 1.5rem;
+  margin: 0;
   display: -webkit-box;
   -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
+.field {
+  font-size: 0.75rem;
+  color: var(--accent-text);
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  background: var(--code-background);
+  border-radius: 6px;
+  border: 1px solid var(--tag-border);
+}
+
 .keywords {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
-  margin-bottom: 1rem;
+  margin-top: 1rem;
 }
 
 .keywordTag {
-  background: var(--primary-light);
-  color: var(--primary-color);
+  background: var(--tag-background);
+  color: var(--accent-text);
   padding: 0.25rem 0.5rem;
   border-radius: 12px;
   font-size: 0.75rem;
   font-weight: 500;
-  transition: transform 0.2s ease;
-  border: 1px solid var(--primary-color);
+  border: 1px solid var(--tag-border);
+  transition: all 0.2s ease;
 }
 
 .keywordTag:hover {
+  background: var(--primary-accent);
+  color: white;
   transform: scale(1.05);
 }
 
 .paperFooter {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
+  gap: 1rem;
   align-items: center;
   padding-top: 1rem;
+  border-top: var(--border-subtle);
   margin-top: auto;
-  border-top: var(--card-border);
+  flex-wrap: wrap;
 }
 
 .doiLink {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-size: 0.8rem;
-  color: var(--light-text);
+  color: var(--secondary-text);
   text-decoration: none;
-  background: var(--highlight-bg);
-  padding: 0.3rem 0.6rem;
+  font-size: 0.75rem;
+  font-family: monospace;
+  background: var(--code-background);
+  padding: 0.5rem 0.75rem;
   border-radius: 6px;
-  transition: all 0.2s ease;
-  border: var(--card-border);
+  transition: all 0.3s ease;
+  border: 1px solid var(--tag-border);
 }
 
 .doiLink:hover {
-  background: var(--alt-bg);
-  color: var(--text-color);
-  border-color: var(--primary-color);
+  color: var(--primary-accent);
+  border-color: var(--primary-accent);
+  transform: translateY(-1px);
 }
 
 .paperLink {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  background: var(--primary-color);
-  color: white;
-  padding: 0.4rem 0.8rem;
-  border-radius: 6px;
+  color: var(--primary-accent);
   text-decoration: none;
-  font-size: 0.85rem;
-  font-weight: 500;
-  transition: all 0.2s ease;
+  font-size: 0.875rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: auto;
+  transition: all 0.3s ease;
+  background: rgba(59, 130, 246, 0.1);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: 1px solid rgba(59, 130, 246, 0.2);
 }
 
 .paperLink:hover {
-  background: var(--primary-dark);
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-sm);
-}
-
-
-.notes {
-  background-color: #f9f9f9;
-  padding: 1rem;
-  border-radius: 4px;
-  margin-top: 1rem;
-}
-
-.notes h3 {
-  font-size: 1rem;
-  margin-bottom: 0.5rem;
-}
-
-.notes p {
-  font-size: 0.9rem;
-  margin: 0;
-}
-
-.loading {
-  text-align: center;
-  padding: 2rem;
-  font-size: 1.2rem;
-  color: var(--light-text);
+  color: white;
+  background: var(--primary-accent);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
 }
 
 .noResults {
   text-align: center;
   padding: 4rem 2rem;
-  color: var(--light-text);
-  background: var(--card-background);
-  border: var(--card-border);
-  border-radius: 12px;
-  margin: 2rem 0;
+  color: var(--secondary-text);
 }
 
 .noResults h3 {
   font-size: 1.5rem;
   margin-bottom: 0.5rem;
-  color: var(--text-color);
-}
-
-.noResults p {
-  font-size: 1rem;
-  margin: 0;
+  color: var(--primary-text);
 }
 
 .errorContainer {
-  background: rgba(214, 40, 57, 0.1);
-  color: var(--danger-color);
-  padding: 2rem;
-  border-radius: 12px;
-  margin: 2rem 0;
-  border: 1px solid var(--danger-color);
   text-align: center;
+  padding: 4rem 2rem;
+  color: var(--error-text);
 }
 
 .errorContainer h2 {
-  margin-top: 0;
+  color: var(--error-text);
   margin-bottom: 1rem;
-  font-size: 1.5rem;
 }
 
 .retryButton {
-  background: var(--danger-color);
+  background: var(--primary-accent);
   color: white;
   border: none;
   padding: 0.75rem 1.5rem;
   border-radius: 8px;
-  font-size: 1rem;
+  font-weight: 500;
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: all 0.3s ease;
   margin-top: 1rem;
 }
 
 .retryButton:hover {
-  background: #b71c1c;
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-sm);
+  background: var(--secondary-accent);
+  transform: translateY(-2px);
 }
 
+/* Dark mode improvements */
+@media (prefers-color-scheme: dark) {
+  .viewModeBtn.active {
+    background: var(--primary-accent);
+    color: white;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  }
+  
+  .dimensionHeader {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  .paperCard {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .paperCard:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--primary-accent);
+  }
+}
+
+/* Responsive Design */
 @media (max-width: 768px) {
-  .papersGrid {
-    grid-template-columns: 1fr;
+  .container {
+    padding: 1rem 0.5rem;
+  }
+  
+  .pageHeader h1 {
+    font-size: 2rem;
+  }
+  
+  .subtitle {
+    font-size: 1rem;
+  }
+  
+  .stats {
+    gap: 1rem;
+  }
+  
+  .statItem {
+    padding: 0.5rem 1rem;
+    font-size: 0.75rem;
   }
   
   .filtersContainer {
+    padding: 1rem;
+  }
+  
+  .viewModeToggle {
+    width: 100%;
+  }
+  
+  .viewModeBtn {
+    flex: 1;
+    justify-content: center;
+  }
+  
+  .filterOptions {
     flex-direction: column;
     align-items: stretch;
   }
   
-  .searchContainer {
-    min-width: auto;
+  .filterGroup {
+    justify-content: space-between;
   }
   
-  .filterOptions {
-    justify-content: center;
+  .filterSelect {
+    min-width: auto;
+    flex: 1;
+  }
+  
+  .papersGrid,
+  .dimensionPapers {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .paperCard {
+    padding: 1rem;
+  }
+  
+  .dimensionHeader {
+    padding: 1rem;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: stretch;
+  }
+  
+  .paperCount {
+    text-align: center;
+  }
+  
+  .dimensionPapers {
+    padding-left: 0;
   }
   
   .paperMeta {
     flex-direction: column;
-    gap: 0.5rem;
+    align-items: flex-start;
   }
   
   .paperFooter {
     flex-direction: column;
     align-items: stretch;
+    gap: 0.5rem;
   }
   
-  .paperFooter .paperLink,
-  .paperFooter .doiLink {
+  .paperLink {
+    margin-left: 0;
     justify-content: center;
   }
 }

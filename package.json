@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "npm run create-favicon && next dev",
-    "build": "next build",
+    "build": "npm run create-favicon && next build",
     "start": "next start",
     "lint": "next lint",
     "setup": "node setup-documents.js",
