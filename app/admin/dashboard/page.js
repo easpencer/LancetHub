@@ -1,6 +1,6 @@
 'use client';
 
-import { useSession, signOut } from 'next-auth/react';
+import { useSession, signOut, SessionProvider } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
@@ -19,8 +19,9 @@ import {
 } from 'react-icons/fa';
 import styles from './dashboard.module.css';
 
-export default function AdminDashboard() {
-  const { data: session, status } = useSession();
+function AdminDashboardContent() {
+  const sessionData = useSession();
+  const { data: session, status } = sessionData || { data: null, status: 'loading' };
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [airtableStatus, setAirtableStatus] = useState('checking');
@@ -311,5 +312,13 @@ export default function AdminDashboard() {
         </motion.div>
       </div>
     </div>
+  );
+}
+
+export default function AdminDashboard() {
+  return (
+    <SessionProvider>
+      <AdminDashboardContent />
+    </SessionProvider>
   );
 }

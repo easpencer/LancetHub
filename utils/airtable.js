@@ -294,3 +294,20 @@ export const analyzeResilienceData = async () => {
     ]
   };
 };
+
+// Function to get Airtable tables (for admin interface)
+export const getAirtableTables = async () => {
+  const base = initAirtable();
+  if (!base) {
+    throw new Error('Airtable not configured');
+  }
+  
+  // Return a list of available tables
+  return [
+    { id: 'case-study-forms', name: 'Case Study Forms' },
+    { id: 'people', name: 'People' },
+    { id: 'landscape-topics', name: 'Landscape Topics' },
+    { id: 'papers', name: 'Papers/Bibliography' },
+    { id: 'metrics', name: 'Resilience Metrics' }
+  ];
+};

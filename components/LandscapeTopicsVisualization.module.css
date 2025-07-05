@@ -147,7 +147,7 @@
 .topicHeader {
   display: flex;
   justify-content: space-between;
-  align-items: start;
+  align-items: flex-start;
   cursor: pointer;
   user-select: none;
 }
