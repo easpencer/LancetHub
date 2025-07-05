@@ -2,7 +2,7 @@
   width: 100%;
   max-width: 1400px;
   margin: 0 auto;
-  padding: 80px 1.5rem 0 1.5rem; /* Added top padding to account for fixed navbar */
+  padding: 0 1.5rem; /* Removed top padding since main-content handles it */
   min-height: 100vh;
 }
 

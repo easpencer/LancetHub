@@ -95,8 +95,30 @@ a {
 
 /* Main content padding for fixed navigation */
 .main-content {
-  padding-top: 4rem;
+  padding-top: 5.5rem; /* Increased to ensure content never hides behind nav */
   min-height: calc(100vh - 200px); /* Account for footer height */
+}
+
+/* Extra responsive adjustments for nav spacing */
+@media (max-width: 768px) {
+  .main-content {
+    padding-top: 5rem; /* Slightly less on mobile as nav is typically smaller */
+  }
+}
+
+/* Ensure page headers have additional space if needed */
+.page-header {
+  margin-top: 1rem;
+}
+
+/* Specific fixes for pages that might have overlapping content */
+.container {
+  padding-top: 1rem;
+}
+
+/* Fix for admin pages that might have their own containers */
+.admin-container {
+  padding-top: 1rem;
 }
 
 /* Buttons */

@@ -8,9 +8,15 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   padding: 1rem 2rem;
   position: sticky;
-  top: 0;
+  top: 5.5rem; /* Offset by main nav height */
   z-index: 10;
   box-shadow: var(--shadow-sm);
+}
+
+@media (max-width: 768px) {
+  .header {
+    top: 5rem; /* Match mobile nav offset */
+  }
 }
 
 .headerContent {
