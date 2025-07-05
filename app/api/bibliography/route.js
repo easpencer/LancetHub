@@ -551,7 +551,7 @@ function getFallbackBibliography() {
     {
       id: 'bib-41',
       Name: 'Leadership in a crisis: responding to the coronavirus outbreak',
-      Authors: 'D'Auria, G & De Smet, A',
+      Authors: 'D\'Auria, G & De Smet, A',
       Publication: 'McKinsey & Company',
       Year: '2020',
       Type: 'Analysis',
@@ -899,7 +899,7 @@ function getFallbackBibliography() {
       Year: '2024',
       Type: 'Organization Overview',
       Keywords: 'epidemic preparedness, vaccine development, innovation, R&D',
-      Abstract: 'CEPI's role in accelerating vaccine development for epidemic threats.',
+      Abstract: 'CEPI\'s role in accelerating vaccine development for epidemic threats.',
       Field: 'Vaccine Innovation',
       Dimension: 'Scientific Knowledge & Innovation Systems'
     },
@@ -1146,7 +1146,7 @@ function getFallbackBibliography() {
       Year: '2024',
       Type: 'Organization Overview',
       Keywords: 'global health financing, pandemic response, health systems',
-      Abstract: 'Global Fund's role in pandemic preparedness and health system strengthening.',
+      Abstract: 'Global Fund\'s role in pandemic preparedness and health system strengthening.',
       Field: 'Health Financing',
       Dimension: 'Economic Stability & Crisis Protection'
     },
