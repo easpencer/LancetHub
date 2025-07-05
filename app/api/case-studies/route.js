@@ -6,14 +6,40 @@ export const dynamic = 'force-dynamic';
 export async function GET() {
   try {
     console.log('🔄 Fetching case studies from Airtable...');
+    console.log('Environment:', {
+      NODE_ENV: process.env.NODE_ENV,
+      VERCEL_ENV: process.env.VERCEL_ENV,
+      USE_MOCK_DATA: process.env.USE_MOCK_DATA,
+      FORCE_CASE_STUDY_FALLBACK: process.env.FORCE_CASE_STUDY_FALLBACK
+    });
+    
+    // Check if we should force comprehensive fallback
+    if (process.env.FORCE_CASE_STUDY_FALLBACK === 'true') {
+      console.log('🔄 FORCE_CASE_STUDY_FALLBACK is set, using comprehensive fallback data');
+      throw new Error('Forced to use comprehensive fallback data');
+    }
     
     // Fetch from Airtable with increased maxRecords for production
-    const caseStudies = await fetchCaseStudies({ 
+    const caseStudiesResult = await fetchCaseStudies({ 
       maxRecords: 100,
       view: 'Grid view'
     });
     
+    // Check if we should use comprehensive fallback
+    if (caseStudiesResult?.useComprehensiveFallback) {
+      console.log('⚠️ Using comprehensive fallback data for case studies');
+      throw new Error('Using comprehensive fallback data');
+    }
+    
+    const caseStudies = Array.isArray(caseStudiesResult) ? caseStudiesResult : caseStudiesResult.mockData || [];
+    
     console.log(`✅ Retrieved ${caseStudies.length} case studies from Airtable`);
+    
+    // Additional check for production
+    if (caseStudies.length <= 2 && (process.env.NODE_ENV === 'production' || process.env.VERCEL_ENV === 'production')) {
+      console.log('⚠️ Only retrieved limited data in production, using comprehensive fallback');
+      throw new Error('Insufficient data from Airtable, using fallback');
+    }
     
     // Process records using dynamic field mapping to capture ALL Airtable data
     const processedRecords = caseStudies.map((record, index) => {

@@ -19,3 +19,4 @@
 # ADMIN_EMAIL
 # ADMIN_PASSWORD
 # USE_MOCK_DATA=false
+# FORCE_CASE_STUDY_FALLBACK=true  # Set to true to use comprehensive fallback data for case studies

@@ -59,6 +59,30 @@ const mockData = {
       'Relevance to Community/Societal Resilience': 'Helps identify vulnerable points in healthcare delivery systems during emergencies...'
     }
   ],
+  'Case study forms': [
+    {
+      id: 'mock1',
+      'Case Study Title': 'Building Community Resilience Networks',
+      'Name': 'Dr. Sarah Johnson',
+      'Section': 'Case Study',
+      'Date': '2023-10-15',
+      'Resilient Dimensions': 'Social Equity & Well-being',
+      'Short Description': 'An examination of community-led resilience initiatives in urban areas.',
+      'Study Focus': 'This study explores how urban communities develop resilience networks to address challenges...',
+      'Relevance to Community/Societal Resilience': 'Demonstrates how localized efforts can build broader societal resilience...'
+    },
+    {
+      id: 'mock2',
+      'Case Study Title': 'Healthcare Access During Crisis',
+      'Name': 'Dr. Michael Chen',
+      'Section': 'Research Paper',
+      'Date': '2023-08-22',
+      'Resilient Dimensions': 'Healthcare Systems',
+      'Short Description': 'Analysis of healthcare access patterns during emergency situations.',
+      'Study Focus': 'This research examines patterns of healthcare utilization during different crisis scenarios...',
+      'Relevance to Community/Societal Resilience': 'Helps identify vulnerable points in healthcare delivery systems during emergencies...'
+    }
+  ],
   'people': [
     {
       id: 'mock-p1',
@@ -415,6 +439,14 @@ const mockData = {
 export const fetchRecords = async (tableName, options = {}) => {
   console.log(`🔄 Fetching records from ${tableName}...`);
   
+  // Check if we should force comprehensive fallback for case studies in production
+  const isProduction = process.env.NODE_ENV === 'production' || process.env.VERCEL_ENV === 'production';
+  const isCaseStudies = tableName.toLowerCase().includes('case study');
+  
+  if (isProduction && isCaseStudies) {
+    console.log('🔍 Production environment detected for case studies, checking Airtable configuration...');
+  }
+  
   // First try to fetch from real Airtable if conditions allow
   if (process.env.USE_MOCK_DATA !== 'true') {
     const base = initAirtable();
@@ -450,6 +482,14 @@ export const fetchRecords = async (tableName, options = {}) => {
   // If Airtable fetch fails or is disabled, return mock data
   // Try exact match first, then lowercase match
   const mockEntry = mockData[tableName] || mockData[tableName.toLowerCase()] || [];
+  
+  // Special handling for case studies in production
+  if (isProduction && isCaseStudies && mockEntry.length <= 2) {
+    console.log('⚠️ Limited mock data for case studies in production - API should use comprehensive fallback');
+    // Return an indicator that comprehensive fallback should be used
+    return { useComprehensiveFallback: true, mockData: mockEntry };
+  }
+  
   await new Promise(resolve => setTimeout(resolve, 800)); // Simulate API delay
   console.log(`🟡 Returning ${mockEntry.length} mock records for ${tableName}`);
   return mockEntry;
