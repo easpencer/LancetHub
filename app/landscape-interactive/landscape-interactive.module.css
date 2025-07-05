@@ -1,7 +1,7 @@
 .container {
   min-height: 100vh;
   padding: 2rem;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  background: var(--background-color);
 }
 
 .pageHeader {
@@ -11,14 +11,19 @@
 
 .pageHeader h1 {
   font-size: 3rem;
-  color: #2c3e50;
+  color: var(--text-color);
   margin-bottom: 1rem;
   font-weight: 700;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  display: inline-block;
 }
 
 .subtitle {
   font-size: 1.2rem;
-  color: #5a6c7d;
+  color: var(--light-text);
   max-width: 800px;
   margin: 0 auto;
 }
@@ -26,10 +31,11 @@
 .controlsContainer {
   max-width: 1200px;
   margin: 0 auto 3rem;
-  background: white;
+  background: var(--card-background);
   border-radius: 16px;
   padding: 2rem;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--shadow-md);
+  border: var(--card-border);
 }
 
 .searchSection {
@@ -46,7 +52,7 @@
   left: 1.5rem;
   top: 50%;
   transform: translateY(-50%);
-  color: #95a5a6;
+  color: var(--light-text);
   font-size: 1.2rem;
 }
 
@@ -54,17 +60,18 @@
   width: 100%;
   padding: 1rem 1rem 1rem 3.5rem;
   font-size: 1.1rem;
-  border: 2px solid #e0e6ed;
+  border: var(--card-border);
   border-radius: 12px;
   transition: all 0.3s ease;
-  background: #f8f9fa;
+  background: var(--highlight-bg);
+  color: var(--text-color);
 }
 
 .searchInput:focus {
   outline: none;
-  border-color: #3498db;
-  background: white;
-  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+  border-color: var(--primary-color);
+  background: var(--card-background);
+  box-shadow: 0 0 0 3px rgba(255, 126, 80, 0.1);
 }
 
 .filtersSection {
@@ -82,34 +89,35 @@
 }
 
 .filterIcon {
-  color: #7f8c8d;
+  color: var(--light-text);
   font-size: 1.2rem;
 }
 
 .filterSelect {
   padding: 0.75rem 2rem 0.75rem 1rem;
   font-size: 1rem;
-  border: 2px solid #e0e6ed;
+  border: var(--card-border);
   border-radius: 8px;
-  background: white;
+  background: var(--highlight-bg);
+  color: var(--text-color);
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .filterSelect:hover {
-  border-color: #3498db;
+  border-color: var(--primary-color);
 }
 
 .filterSelect:focus {
   outline: none;
-  border-color: #3498db;
-  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(255, 126, 80, 0.1);
 }
 
 .visualizationToggle {
   display: flex;
   gap: 0.5rem;
-  background: #f0f2f5;
+  background: var(--alt-bg);
   padding: 0.25rem;
   border-radius: 10px;
 }
@@ -118,7 +126,7 @@
   padding: 0.75rem 1.25rem;
   border: none;
   background: transparent;
-  color: #7f8c8d;
+  color: var(--light-text);
   cursor: pointer;
   border-radius: 8px;
   transition: all 0.3s ease;
@@ -129,23 +137,24 @@
 }
 
 .vizButton:hover {
-  background: rgba(52, 152, 219, 0.1);
-  color: #3498db;
+  background: var(--primary-light);
+  color: var(--primary-color);
 }
 
 .vizButton.active {
-  background: #3498db;
-  color: white;
-  box-shadow: 0 2px 8px rgba(52, 152, 219, 0.3);
+  background: var(--primary-color);
+  color: var(--text-color);
+  box-shadow: var(--shadow-sm);
 }
 
 .visualizationContainer {
   max-width: 1400px;
   margin: 0 auto;
-  background: white;
+  background: var(--card-background);
   border-radius: 20px;
   padding: 3rem;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-lg);
+  border: var(--card-border);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -166,7 +175,7 @@
 
 .dimensionTitle {
   font-size: 1.5rem;
-  color: #2c3e50;
+  color: var(--text-color);
   margin-bottom: 1.5rem;
   padding-left: 1rem;
   border-left: 4px solid;
@@ -180,8 +189,8 @@
 }
 
 .topicCard {
-  background: white;
-  border: 1px solid #e0e6ed;
+  background: var(--card-background);
+  border: var(--card-border);
   border-radius: 12px;
   padding: 1.5rem;
   cursor: pointer;
@@ -191,12 +200,12 @@
 
 .topicCard h4 {
   margin: 0 0 0.75rem 0;
-  color: #2c3e50;
+  color: var(--text-color);
   font-size: 1.1rem;
 }
 
 .contextPreview {
-  color: #7f8c8d;
+  color: var(--light-text);
   font-size: 0.9rem;
   line-height: 1.5;
   margin: 0;
@@ -218,14 +227,15 @@
 }
 
 .topicModalContent {
-  background: white;
+  background: var(--card-background);
   border-radius: 20px;
   max-width: 800px;
   width: 100%;
   max-height: 90vh;
   overflow-y: auto;
   position: relative;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow-lg);
+  border: var(--card-border);
 }
 
 .closeButton {
@@ -235,7 +245,7 @@
   background: none;
   border: none;
   font-size: 2rem;
-  color: #95a5a6;
+  color: var(--light-text);
   cursor: pointer;
   width: 40px;
   height: 40px;
@@ -247,13 +257,13 @@
 }
 
 .closeButton:hover {
-  background: #f0f2f5;
-  color: #2c3e50;
+  background: var(--highlight-bg);
+  color: var(--text-color);
 }
 
 .modalHeader {
   padding: 3rem 3rem 2rem;
-  border-bottom: 1px solid #e0e6ed;
+  border-bottom: var(--card-border);
 }
 
 .dimensionBadge {
@@ -271,7 +281,7 @@
 .modalHeader h2 {
   margin: 0;
   font-size: 2rem;
-  color: #2c3e50;
+  color: var(--text-color);
 }
 
 .modalBody {
@@ -283,7 +293,7 @@
   gap: 1.5rem;
   margin-bottom: 2rem;
   padding: 1.5rem;
-  background: #f8f9fa;
+  background: var(--highlight-bg);
   border-radius: 12px;
 }
 
@@ -293,21 +303,21 @@
 
 .modalIcon {
   font-size: 1.5rem;
-  color: #3498db;
+  color: var(--primary-color);
   flex-shrink: 0;
   margin-top: 0.25rem;
 }
 
 .modalSection h3 {
   margin: 0 0 0.5rem 0;
-  color: #2c3e50;
+  color: var(--text-color);
   font-size: 1.1rem;
   font-weight: 600;
 }
 
 .modalSection p {
   margin: 0;
-  color: #5a6c7d;
+  color: var(--light-text);
   line-height: 1.6;
 }
 
@@ -321,22 +331,23 @@
 }
 
 .statCard {
-  background: white;
+  background: var(--card-background);
   padding: 2rem;
   border-radius: 12px;
   text-align: center;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--shadow-md);
+  border: var(--card-border);
 }
 
 .statCard h3 {
   font-size: 2.5rem;
-  color: #3498db;
+  color: var(--primary-color);
   margin: 0 0 0.5rem 0;
 }
 
 .statCard p {
   margin: 0;
-  color: #7f8c8d;
+  color: var(--light-text);
   font-size: 1rem;
 }
 
@@ -349,19 +360,19 @@
 }
 
 .errorContainer h2 {
-  color: #e74c3c;
+  color: var(--danger-color);
   margin-bottom: 1rem;
 }
 
 .errorContainer p {
-  color: #7f8c8d;
+  color: var(--light-text);
   margin-bottom: 2rem;
 }
 
 .retryButton {
   padding: 0.75rem 2rem;
-  background: #3498db;
-  color: white;
+  background: var(--primary-color);
+  color: var(--text-color);
   border: none;
   border-radius: 8px;
   font-size: 1rem;
@@ -370,9 +381,9 @@
 }
 
 .retryButton:hover {
-  background: #2980b9;
+  background: var(--primary-dark);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+  box-shadow: var(--shadow-md);
 }
 
 /* Responsive Design */
@@ -430,6 +441,6 @@
 }
 
 .noResults h3 {
-  color: #2c3e50;
+  color: var(--text-color);
   margin-bottom: 0.5rem;
 }

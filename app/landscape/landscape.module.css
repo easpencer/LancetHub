@@ -53,13 +53,14 @@
 
 .dataSource {
   font-size: 0.875rem;
-  color: #059669;
-  background: #d1fae5;
+  color: var(--success-color);
+  background: rgba(5, 150, 105, 0.1);
   padding: 0.5rem 1rem;
   border-radius: 6px;
   display: inline-block;
   margin-top: 1rem;
   font-weight: 500;
+  border: 1px solid rgba(5, 150, 105, 0.2);
 }
 
 .headerActions {
@@ -322,7 +323,7 @@
 }
 
 .tagCount {
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: rgba(255, 126, 80, 0.2);
   color: inherit;
   padding: 0.1rem 0.5rem;
   border-radius: var(--border-radius-round);
@@ -331,10 +332,11 @@
 
 /* Filters container */
 .filtersContainer {
-  background: white;
+  background: var(--card-background);
   padding: 1.5rem;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-md);
+  border: var(--card-border);
   margin-bottom: 2rem;
   display: flex;
   flex-wrap: wrap;
@@ -360,17 +362,18 @@
 .searchInput {
   width: 100%;
   padding: 0.75rem 1rem 0.75rem 2.5rem;
-  border: 2px solid #e2e8f0;
+  border: var(--card-border);
   border-radius: 8px;
   font-size: 1rem;
   transition: border-color 0.2s ease;
-  background: #f8fafc;
+  background: var(--highlight-bg);
+  color: var(--text-color);
 }
 
 .searchInput:focus {
   outline: none;
   border-color: var(--primary-color);
-  background: white;
+  background: var(--card-background);
 }
 
 .filterOptions {
@@ -392,9 +395,10 @@
 
 .filterSelect {
   padding: 0.5rem 1rem;
-  border: 2px solid #e2e8f0;
+  border: var(--card-border);
   border-radius: 6px;
-  background: white;
+  background: var(--highlight-bg);
+  color: var(--text-color);
   font-size: 0.9rem;
   cursor: pointer;
   transition: border-color 0.2s ease;
@@ -505,29 +509,29 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  background: white;
+  background: var(--card-background);
   border-radius: 8px;
   padding: 1.75rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  border: 1px solid #e5e7eb;
+  box-shadow: var(--shadow-sm);
+  border: var(--card-border);
   transition: all 0.2s ease;
 }
 
 .topicCard:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
-  border-color: #cbd5e1;
+  box-shadow: var(--shadow-md);
+  border-color: var(--primary-color);
 }
 
 .sectionIcon {
   font-size: 0.875rem;
-  color: #3b82f6;
+  color: var(--primary-color);
 }
 
 .topicHeader {
   margin-bottom: 1rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid #f3f4f6;
+  border-bottom: var(--card-border);
 }
 
 .topicMeta {
@@ -538,8 +542,8 @@
 }
 
 .topicDimension {
-  background: #dbeafe;
-  color: #1e40af;
+  background: var(--primary-light);
+  color: var(--primary-color);
   padding: 0.375rem 0.75rem;
   border-radius: 6px;
   font-size: 0.75rem;
@@ -550,8 +554,8 @@
 }
 
 .topicContext {
-  background: #fee2e2;
-  color: #dc2626;
+  background: rgba(220, 38, 38, 0.1);
+  color: var(--danger-color);
   padding: 0.375rem 0.75rem;
   border-radius: 6px;
   font-size: 0.75rem;
@@ -559,11 +563,12 @@
   text-transform: uppercase;
   letter-spacing: 0.025em;
   display: inline-block;
+  border: 1px solid rgba(220, 38, 38, 0.2);
 }
 
 .topicTitle {
   font-size: 1.125rem;
-  color: #111827;
+  color: var(--text-color);
   line-height: 1.5;
   font-weight: 600;
   margin: 0.5rem 0 0 0;
@@ -580,7 +585,7 @@
   flex-direction: column;
   gap: 0.5rem;
   padding: 0.75rem 0;
-  border-bottom: 1px solid #f9fafb;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .topicDetail:last-child {
@@ -590,7 +595,7 @@
 .detailLabel {
   font-size: 0.8125rem;
   font-weight: 600;
-  color: #6b7280;
+  color: var(--light-text);
   text-transform: uppercase;
   letter-spacing: 0.025em;
   display: flex;
@@ -601,7 +606,7 @@
 
 .detailValue {
   font-size: 0.875rem;
-  color: #374151;
+  color: var(--text-color);
   line-height: 1.6;
 }
 

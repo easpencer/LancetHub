@@ -251,7 +251,7 @@ export default function LandscapeInteractivePage() {
               height: 800,
               paper_bgcolor: 'transparent',
               plot_bgcolor: 'transparent',
-              font: { size: 12, color: '#333' }
+              font: { size: 12, color: 'var(--text-color)' }
             }}
             config={{ displayModeBar: false }}
             onClick={(event) => {
@@ -286,7 +286,7 @@ export default function LandscapeInteractivePage() {
               height: 600,
               paper_bgcolor: 'transparent',
               plot_bgcolor: 'transparent',
-              font: { size: 14, color: '#333' }
+              font: { size: 14, color: 'var(--text-color)' }
             }}
             config={{ displayModeBar: false }}
             onClick={(event) => {
