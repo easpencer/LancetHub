@@ -3,6 +3,9 @@
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+
+// Disable static generation for this page
+export const dynamic = 'force-dynamic';
 import { 
   FaPlus, 
   FaEdit, 
@@ -17,7 +20,9 @@ import Link from 'next/link';
 import styles from './case-studies-admin.module.css';
 
 export default function CaseStudiesAdmin() {
-  const { data: session, status } = useSession();
+  const sessionData = useSession();
+  const session = sessionData?.data;
+  const status = sessionData?.status || 'loading';
   const router = useRouter();
   
   const [caseStudies, setCaseStudies] = useState([]);

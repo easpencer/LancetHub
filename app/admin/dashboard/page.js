@@ -19,6 +19,9 @@ import {
 } from 'react-icons/fa';
 import styles from './dashboard.module.css';
 
+// Disable static generation for this page
+export const dynamic = 'force-dynamic';
+
 function AdminDashboardContent() {
   const sessionData = useSession();
   const { data: session, status } = sessionData || { data: null, status: 'loading' };
