@@ -145,10 +145,8 @@ export default function PeoplePage() {
                 className={styles.personCard}
               >
                 <div className={styles.personAvatar}>
-                  {person.Image && person.Image.length > 0 ? (
-                    <img src={person.Image[0]?.url} alt={person.Name} />
-                  ) : (person.Photo && person.Photo.length > 0) || (person.Image && person.Image.length > 0) ? (
-                    <img src={(person.Photo || person.Image)[0]?.url} alt={person.Name} />
+                  {person.Image || person.imageUrl ? (
+                    <img src={person.Image || person.imageUrl} alt={person.Name} />
                   ) : (
                     <div className={styles.initialsAvatar}>
                       {person.Name?.split(' ').map(n => n[0]).join('')}
