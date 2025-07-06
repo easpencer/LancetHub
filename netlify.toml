@@ -15,10 +15,7 @@
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 
-[functions]
-  # Prevent aggressive bundling that causes build-time module loading
-  node_bundler = "zisi"
-  included_files = ["node_modules/**"]
+# Remove functions config - let Netlify handle it automatically
 
 # Headers for security and performance
 [[headers]]

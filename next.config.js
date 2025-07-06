@@ -2,10 +2,6 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  experimental: {
-    // Prevent ISR caching that might trigger build-time imports
-    isrMemoryCacheSize: 0,
-  },
   images: {
     domains: [
       'localhost',

@@ -114,6 +114,26 @@ export const fetchPapers = async (options = {}) => {
 
 export const fetchBibliographyData = fetchPapers;
 
+// Add missing exports that other files are importing
+export const fetchResilienceDimensions = async (options = {}) => {
+  return fetchRecords('Resilience Dimensions', options).catch(() => []);
+};
+
+export const fetchResilienceMetrics = async (options = {}) => {
+  return fetchRecords('Metrics', options).catch(() => []);
+};
+
+export const getAirtableTables = async () => {
+  // Return a list of available tables
+  return [
+    { id: 'case-study-forms', name: 'Case Study Forms' },
+    { id: 'people', name: 'People' },
+    { id: 'landscape-topics', name: 'Landscape Topics' },
+    { id: 'papers', name: 'Papers/Bibliography' },
+    { id: 'metrics', name: 'Resilience Metrics' }
+  ];
+};
+
 // Re-export other functions for compatibility
 export const createRecord = async () => {
   throw new Error('Write operations not supported in this implementation');
