@@ -88,6 +88,7 @@ export const fetchRecords = async (tableName, options = {}) => {
 
 // Table-specific functions
 export const fetchCaseStudies = async (options = {}) => {
+  // Note: The actual table name in Airtable is "Case study forms" (lowercase 's')
   return fetchRecords('Case study forms', options);
 };
 

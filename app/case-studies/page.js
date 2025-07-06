@@ -42,6 +42,7 @@ export default function CaseStudies() {
         // Log all available fields from first study to see what Airtable is providing
         if (studies.length > 0) {
           console.log('Available fields in case studies:', Object.keys(studies[0]));
+          console.log('First case study:', studies[0]);
         }
         
         // Sort by date (newest first) and add computed fields
