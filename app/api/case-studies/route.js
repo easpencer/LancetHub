@@ -25,15 +25,15 @@ export async function GET() {
     // Process records - map Airtable field names to expected field names
     const processedRecords = caseStudies.map((record) => ({
       ...record,
-      // Map the actual Airtable field names
+      // Map the actual Airtable field names (note the trailing spaces in some field names!)
       Title: record['Case Study Title'] || record.Title || record.Name || 'Untitled',
-      Type: record['Study Type '] || record.Type || 'Research',
+      Type: record['Study Type '] || record.Type || 'Research', // Note the trailing space!
       Description: record['Short Description'] || record.Description || '',
       Focus: record['Study Focus'] || record.Focus || '',
       Relevance: record['Relevance to Community/Societal Resilience'] || record.Relevance || '',
-      Dimensions: record['Resilient Dimensions '] || record.Dimensions || '',
-      Keywords: record['Key Words '] || record.Keywords || '',
-      Author: record.People || record.Author || '',
+      Dimensions: record['Resilient Dimensions '] || record.Dimensions || '', // Note the trailing space!
+      Keywords: record['Key Words '] || record.Keywords || '', // Note the trailing space!
+      Author: record.Name || record.People || record.Author || '',
       // Format date
       formattedDate: record.Date ? new Date(record.Date).toLocaleDateString('en-US', {
         year: 'numeric',
