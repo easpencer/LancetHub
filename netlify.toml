@@ -30,13 +30,11 @@
 
 # Environment-specific build settings
 [context.production.environment]
-  # Use mock data if Airtable is not configured
-  USE_MOCK_DATA = "true"
-  # Or force comprehensive fallback for case studies
-  # FORCE_CASE_STUDY_FALLBACK = "true"
+  # Use real Airtable data
+  USE_MOCK_DATA = "false"
 
 [context.deploy-preview.environment]
-  USE_MOCK_DATA = "true"
+  USE_MOCK_DATA = "false"
 
 [context.branch-deploy.environment]
-  USE_MOCK_DATA = "true"
+  USE_MOCK_DATA = "false"

@@ -39,16 +39,21 @@ export default function CaseStudies() {
         console.log("Case studies data:", data);
         const studies = data.caseStudies || [];
         
+        // Log all available fields from first study to see what Airtable is providing
+        if (studies.length > 0) {
+          console.log('Available fields in case studies:', Object.keys(studies[0]));
+        }
+        
         // Sort by date (newest first) and add computed fields
         const enrichedStudies = studies.map(study => ({
-          ...study,
+          ...study, // Keep ALL original fields from Airtable
           formattedDate: study.Date ? new Date(study.Date).toLocaleDateString('en-US', {
             year: 'numeric',
             month: 'long',
             day: 'numeric'
           }) : null,
-          hasFullData: !!(study.Methodology || study.Findings || study.Recommendations),
-          dimensionsList: (study.Dimensions || '').split(',').map(d => d.trim()).filter(Boolean)
+          hasFullData: !!(study.Methodology || study.Findings || study.Recommendations || study['Key Findings'] || study['Research Methods']),
+          dimensionsList: (study.Dimensions || study['Resilient Dimensions'] || study['Resilience Dimensions'] || '').split(',').map(d => d.trim()).filter(Boolean)
         })).sort((a, b) => {
           const dateA = a.Date ? new Date(a.Date) : new Date(0);
           const dateB = b.Date ? new Date(b.Date) : new Date(0);
