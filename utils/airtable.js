@@ -97,6 +97,13 @@ export const fetchPeopleData = async (options = {}) => {
 };
 
 export const fetchLandscapeData = async (options = {}) => {
+  // Try 'Landscape' first, then fall back to 'Landscape topics'
+  try {
+    const data = await fetchRecords('Landscape', options);
+    if (data && data.length > 0) return data;
+  } catch (error) {
+    console.log('Table "Landscape" not found, trying "Landscape topics"');
+  }
   return fetchRecords('Landscape topics', options);
 };
 

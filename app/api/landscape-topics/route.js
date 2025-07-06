@@ -137,37 +137,93 @@ export async function GET() {
       view: 'Grid view'
     });
     
-    // If we get data, use it
+    // Use fallback data since Airtable tables aren't accessible
+    let topics = fallbackLandscapeTopics;
+    let source = 'fallback';
+    
     if (landscapeTopics && landscapeTopics.length > 0) {
       console.log(`✅ Retrieved ${landscapeTopics.length} landscape topics from Airtable`);
-      
-      return NextResponse.json({ 
-        landscapeTopics,
-        totalTopics: landscapeTopics.length,
-        lastUpdated: new Date().toISOString(),
-        source: 'airtable'
-      });
+      topics = landscapeTopics;
+      source = 'airtable';
+    } else {
+      console.log('📋 Using fallback landscape topics data');
     }
     
-    // Otherwise use fallback data
-    console.log('📋 Using fallback landscape topics data');
+    // Process data for frontend visualization
+    const processedData = processLandscapeData(topics);
+    
     return NextResponse.json({ 
-      landscapeTopics: fallbackLandscapeTopics,
-      totalTopics: fallbackLandscapeTopics.length,
+      ...processedData,
       lastUpdated: new Date().toISOString(),
-      source: 'fallback'
+      source
     });
     
   } catch (error) {
     console.error('🔴 Error fetching landscape topics:', error);
     
-    // Return fallback data on error
+    // Return processed fallback data on error
+    const processedData = processLandscapeData(fallbackLandscapeTopics);
+    
     return NextResponse.json({ 
-      landscapeTopics: fallbackLandscapeTopics,
-      totalTopics: fallbackLandscapeTopics.length,
+      ...processedData,
       lastUpdated: new Date().toISOString(),
       source: 'fallback',
       error: error.message
     });
   }
+}
+
+// Process landscape data for frontend visualization
+function processLandscapeData(topics) {
+  // Group topics by dimension
+  const groupedByDimension = {};
+  const dimensionCounts = {};
+  
+  topics.forEach(topic => {
+    const dimension = topic.Dimension || 'Other';
+    if (!groupedByDimension[dimension]) {
+      groupedByDimension[dimension] = [];
+      dimensionCounts[dimension] = 0;
+    }
+    groupedByDimension[dimension].push({
+      id: topic.id,
+      topic: topic.Topic,
+      dimension: dimension,
+      context: topic.Context,
+      leadership: topic.Leadership,
+      teamwork: topic.Teamwork,
+      data: topic.Data,
+      resources: topic.Resources,
+      importance: topic.Importance,
+      category: topic.Category
+    });
+    dimensionCounts[dimension]++;
+  });
+  
+  // Create dimension stats
+  const dimensionStats = Object.entries(dimensionCounts).map(([dimension, count]) => ({
+    dimension,
+    topicCount: count,
+    keyThemes: extractKeyThemes(groupedByDimension[dimension])
+  }));
+  
+  // Get unique dimensions
+  const dimensions = Object.keys(groupedByDimension);
+  
+  return {
+    landscapeTopics: topics,
+    totalTopics: topics.length,
+    dimensions,
+    dimensionStats,
+    groupedByDimension
+  };
+}
+
+// Extract key themes from topics in a dimension
+function extractKeyThemes(topics) {
+  const themes = [];
+  topics.forEach(topic => {
+    if (topic.category) themes.push(topic.category);
+  });
+  return [...new Set(themes)].slice(0, 3);
 }

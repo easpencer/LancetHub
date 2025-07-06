@@ -1,43 +1,48 @@
-import Airtable from 'airtable';
-import { AIRTABLE_CONFIG } from '../utils/airtable-config.js';
+// Test Airtable connection directly
+require('dotenv').config({ path: '.env.local' });
 
-async function testAirtableDirect() {
-  console.log('Testing direct Airtable access...\n');
+const Airtable = require('airtable');
+
+async function testAirtable() {
+  console.log('Testing direct Airtable connection...\n');
+  
+  const apiKey = process.env.AIRTABLE_API_KEY || require('../utils/airtable-config.js').AIRTABLE_CONFIG.apiKey;
+  const baseId = process.env.AIRTABLE_BASE_ID || require('../utils/airtable-config.js').AIRTABLE_CONFIG.baseId;
+  
+  console.log('Credentials:', {
+    hasApiKey: !!apiKey,
+    apiKeyStart: apiKey?.substring(0, 10) + '...',
+    baseId: baseId
+  });
   
   try {
-    // Configure Airtable
-    Airtable.configure({ apiKey: AIRTABLE_CONFIG.apiKey });
-    const base = Airtable.base(AIRTABLE_CONFIG.baseId);
+    Airtable.configure({ apiKey });
+    const base = Airtable.base(baseId);
     
-    // Try to list known tables
-    const knownTables = [
-      'Case study forms',
-      'People', 
-      'Papers',
-      'Landscape topics',
-      'Resilience Dimensions',
-      'Metrics',
-      'Dimensions',
-      'Frameworks'
-    ];
+    // Test Case study forms specifically
+    console.log('\nTesting "Case study forms" table:');
+    const caseStudies = await base('Case study forms')
+      .select({ 
+        maxRecords: 5,
+        view: 'Grid view'
+      })
+      .all();
     
-    for (const tableName of knownTables) {
-      try {
-        console.log(`\nTrying table: "${tableName}"...`);
-        const records = await base(tableName).select({ maxRecords: 1 }).firstPage();
-        console.log(`✅ SUCCESS: "${tableName}" exists with ${records.length} record(s)`);
-        if (records.length > 0) {
-          console.log('   Fields:', Object.keys(records[0].fields));
-        }
-      } catch (error) {
-        console.log(`❌ FAILED: "${tableName}" - ${error.message}`);
-      }
-    }
+    console.log(`Found ${caseStudies.length} case studies\n`);
+    
+    caseStudies.forEach((record, i) => {
+      console.log(`\nRecord ${i + 1}:`);
+      console.log('ID:', record.id);
+      console.log('Fields:', Object.keys(record.fields));
+      console.log('Title:', record.fields['Case Study Title'] || 'No title');
+      console.log('Name:', record.fields['Name'] || 'No name');
+      console.log('Full record:', JSON.stringify(record.fields, null, 2));
+    });
     
   } catch (error) {
-    console.error('General error:', error.message);
+    console.error('Error:', error.message);
+    console.error('Full error:', error);
   }
 }
 
-// Run the test
-testAirtableDirect();
+testAirtable();

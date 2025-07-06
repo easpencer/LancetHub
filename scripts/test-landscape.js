@@ -1,31 +1,41 @@
-import { fetchLandscapeData } from '../utils/airtable.js';
-import dotenv from 'dotenv';
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
+// Test different table names
+require('dotenv').config({ path: '.env.local' });
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const Airtable = require('airtable');
 
-// Load environment variables
-dotenv.config({ path: join(__dirname, '..', '.env.local') });
-
-async function testLandscape() {
-  console.log('Testing Landscape data from Airtable...\n');
+async function testTables() {
+  const apiKey = process.env.AIRTABLE_API_KEY;
+  const baseId = process.env.AIRTABLE_BASE_ID;
   
-  try {
-    console.log('Fetching Landscape Topics...');
-    const landscape = await fetchLandscapeData({ maxRecords: 10 });
-    console.log(`✅ Landscape: Retrieved ${landscape.length} records`);
-    
-    if (landscape.length > 0) {
-      console.log('   Field names from first record:', Object.keys(landscape[0] || {}));
-      console.log('\n   First record data:', JSON.stringify(landscape[0], null, 2));
+  Airtable.configure({ apiKey });
+  const base = Airtable.base(baseId);
+  
+  const tablesToTest = [
+    'Landscape',
+    'Landscape topics', 
+    'Landscapes',
+    'Resilience Dimensions',
+    'Dimensions',
+    'Framework',
+    'Topics'
+  ];
+  
+  console.log('Testing possible table names:\n');
+  
+  for (const tableName of tablesToTest) {
+    try {
+      const records = await base(tableName)
+        .select({ maxRecords: 1 })
+        .firstPage();
+      
+      console.log(`✅ "${tableName}" - Found ${records.length} records`);
+      if (records.length > 0) {
+        console.log(`   Fields: ${Object.keys(records[0].fields).join(', ')}`);
+      }
+    } catch (error) {
+      console.log(`❌ "${tableName}" - ${error.message}`);
     }
-  } catch (error) {
-    console.log(`❌ Landscape error: ${error.message}`);
-    console.log('   Full error:', error);
   }
 }
 
-// Run the test
-testLandscape();
+testTables();

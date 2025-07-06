@@ -26,7 +26,10 @@ export async function GET(request) {
       Name: record.Name || record['Full Name'] || 'Unknown',
       Role: record.Role || record.Position || '',
       Affiliation: record.Affiliation || record.Institution || '',
-      Order: record.Order || 999
+      Order: record.Order || 999,
+      // Handle image field properly
+      Image: record.Image && record.Image.length > 0 ? record.Image[0].url : null,
+      imageUrl: record.Image && record.Image.length > 0 ? record.Image[0].url : null
     }));
     
     // Filter by role if provided
