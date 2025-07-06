@@ -1,5 +1,5 @@
 [build]
-  command = "./scripts/netlify-build.sh"
+  command = "npm run build"
   publish = ".next"
 
 [build.environment]
@@ -19,10 +19,6 @@
   # Prevent aggressive bundling that causes build-time module loading
   node_bundler = "zisi"
   included_files = ["node_modules/**"]
-  
-  [plugins.inputs]
-    # Disable automatic ISR and tracing that might cause build-time imports
-    disableServerlessFunctionsBundling = true
 
 # Headers for security and performance
 [[headers]]
