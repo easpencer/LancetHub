@@ -1,5 +1,3 @@
-#\!/usr/bin/env node
-
 // Simple script to verify Airtable connection and show what data is available
 require('dotenv').config({ path: '.env.local' });
 
@@ -11,7 +9,7 @@ async function verifyAirtableConnection() {
   const apiKey = process.env.AIRTABLE_API_KEY;
   const baseId = process.env.AIRTABLE_BASE_ID;
   
-  if (\!apiKey || \!baseId) {
+  if (!apiKey || !baseId) {
     console.error('❌ Missing Airtable credentials in .env.local');
     console.log('   AIRTABLE_API_KEY:', apiKey ? '✅ Set' : '❌ Missing');
     console.log('   AIRTABLE_BASE_ID:', baseId ? '✅ Set' : '❌ Missing');
@@ -57,4 +55,3 @@ async function verifyAirtableConnection() {
 }
 
 verifyAirtableConnection();
-EOF < /dev/null
