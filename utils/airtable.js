@@ -3,6 +3,8 @@
  * This handles the CommonJS/ESM compatibility issues
  */
 
+import { AIRTABLE_CONFIG } from './airtable-config.js';
+
 let Airtable;
 let airtableCache = null;
 
@@ -31,8 +33,9 @@ const getAirtable = async () => {
 const initAirtable = async () => {
   if (airtableCache) return airtableCache;
   
-  const apiKey = process.env.AIRTABLE_API_KEY;
-  const baseId = process.env.AIRTABLE_BASE_ID;
+  // Use embedded config first, fall back to env vars
+  const apiKey = AIRTABLE_CONFIG.apiKey || process.env.AIRTABLE_API_KEY;
+  const baseId = AIRTABLE_CONFIG.baseId || process.env.AIRTABLE_BASE_ID;
   
   if (!apiKey || !baseId) {
     console.error('Airtable credentials missing');
