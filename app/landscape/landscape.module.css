@@ -10,11 +10,12 @@
   text-align: center;
   margin-bottom: 3rem;
   padding: 3rem 1rem;
-  background: linear-gradient(135deg, rgba(255, 126, 80, 0.1), rgba(255, 179, 71, 0.1));
-  border-radius: var(--border-radius-lg);
-  border: 1px solid rgba(255, 126, 80, 0.1);
+  background: linear-gradient(135deg, rgba(0, 102, 204, 0.1), rgba(44, 120, 115, 0.1));
+  border-radius: 24px;
+  border: 1px solid rgba(0, 102, 204, 0.2);
   position: relative;
   overflow: hidden;
+  backdrop-filter: blur(10px);
 }
 
 .header::before {
@@ -36,13 +37,15 @@
 }
 
 .header h1 {
-  font-size: clamp(2.2rem, 5vw, 3rem);
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
   margin-bottom: 1rem;
-  background: var(--gradient-primary);
+  background: linear-gradient(135deg, #0066cc, #2c7873);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
   display: inline-block;
+  font-weight: 800;
+  letter-spacing: -1px;
 }
 
 .subtitle {
@@ -75,18 +78,19 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.75rem 1.5rem;
-  background: var(--gradient-primary);
+  background: linear-gradient(135deg, #0066cc, #2c7873);
   color: white;
   text-decoration: none;
-  border-radius: var(--border-radius);
-  font-weight: 500;
+  border-radius: 30px;
+  font-weight: 600;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(255, 126, 80, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 102, 204, 0.3);
 }
 
 .interactiveLink:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(255, 126, 80, 0.4);
+  box-shadow: 0 6px 20px rgba(0, 102, 204, 0.4);
+  background: linear-gradient(135deg, #0052a3, #205753);
 }
 
 .linkIcon {
@@ -509,18 +513,37 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  background: var(--card-background);
-  border-radius: 8px;
-  padding: 1.75rem;
-  box-shadow: var(--shadow-sm);
-  border: var(--card-border);
-  transition: all 0.2s ease;
+  background: linear-gradient(135deg, rgba(17, 24, 39, 0.9), rgba(17, 24, 39, 0.7));
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(0, 102, 204, 0.2);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+}
+
+.topicCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #0066cc, #2c7873);
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 .topicCard:hover {
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-md);
-  border-color: var(--primary-color);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+  border-color: rgba(0, 102, 204, 0.4);
+}
+
+.topicCard:hover::before {
+  opacity: 1;
 }
 
 .sectionIcon {
@@ -564,6 +587,29 @@
   letter-spacing: 0.025em;
   display: inline-block;
   border: 1px solid rgba(220, 38, 38, 0.2);
+}
+
+.contextBadge {
+  padding: 0.375rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: inline-block;
+  border: 1px solid;
+}
+
+.pandemicBadge {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.generalBadge {
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+  border-color: rgba(34, 197, 94, 0.3);
 }
 
 .topicTitle {

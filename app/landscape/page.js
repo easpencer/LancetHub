@@ -15,6 +15,7 @@ export default function LandscapePage() {
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterDimension, setFilterDimension] = useState('all');
+  const [filterContext, setFilterContext] = useState('all');
   const [dimensions, setDimensions] = useState(['all']);
 
   useEffect(() => {
@@ -71,8 +72,15 @@ export default function LandscapePage() {
       results = results.filter(topic => topic.Dimension === filterDimension);
     }
     
+    // Apply context filter (Pandemic vs General)
+    if (filterContext !== 'all') {
+      results = results.filter(topic => 
+        topic.Context && topic.Context.toLowerCase() === filterContext.toLowerCase()
+      );
+    }
+    
     setFilteredTopics(results);
-  }, [searchTerm, filterDimension, landscape]);
+  }, [searchTerm, filterDimension, filterContext, landscape]);
 
   if (loading) {
     return <LoadingState message="Loading Resilience Landscape" submessage="Fetching resilience framework..." />;
@@ -136,6 +144,19 @@ export default function LandscapePage() {
                     {dimension === 'all' ? 'All Dimensions' : dimension}
                   </option>
                 ))}
+              </select>
+            </div>
+            
+            <div className={styles.filterGroup}>
+              <FaFilter className={styles.filterIcon} />
+              <select 
+                className={styles.filterSelect}
+                value={filterContext}
+                onChange={(e) => setFilterContext(e.target.value)}
+              >
+                <option value="all">All Contexts</option>
+                <option value="pandemic">Pandemic</option>
+                <option value="general">General</option>
               </select>
             </div>
           </div>
@@ -223,11 +244,16 @@ export default function LandscapePage() {
                 <div className={styles.topicHeader}>
                   <div className={styles.topicMeta}>
                     <div className={styles.topicDimension}>{topic.Dimension}</div>
+                    {topic.Context && (
+                      <div className={`${styles.contextBadge} ${topic.Context.toLowerCase() === 'pandemic' ? styles.pandemicBadge : styles.generalBadge}`}>
+                        {topic.Context}
+                      </div>
+                    )}
                     {topic.Priority && topic.Priority !== 'Medium' && (
                       <div className={styles.topicContext}>{topic.Priority} Priority</div>
                     )}
                   </div>
-                  <h2 className={styles.topicTitle}>{topic.Topic}</h2>
+                  <h2 className={styles.topicTitle}>{topic['Topic / Sub-Dimension'] || topic.Topic}</h2>
                 </div>
                 
                 <div className={styles.topicDetails}>
@@ -240,39 +266,39 @@ export default function LandscapePage() {
                     </div>
                   )}
                   
-                  {topic.Leadership && (
+                  {topic['People & Leadership'] && (
                     <div className={styles.topicDetail}>
                       <div className={styles.detailLabel}>
-                        <FaUsers className={styles.sectionIcon} /> Leadership
+                        <FaUsers className={styles.sectionIcon} /> People & Leadership
                       </div>
-                      <div className={styles.detailValue}>{topic.Leadership}</div>
+                      <div className={styles.detailValue}>{topic['People & Leadership']}</div>
                     </div>
                   )}
                   
-                  {topic.Teamwork && (
+                  {topic['Teamwork & Organizations'] && (
                     <div className={styles.topicDetail}>
                       <div className={styles.detailLabel}>
-                        <FaHandshake className={styles.sectionIcon} /> Teamwork
+                        <FaHandshake className={styles.sectionIcon} /> Teamwork & Organizations
                       </div>
-                      <div className={styles.detailValue}>{topic.Teamwork}</div>
+                      <div className={styles.detailValue}>{topic['Teamwork & Organizations']}</div>
                     </div>
                   )}
                   
-                  {topic.Data && (
+                  {topic['Data & Knowledge'] && (
                     <div className={styles.topicDetail}>
                       <div className={styles.detailLabel}>
-                        <FaDatabase className={styles.sectionIcon} /> Data
+                        <FaDatabase className={styles.sectionIcon} /> Data & Knowledge
                       </div>
-                      <div className={styles.detailValue}>{topic.Data}</div>
+                      <div className={styles.detailValue}>{topic['Data & Knowledge']}</div>
                     </div>
                   )}
                   
-                  {topic.Resources && (
+                  {topic['Resources & Products'] && (
                     <div className={styles.topicDetail}>
                       <div className={styles.detailLabel}>
-                        <FaTools className={styles.sectionIcon} /> Resources
+                        <FaTools className={styles.sectionIcon} /> Resources & Products
                       </div>
-                      <div className={styles.detailValue}>{topic.Resources}</div>
+                      <div className={styles.detailValue}>{topic['Resources & Products']}</div>
                     </div>
                   )}
                   
