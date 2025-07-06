@@ -1,10 +1,9 @@
 import { NextResponse } from 'next/server';
 
 export function middleware(request) {
-  // Log API requests for debugging
+  // Only log API errors, not every request
   if (request.nextUrl.pathname.startsWith('/api/')) {
-    console.log(`[API Request] ${request.method} ${request.nextUrl.pathname}`);
-    console.log(`[API Headers] ${JSON.stringify(Object.fromEntries(request.headers.entries()))}`);
+    // Just pass through
   }
 
   // Add CORS headers for API routes
