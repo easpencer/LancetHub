@@ -50,6 +50,11 @@
   50% { filter: brightness(1.2) drop-shadow(0 0 30px rgba(236, 72, 153, 0.7)); }
 }
 
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
 .subtitle {
   font-size: 1.3rem;
   color: rgba(255, 255, 255, 0.7);

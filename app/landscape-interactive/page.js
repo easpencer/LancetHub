@@ -22,7 +22,31 @@ import ErrorBoundary from '../../components/ErrorBoundary';
 import styles from './landscape-interactive.module.css';
 
 // Dynamically import Plotly to avoid SSR issues
-const Plot = dynamic(() => import('react-plotly.js'), { ssr: false });
+const Plot = dynamic(() => import('react-plotly.js'), { 
+  ssr: false,
+  loading: () => (
+    <div style={{ 
+      display: 'flex', 
+      justifyContent: 'center', 
+      alignItems: 'center', 
+      height: '600px',
+      color: '#ffffff'
+    }}>
+      <div style={{ textAlign: 'center' }}>
+        <div style={{ 
+          width: '50px', 
+          height: '50px', 
+          border: '3px solid rgba(255, 255, 255, 0.3)',
+          borderTopColor: '#8b5cf6',
+          borderRadius: '50%',
+          animation: 'spin 1s linear infinite',
+          margin: '0 auto 1rem'
+        }} />
+        <p>Loading visualization...</p>
+      </div>
+    </div>
+  )
+});
 
 // Color palette for dimensions - vibrant gradient colors
 const dimensionColors = {
@@ -58,19 +82,19 @@ export default function LandscapeInteractivePage() {
       try {
         setLoading(true);
         setError(null);
-        const res = await fetch('/api/landscape');
+        const res = await fetch('/api/landscape-topics');
         
         if (!res.ok) {
           throw new Error(`Failed to fetch landscape data: ${res.status} ${res.statusText}`);
         }
         
         const data = await res.json();
-        const landscapeData = data.landscape || [];
+        const landscapeData = data.landscapeTopics || [];
         setLandscape(landscapeData);
         setFilteredData(landscapeData);
         
-        // Extract unique dimensions
-        const uniqueDimensions = [...new Set(landscapeData.map(item => item.Dimension).filter(Boolean))];
+        // Extract unique dimensions from the API response
+        const uniqueDimensions = data.dimensions || [...new Set(landscapeData.map(item => item.Dimension).filter(Boolean))];
         setDimensions(uniqueDimensions);
         
         setLoading(false);
@@ -230,10 +254,14 @@ export default function LandscapeInteractivePage() {
   }, [filteredData]);
 
   const renderVisualization = () => {
-    switch (visualizationType) {
-      case 'sunburst':
-        const sunburstData = createSunburstData();
-        return (
+    try {
+      switch (visualizationType) {
+        case 'sunburst':
+          const sunburstData = createSunburstData();
+          if (!sunburstData || !sunburstData.children || sunburstData.children.length === 0) {
+            return <div style={{ color: '#ffffff', textAlign: 'center' }}>No data available for visualization</div>;
+          }
+          return (
           <Plot
             data={[{
               type: 'sunburst',
@@ -305,6 +333,9 @@ export default function LandscapeInteractivePage() {
 
       case 'treemap':
         const treemapData = createTreemapData();
+        if (!treemapData || !treemapData.labels || treemapData.labels.length === 0) {
+          return <div style={{ color: '#ffffff', textAlign: 'center' }}>No data available for visualization</div>;
+        }
         return (
           <Plot
             data={[{
@@ -428,6 +459,15 @@ export default function LandscapeInteractivePage() {
 
       default:
         return null;
+    }
+    } catch (error) {
+      console.error('Error rendering visualization:', error);
+      return (
+        <div style={{ color: '#ffffff', textAlign: 'center', padding: '2rem' }}>
+          <p>Error loading visualization</p>
+          <p style={{ fontSize: '0.9rem', opacity: 0.7 }}>{error.message}</p>
+        </div>
+      );
     }
   };
 
