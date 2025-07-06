@@ -267,27 +267,83 @@ export default function LandscapeTopicsVisualization() {
         <div className={styles.networkView}>
           <div className={styles.networkContainer}>
             <svg width="100%" height="600" viewBox="0 0 1200 600">
+              {/* Background gradient */}
+              <defs>
+                <radialGradient id="centerGradient">
+                  <stop offset="0%" stopColor="#6366f1" stopOpacity="0.8" />
+                  <stop offset="100%" stopColor="#3730a3" stopOpacity="0.8" />
+                </radialGradient>
+                <radialGradient id="nodeGradient">
+                  <stop offset="0%" stopColor="#8b5cf6" stopOpacity="0.9" />
+                  <stop offset="100%" stopColor="#6d28d9" stopOpacity="0.9" />
+                </radialGradient>
+                <filter id="glow">
+                  <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+                  <feMerge>
+                    <feMergeNode in="coloredBlur"/>
+                    <feMergeNode in="SourceGraphic"/>
+                  </feMerge>
+                </filter>
+              </defs>
+              
+              {/* Animated connections */}
+              {landscapeData.dimensionStats.map((stat, index) => {
+                const angle = (index / landscapeData.dimensionStats.length) * 2 * Math.PI;
+                const x = 600 + 250 * Math.cos(angle);
+                const y = 300 + 250 * Math.sin(angle);
+                
+                return (
+                  <g key={`line-${stat.dimension}`}>
+                    <line 
+                      x1="600" y1="300" x2={x} y2={y} 
+                      stroke="url(#nodeGradient)" 
+                      strokeWidth="3" 
+                      opacity="0.3"
+                      strokeDasharray="5,5"
+                    >
+                      <animate 
+                        attributeName="stroke-dashoffset" 
+                        values="0;10" 
+                        dur="2s" 
+                        repeatCount="indefinite" 
+                      />
+                    </line>
+                  </g>
+                );
+              })}
+              
               {/* Central hub */}
-              <circle cx="600" cy="300" r="50" fill="#3498db" />
-              <text x="600" y="305" textAnchor="middle" fill="white" fontSize="12">
-                Resilience
+              <g filter="url(#glow)">
+                <circle cx="600" cy="300" r="60" fill="url(#centerGradient)" />
+                <circle cx="600" cy="300" r="60" fill="none" stroke="#6366f1" strokeWidth="2" opacity="0.5">
+                  <animate attributeName="r" values="60;70;60" dur="3s" repeatCount="indefinite" />
+                  <animate attributeName="opacity" values="0.5;0.2;0.5" dur="3s" repeatCount="indefinite" />
+                </circle>
+              </g>
+              <text x="600" y="305" textAnchor="middle" fill="white" fontSize="16" fontWeight="bold">
+                RESILIENCE
               </text>
               
               {/* Dimension nodes */}
               {landscapeData.dimensionStats.map((stat, index) => {
                 const angle = (index / landscapeData.dimensionStats.length) * 2 * Math.PI;
-                const x = 600 + 200 * Math.cos(angle);
-                const y = 300 + 200 * Math.sin(angle);
+                const x = 600 + 250 * Math.cos(angle);
+                const y = 300 + 250 * Math.sin(angle);
+                const nodeSize = 35 + (stat.topicCount / 2);
                 
                 return (
                   <g key={stat.dimension}>
-                    <line x1="600" y1="300" x2={x} y2={y} stroke="#ecf0f1" strokeWidth="2" />
-                    <circle cx={x} cy={y} r="40" fill="#2ecc71" />
-                    <text x={x} y={y + 5} textAnchor="middle" fill="white" fontSize="10">
+                    <circle 
+                      cx={x} cy={y} r={nodeSize} 
+                      fill="url(#nodeGradient)" 
+                      filter="url(#glow)"
+                      className={styles.networkNode}
+                    />
+                    <text x={x} y={y + 5} textAnchor="middle" fill="white" fontSize="11" fontWeight="600">
                       {stat.dimension.split(' ')[0]}
                     </text>
-                    <text x={x} y={y - 50} textAnchor="middle" fontSize="12">
-                      {stat.topicCount} topics
+                    <text x={x} y={y - nodeSize - 10} textAnchor="middle" fill="#e0e7ff" fontSize="14" fontWeight="bold">
+                      {stat.topicCount}
                     </text>
                   </g>
                 );
@@ -296,9 +352,9 @@ export default function LandscapeTopicsVisualization() {
           </div>
           
           <div className={styles.networkLegend}>
-            <h4>Network Visualization</h4>
-            <p>Each dimension connects to the central resilience hub</p>
-            <p>Size represents number of topics in each dimension</p>
+            <h4>Resilience Network Map</h4>
+            <p>Interactive visualization showing {landscapeData.totalTopics} topics across {landscapeData.dimensions.length} dimensions</p>
+            <p>Node size represents the number of topics • Animated connections show relationships</p>
           </div>
         </div>
       )}
