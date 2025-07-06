@@ -8,6 +8,12 @@ let airtableCache = null;
 
 // Initialize Airtable with proper module loading
 const getAirtable = async () => {
+  // CRITICAL: Don't load Airtable during build time
+  if (process.env.NETLIFY && !process.env.DEPLOY_URL) {
+    console.log('Skipping Airtable during build');
+    return null;
+  }
+  
   if (!Airtable) {
     try {
       // Try dynamic import first
@@ -29,6 +35,12 @@ const getAirtable = async () => {
 
 // Initialize Airtable base
 const initAirtable = async () => {
+  // Skip initialization during build time
+  if (process.env.NODE_ENV === 'production' && !process.env.NETLIFY_DEV) {
+    // This prevents the module from being loaded during build
+    return null;
+  }
+  
   if (airtableCache) return airtableCache;
   
   const apiKey = process.env.AIRTABLE_API_KEY;
