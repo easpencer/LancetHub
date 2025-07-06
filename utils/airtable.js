@@ -97,14 +97,21 @@ export const fetchPeopleData = async (options = {}) => {
 };
 
 export const fetchLandscapeData = async (options = {}) => {
-  // Try 'Landscape' first, then fall back to 'Landscape topics'
+  // The table is actually spelled "lanscape" (missing 'd')
   try {
-    const data = await fetchRecords('Landscape', options);
+    const data = await fetchRecords('lanscape', options);
     if (data && data.length > 0) return data;
   } catch (error) {
-    console.log('Table "Landscape" not found, trying "Landscape topics"');
+    console.log('Table "lanscape" not found, trying other variations');
+    // Try other variations
+    try {
+      const data2 = await fetchRecords('Landscape', options);
+      if (data2 && data2.length > 0) return data2;
+    } catch (e) {
+      console.log('Table "Landscape" not found either');
+    }
   }
-  return fetchRecords('Landscape topics', options);
+  return [];
 };
 
 export const fetchPapers = async (options = {}) => {

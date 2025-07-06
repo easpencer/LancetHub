@@ -131,13 +131,13 @@ export async function GET() {
   try {
     console.log('🔄 Fetching landscape topics data from Airtable...');
     
-    // Try to fetch from Airtable first
+    // Try to fetch from Landscape table in Airtable
     const landscapeTopics = await fetchLandscapeData({
       maxRecords: 500,
       view: 'Grid view'
     });
     
-    // Use fallback data since Airtable tables aren't accessible
+    // Use the data we get
     let topics = fallbackLandscapeTopics;
     let source = 'fallback';
     
@@ -226,4 +226,14 @@ function extractKeyThemes(topics) {
     if (topic.category) themes.push(topic.category);
   });
   return [...new Set(themes)].slice(0, 3);
+}
+
+// Determine importance based on dimension and count
+function determineImportance(count, dimension) {
+  if (dimension === 'Social Equity & Well-being' || dimension === 'Knowledge & Learning') {
+    return 'Critical';
+  }
+  if (count > 3) return 'High';
+  if (count > 1) return 'Medium';
+  return 'Low';
 }
