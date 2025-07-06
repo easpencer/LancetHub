@@ -6,6 +6,7 @@ import {
   fetchLandscapeData,
   fetchPapers
 } from '../../../utils/airtable';
+import { handleApiError } from '../../../utils/api-error-handler';
 
 /**
  * Rate limiting - basic implementation
@@ -14,7 +15,9 @@ import {
 const RATE_LIMIT_WINDOW = 60 * 1000; // 1 minute
 const MAX_REQUESTS = 60; // 60 requests per minute
 
+// Use a global variable for serverless function persistence (per instance)
 const ipRequestCounts = new Map();
+
 const cleanupOldRequests = () => {
   const now = Date.now();
   for (const [ip, requests] of ipRequestCounts.entries()) {
@@ -27,10 +30,10 @@ const cleanupOldRequests = () => {
   }
 };
 
-// Clean up old requests every minute
-setInterval(cleanupOldRequests, 60 * 1000);
-
 export async function GET(request) {
+  // Clean up old requests periodically
+  cleanupOldRequests();
+  
   // Simple rate limiting
   const ip = request.headers.get('x-forwarded-for') || 'unknown';
   
@@ -99,22 +102,6 @@ export async function GET(request) {
         );
     }
   } catch (error) {
-    console.error('API route error:', error);
-    
-    // Determine appropriate status code based on error
-    let statusCode = 500;
-    if (error.message?.includes('not found') || error.message?.includes('does not exist')) {
-      statusCode = 404;
-    } else if (error.message?.includes('unauthorized') || error.message?.includes('authentication')) {
-      statusCode = 401;
-    }
-    
-    return NextResponse.json(
-      { 
-        error: `Failed to fetch data: ${error.message}`,
-        details: process.env.NODE_ENV === 'development' ? error.stack : undefined
-      },
-      { status: statusCode }
-    );
+    return handleApiError(error, `airtable-connect/${action}`);
   }
 }

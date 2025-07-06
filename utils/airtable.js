@@ -12,6 +12,8 @@ const initAirtable = () => {
   
   if (!apiKey || !baseId) {
     console.error('🔴 Airtable API key or base ID not configured in environment variables');
+    console.error('🔴 AIRTABLE_API_KEY exists:', !!apiKey);
+    console.error('🔴 AIRTABLE_BASE_ID exists:', !!baseId);
     return null;
   }
   
@@ -58,9 +60,9 @@ export const fetchRecords = async (tableName, options = {}) => {
     
     console.log(`🔄 Executing Airtable query on ${tableName}:`, JSON.stringify(query));
     
-    // Add timeout to prevent hanging
+    // Add timeout to prevent hanging - shorter timeout for serverless
     const timeoutPromise = new Promise((_, reject) => {
-      setTimeout(() => reject(new Error('Airtable request timeout after 10s')), 10000);
+      setTimeout(() => reject(new Error('Airtable request timeout after 5s')), 5000);
     });
     
     const recordsPromise = base(tableName).select(query).all();

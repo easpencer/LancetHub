@@ -3,10 +3,12 @@
   publish = ".next"
 
 [build.environment]
-  # Set Node version
-  NODE_VERSION = "18"
+  # Set Node version - matching .nvmrc
+  NODE_VERSION = "18.19.0"
   # Increase timeout for build
   AWS_LAMBDA_JS_RUNTIME = "nodejs18.x"
+  # Next.js specific settings
+  NEXT_TELEMETRY_DISABLED = "1"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
