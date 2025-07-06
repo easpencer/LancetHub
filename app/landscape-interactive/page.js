@@ -24,17 +24,22 @@ import styles from './landscape-interactive.module.css';
 // Dynamically import Plotly to avoid SSR issues
 const Plot = dynamic(() => import('react-plotly.js'), { ssr: false });
 
-// Color palette for dimensions
+// Color palette for dimensions - vibrant gradient colors
 const dimensionColors = {
-  'Social Equity & Well-being': '#FF6B6B',
-  'Environmental Resilience': '#4ECDC4',
-  'Economic Sustainability': '#45B7D1',
-  'Healthcare Systems': '#96CEB4',
-  'Information Systems': '#DDA0DD',
-  'Infrastructure Resilience': '#F4A460',
-  'Governance & Civic Engagement': '#98D8C8',
-  'Cultural Vitality': '#FFB6C1',
-  'default': '#95A5A6'
+  'Social Equity & Well-being': '#ec4899',
+  'Environmental Stewardship & Resource Security': '#10b981',
+  'Economic Vitality & Diversity': '#3b82f6',
+  'Knowledge & Learning': '#f59e0b',
+  'Governance & Civic Engagement': '#8b5cf6',
+  'Infrastructure & Built Environment': '#ef4444',
+  'Cultural Vitality & Heritage': '#06b6d4',
+  'Environmental Resilience': '#10b981',
+  'Economic Sustainability': '#3b82f6',
+  'Healthcare Systems': '#ec4899',
+  'Information Systems': '#8b5cf6',
+  'Infrastructure Resilience': '#ef4444',
+  'Cultural Vitality': '#06b6d4',
+  'default': '#6b7280'
 };
 
 export default function LandscapeInteractivePage() {
@@ -239,21 +244,57 @@ export default function LandscapeInteractivePage() {
                 colors: sunburstData.children.flatMap(d => [
                   dimensionColors[d.name] || dimensionColors.default,
                   ...d.children.map(() => dimensionColors[d.name] || dimensionColors.default)
-                ])
+                ]),
+                line: {
+                  color: 'rgba(255, 255, 255, 0.2)',
+                  width: 2
+                }
               },
               textinfo: 'label',
-              hovertemplate: '<b>%{label}</b><extra></extra>',
-              customdata: sunburstData.children.flatMap(d => [null, ...d.children.map(c => c.data)])
+              textfont: {
+                size: 14,
+                color: 'white',
+                family: 'system-ui, -apple-system, sans-serif'
+              },
+              hoverlabel: {
+                bgcolor: 'rgba(0, 0, 0, 0.8)',
+                bordercolor: 'rgba(255, 255, 255, 0.2)',
+                font: {
+                  size: 14,
+                  color: 'white'
+                }
+              },
+              hovertemplate: '<b>%{label}</b><br>Click to view details<extra></extra>',
+              customdata: sunburstData.children.flatMap(d => [null, ...d.children.map(c => c.data)]),
+              branchvalues: 'total',
+              insidetextorientation: 'radial'
             }]}
             layout={{
               margin: { t: 40, l: 0, r: 0, b: 0 },
-              width: 800,
-              height: 800,
+              width: 900,
+              height: 900,
               paper_bgcolor: 'transparent',
               plot_bgcolor: 'transparent',
-              font: { size: 12, color: 'var(--text-color)' }
+              font: { 
+                size: 14, 
+                color: '#ffffff',
+                family: 'system-ui, -apple-system, sans-serif'
+              },
+              showlegend: false,
+              sunburstcolorway: Object.values(dimensionColors)
             }}
-            config={{ displayModeBar: false }}
+            config={{ 
+              displayModeBar: true,
+              displaylogo: false,
+              modeBarButtonsToRemove: ['pan2d', 'lasso2d', 'select2d', 'autoScale2d', 'resetScale2d'],
+              toImageButtonOptions: {
+                format: 'png',
+                filename: 'resilience-framework',
+                height: 1200,
+                width: 1200,
+                scale: 2
+              }
+            }}
             onClick={(event) => {
               if (event.points[0].customdata) {
                 setSelectedTopic(event.points[0].customdata);
@@ -273,22 +314,70 @@ export default function LandscapeInteractivePage() {
               values: treemapData.values,
               text: treemapData.text,
               textposition: 'middle center',
+              textfont: {
+                size: 16,
+                color: 'white',
+                family: 'system-ui, -apple-system, sans-serif',
+                weight: 600
+              },
               marker: {
                 colors: treemapData.colors,
-                line: { width: 2, color: 'white' }
+                line: { 
+                  width: 3, 
+                  color: 'rgba(255, 255, 255, 0.3)' 
+                },
+                cornerradius: 10,
+                opacity: 0.9
               },
-              hovertemplate: '<b>%{label}</b><extra></extra>',
-              customdata: treemapData.customdata
+              hoverlabel: {
+                bgcolor: 'rgba(0, 0, 0, 0.9)',
+                bordercolor: 'rgba(255, 255, 255, 0.3)',
+                font: {
+                  size: 16,
+                  color: 'white',
+                  family: 'system-ui, -apple-system, sans-serif'
+                }
+              },
+              hovertemplate: '<b>%{label}</b><br>%{value} topics<br>Click to explore<extra></extra>',
+              customdata: treemapData.customdata,
+              pathbar: {
+                visible: true,
+                thickness: 30,
+                textfont: {
+                  size: 12,
+                  color: 'white'
+                }
+              }
             }]}
             layout={{
-              margin: { t: 40, l: 0, r: 0, b: 0 },
-              width: 900,
-              height: 600,
+              margin: { t: 50, l: 10, r: 10, b: 10 },
+              width: 1000,
+              height: 700,
               paper_bgcolor: 'transparent',
               plot_bgcolor: 'transparent',
-              font: { size: 14, color: 'var(--text-color)' }
+              font: { 
+                size: 16, 
+                color: '#ffffff',
+                family: 'system-ui, -apple-system, sans-serif'
+              },
+              treemapcolorway: Object.values(dimensionColors),
+              transition: {
+                duration: 500,
+                easing: 'cubic-in-out'
+              }
             }}
-            config={{ displayModeBar: false }}
+            config={{ 
+              displayModeBar: true,
+              displaylogo: false,
+              modeBarButtonsToRemove: ['pan2d', 'lasso2d', 'select2d', 'autoScale2d', 'resetScale2d'],
+              toImageButtonOptions: {
+                format: 'png',
+                filename: 'resilience-framework',
+                height: 1200,
+                width: 1200,
+                scale: 2
+              }
+            }}
             onClick={(event) => {
               if (event.points[0].customdata) {
                 setSelectedTopic(event.points[0].customdata);
