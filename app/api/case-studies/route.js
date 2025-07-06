@@ -31,8 +31,20 @@ export async function GET() {
       Description: record['Short Description'] || record.Description || '',
       Focus: record['Study Focus'] || record.Focus || '',
       Relevance: record['Relevance to Community/Societal Resilience'] || record.Relevance || '',
-      Dimensions: record['Resilient Dimensions '] || record.Dimensions || '', // Note the trailing space!
-      Keywords: record['Key Words '] || record.Keywords || '', // Note the trailing space!
+      Dimensions: (() => {
+        const dims = record['Resilient Dimensions '] || record.Dimensions || [];
+        if (Array.isArray(dims)) {
+          return dims.join(', ');
+        }
+        return dims;
+      })(), // Note the trailing space!
+      Keywords: (() => {
+        const kw = record['Key Words '] || record.Keywords || [];
+        if (Array.isArray(kw)) {
+          return kw.join(', ');
+        }
+        return kw;
+      })(), // Note the trailing space!
       Author: record.Name || record.People || record.Author || '',
       // Format date
       formattedDate: record.Date ? new Date(record.Date).toLocaleDateString('en-US', {
@@ -40,8 +52,14 @@ export async function GET() {
         month: 'long',
         day: 'numeric'
       }) : null,
-      // Create dimensions list
-      dimensionsList: (record['Resilient Dimensions '] || record.Dimensions || '').split(',').map(d => d.trim()).filter(Boolean)
+      // Create dimensions list - handle both string and array formats
+      dimensionsList: (() => {
+        const dims = record['Resilient Dimensions '] || record.Dimensions || [];
+        if (Array.isArray(dims)) {
+          return dims.map(d => d.trim()).filter(Boolean);
+        }
+        return dims.split(',').map(d => d.trim()).filter(Boolean);
+      })()
     }));
     
     return NextResponse.json({ 
