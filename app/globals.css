@@ -44,7 +44,7 @@
   --card-border: 1px solid rgba(255, 255, 255, 0.08);
   
   /* Gradients */
-  --gradient-primary: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  --gradient-primary: linear-gradient(135deg, #6366f1, #8b5cf6);
   --gradient-warm: linear-gradient(135deg, var(--accent-color), var(--secondary-color));
   --gradient-medical: linear-gradient(135deg, #0066cc, #2c7873);
   
@@ -55,6 +55,13 @@
   --health-green: #2E8B57;
   --warning-orange: #FF9800;
   --risk-red: #FF4444;
+  
+  /* Additional dark theme variables for interactive visualization */
+  --background-dark: #0a0a0f;
+  --text-primary: #ffffff;
+  --text-secondary: #a0a0a0;
+  --border-color: rgba(255, 255, 255, 0.1);
+  --primary-hover: #0052a3;
 }
 
 * {
