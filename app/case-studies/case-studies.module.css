@@ -637,42 +637,306 @@
   box-shadow: var(--shadow-md);
 }
 
-/* Responsive */
-@media (max-width: 768px) {
+/* Mobile-first responsive design */
+/* Base mobile styles (320px and up) */
+@media (max-width: 480px) {
+  .container {
+    padding: 0 1rem;
+  }
+  
+  .pageHeader {
+    padding-top: 1rem;
+  }
+  
+  .pageHeader h1 {
+    font-size: 1.75rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .subtitle {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  /* Stats bar mobile optimization */
+  .statsBar {
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 1.5rem 1rem;
+  }
+  
+  .statNumber {
+    font-size: 2rem;
+  }
+  
+  .statLabel {
+    font-size: 0.8rem;
+  }
+  
+  /* Filters mobile optimization */
+  .filtersContainer {
+    padding: 1rem;
+    margin: 1rem 0;
+  }
+  
+  .searchContainer {
+    padding: 0.5rem 1rem;
+  }
+  
+  .searchIcon {
+    font-size: 1rem;
+    margin-right: 0.5rem;
+  }
+  
+  .searchInput {
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+  
+  .filterOptions {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .filterGroup {
+    width: 100%;
+    padding: 0.5rem 1rem;
+  }
+  
+  .filterSelect {
+    width: 100%;
+    min-width: unset;
+  }
+  
+  .viewToggle {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  /* Grid optimization */
+  .caseStudiesGrid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    padding: 0;
+  }
+  
+  /* Case study cards */
+  .caseStudyCard {
+    margin: 0;
+  }
+  
+  .cardContent {
+    padding: 1.25rem;
+  }
+  
+  .cardHeader {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .studyType,
+  .fullDataBadge {
+    font-size: 0.75rem;
+    padding: 0.3rem 0.75rem;
+  }
+  
+  .cardTitle {
+    font-size: 1.1rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .cardDescription {
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+  }
+  
+  .metaTags {
+    gap: 0.5rem;
+  }
+  
+  .metaTag {
+    font-size: 0.75rem;
+  }
+  
+  .cardFooter {
+    margin-top: 1rem;
+    padding-top: 1rem;
+  }
+  
+  .authorInfo {
+    margin-bottom: 0.75rem;
+  }
+  
+  .authorInfo span {
+    font-size: 0.85rem;
+  }
+  
+  .readMore {
+    font-size: 0.9rem;
+    padding: 0.5rem;
+  }
+  
+  /* List view optimization */
+  .listViewItem {
+    padding: 1rem;
+  }
+  
+  .detailedHeader {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .detailedTitle {
+    font-size: 1.25rem;
+  }
+  
+  .detailsGrid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .infoLabel {
+    font-size: 0.8rem;
+  }
+  
+  .infoValue {
+    font-size: 0.9rem;
+  }
+  
+  /* No results */
+  .noResults {
+    padding: 2rem 1rem;
+  }
+  
+  .noResults h3 {
+    font-size: 1.25rem;
+  }
+}
+
+/* Small tablets (481px to 768px) */
+@media (min-width: 481px) and (max-width: 768px) {
   .pageHeader h1 {
     font-size: 2rem;
   }
   
   .statsBar {
-    flex-direction: column;
-    gap: 1.5rem;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: space-around;
   }
   
   .filterOptions {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  
-  .searchContainer,
-  .filterGroup {
-    max-width: none;
-  }
-  
-  .caseStudiesGrid {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
-  
-  .detailedHeader {
-    flex-direction: column;
+    flex-wrap: wrap;
     gap: 1rem;
   }
   
-  .detailedTitle {
+  .caseStudiesGrid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  .cardContent {
+    padding: 1.5rem;
+  }
+}
+
+/* Tablets (769px to 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .caseStudiesGrid {
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  }
+}
+
+/* Large screens adjustment */
+@media (min-width: 1025px) {
+  .caseStudiesGrid {
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  /* Remove hover effects on touch devices */
+  .caseStudyCard:hover {
+    transform: none;
+    box-shadow: var(--shadow-md);
+  }
+  
+  .caseStudyCard:hover::before {
+    transform: translateX(-100%);
+  }
+  
+  /* Add active states for better feedback */
+  .caseStudyCard:active {
+    transform: scale(0.98);
+  }
+  
+  .viewToggleButton:active,
+  .readMore:active {
+    transform: scale(0.95);
+  }
+  
+  /* Increase tap targets */
+  .viewToggleButton {
+    min-height: 44px;
+    padding: 0.75rem 1rem;
+  }
+  
+  .readMore {
+    min-height: 44px;
+    padding: 0.75rem;
+  }
+  
+  .filterSelect {
+    min-height: 44px;
+  }
+}
+
+/* Landscape mobile optimization */
+@media (max-width: 768px) and (orientation: landscape) {
+  .pageHeader {
+    padding-top: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .pageHeader h1 {
     font-size: 1.5rem;
   }
   
-  .viewToggle {
-    margin-left: 0;
+  .statsBar {
+    display: none; /* Hide on landscape mobile to save space */
+  }
+  
+  .caseStudiesGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  .caseStudyCard,
+  .viewToggleButton,
+  .readMore {
+    transition: none;
+  }
+  
+  .caseStudyCard::before {
+    display: none;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .caseStudyCard {
+    border-width: 2px;
+  }
+  
+  .studyType,
+  .fullDataBadge {
+    border-width: 2px;
+  }
+  
+  .viewToggleButton.active {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
   }
 }

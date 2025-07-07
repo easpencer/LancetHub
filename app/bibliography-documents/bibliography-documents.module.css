@@ -585,68 +585,360 @@
   transform: translateY(-2px);
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
+/* Mobile-first responsive design */
+/* Base mobile styles (320px and up) */
+@media (max-width: 480px) {
   .container {
     padding: 1rem;
   }
-
-  .header h1 {
-    font-size: 2rem;
+  
+  .header {
+    margin-bottom: 2rem;
   }
 
+  .header h1 {
+    font-size: 1.75rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .subtitle {
+    font-size: 1rem;
+  }
+
+  /* Main tabs mobile optimization */
   .mainTabs {
     flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.25rem;
+    margin-bottom: 2rem;
   }
 
   .mainTab {
     width: 100%;
     justify-content: center;
+    padding: 0.875rem 1.5rem;
+    font-size: 0.9rem;
   }
 
+  /* Controls mobile optimization */
   .controls {
     padding: 1rem;
+    gap: 0.75rem;
   }
 
   .searchControls {
-    flex-direction: column;
+    margin-bottom: 0.75rem;
   }
 
   .searchBox {
     max-width: none;
   }
+  
+  .searchIcon {
+    left: 0.75rem;
+    font-size: 1rem;
+  }
+  
+  .searchInput {
+    padding: 0.6rem 0.75rem 0.6rem 2.5rem;
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
 
   .filters {
     flex-direction: column;
-    align-items: stretch;
+    gap: 0.75rem;
   }
 
   .filterSelect,
   .sortSelect {
-    min-width: auto;
     width: 100%;
+    min-height: 44px;
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+  }
+  
+  /* Results header */
+  .resultsHeader {
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+  }
+  
+  .resultsHeader h3 {
+    font-size: 1rem;
   }
 
+  /* Grid optimization */
   .papersGrid,
   .documentsGrid {
     grid-template-columns: 1fr;
+    gap: 1rem;
   }
 
+  /* Card optimization */
   .paperCard,
   .documentCard {
-    padding: 1.5rem;
+    padding: 1.25rem;
+  }
+  
+  .paperHeader,
+  .documentHeader {
+    margin-bottom: 1rem;
+  }
+  
+  .paperTitle,
+  .documentTitle {
+    font-size: 1.1rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .paperMeta,
+  .documentMeta {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  
+  .paperYear,
+  .paperDimension,
+  .paperType,
+  .documentType,
+  .documentYear {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.5rem;
+  }
+  
+  .paperAuthors,
+  .documentAuthors {
+    font-size: 0.85rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .paperAbstract,
+  .documentDescription {
+    font-size: 0.9rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .paperJournal {
+    font-size: 0.85rem;
   }
 
   .paperFooter,
   .documentFooter {
     flex-direction: column;
-    align-items: stretch;
+    gap: 0.75rem;
   }
 
   .paperLink,
   .citeButton,
   .documentLink,
   .downloadButton {
+    width: 100%;
     justify-content: center;
+    font-size: 0.9rem;
+    padding: 0.6rem 1rem;
+    min-height: 44px;
+  }
+  
+  /* Modal optimization */
+  .modalOverlay {
+    padding: 1rem;
+  }
+  
+  .modalContent {
+    padding: 2rem 1.5rem;
+    max-height: 85vh;
+  }
+  
+  .modalClose {
+    top: 1rem;
+    right: 1rem;
+    width: 36px;
+    height: 36px;
+    font-size: 1.5rem;
+  }
+  
+  .modalContent h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    padding-right: 2rem;
+  }
+  
+  .modalMeta {
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .modalMeta p {
+    font-size: 0.85rem;
+    margin: 0.25rem 0;
+  }
+  
+  .modalAbstract h3,
+  .modalKeywords h3 {
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .modalAbstract p,
+  .modalKeywords p {
+    font-size: 0.9rem;
+  }
+  
+  .modalActions {
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+  }
+  
+  .modalLink {
+    width: 100%;
+    justify-content: center;
+    padding: 0.6rem 1rem;
+  }
+}
+
+/* Small tablets (481px to 768px) */
+@media (min-width: 481px) and (max-width: 768px) {
+  .container {
+    padding: 1.5rem;
+  }
+  
+  .header h1 {
+    font-size: 2rem;
+  }
+  
+  .mainTabs {
+    gap: 0.75rem;
+  }
+  
+  .controls {
+    padding: 1.25rem;
+  }
+  
+  .papersGrid,
+  .documentsGrid {
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  .paperCard,
+  .documentCard {
+    padding: 1.5rem;
+  }
+  
+  .paperFooter,
+  .documentFooter {
+    flex-wrap: wrap;
+  }
+}
+
+/* Tablets (769px to 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .papersGrid,
+  .documentsGrid {
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  }
+}
+
+/* Large screens optimization */
+@media (min-width: 1025px) {
+  .papersGrid,
+  .documentsGrid {
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  /* Remove hover effects on touch devices */
+  .paperCard:hover,
+  .documentCard:hover {
+    transform: none;
+    box-shadow: var(--shadow-md);
+  }
+  
+  /* Add active states */
+  .paperCard:active,
+  .documentCard:active {
+    transform: scale(0.98);
+  }
+  
+  .paperLink:active,
+  .citeButton:active,
+  .documentLink:active,
+  .downloadButton:active,
+  .modalLink:active {
+    transform: scale(0.95);
+  }
+  
+  /* Increase touch targets */
+  .mainTab {
+    min-height: 48px;
+  }
+  
+  .filterSelect,
+  .sortSelect {
+    cursor: pointer;
+  }
+}
+
+/* Landscape mobile optimization */
+@media (max-width: 768px) and (orientation: landscape) {
+  .header {
+    margin-bottom: 1.5rem;
+  }
+  
+  .header h1 {
+    font-size: 1.5rem;
+  }
+  
+  .subtitle {
+    display: none;
+  }
+  
+  .mainTabs {
+    flex-direction: row;
+  }
+  
+  .papersGrid,
+  .documentsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .modalContent {
+    max-height: 90vh;
+    padding: 1.5rem;
+  }
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  .paperCard,
+  .documentCard,
+  .mainTab,
+  .paperLink,
+  .citeButton,
+  .documentLink,
+  .downloadButton {
+    transition: none;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .paperCard,
+  .documentCard {
+    border-width: 2px;
+  }
+  
+  .mainTab.activeMainTab {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+  }
+  
+  .paperLink,
+  .documentLink {
+    border: 2px solid currentColor;
   }
 }

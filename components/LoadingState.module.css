@@ -122,6 +122,68 @@
   height: 80px;
 }
 
+/* Mobile optimizations */
+@media (max-width: 480px) {
+  .loadingContainer {
+    padding: 1rem;
+    gap: 1rem;
+  }
+  
+  .loadingMessage {
+    font-size: 1.25rem;
+  }
+  
+  .loadingSubmessage {
+    font-size: 0.9rem;
+  }
+  
+  /* Adjust spinner sizes for mobile */
+  .sizeSmall.spinner {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .sizeMedium.spinner {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .sizeLarge.spinner {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .sizeSmall.dotsLoader div {
+    width: 6px;
+    height: 6px;
+  }
+  
+  .sizeMedium.dotsLoader div {
+    width: 10px;
+    height: 10px;
+  }
+  
+  .sizeLarge.dotsLoader div {
+    width: 16px;
+    height: 16px;
+  }
+  
+  .sizeSmall.pulseLoader {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .sizeMedium.pulseLoader {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .sizeLarge.pulseLoader {
+    width: 60px;
+    height: 60px;
+  }
+}
+
 @media (prefers-reduced-motion) {
   .spinner::before {
     animation: none;
