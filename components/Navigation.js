@@ -39,7 +39,7 @@ export default function Navigation() {
     { href: '/landscape-interactive', label: 'Interactive Visualization' },
     { href: '/pandemic-vulnerability', label: 'Pandemic Map' },
     { href: '/case-studies', label: 'Case Studies' },
-    { href: '/insights', label: 'Insights' },
+    { href: '/analysis-insights', label: 'Analysis & Insights' },
     { href: '/people', label: 'People' },
     { href: '/bibliography', label: 'Bibliography' },
     { href: '/references', label: 'References' },
