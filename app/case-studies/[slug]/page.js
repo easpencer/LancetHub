@@ -312,11 +312,21 @@ export default function CaseStudyPage({ params }) {
                 <h2>References</h2>
               </div>
               <div className={styles.references}>
-                {study.References.split('\n').filter(Boolean).map((ref, index) => (
-                  <p key={index} className={styles.reference}>
-                    {ref.trim()}
-                  </p>
-                ))}
+                {(() => {
+                  // Handle References as either string or array
+                  let referencesList = [];
+                  if (typeof study.References === 'string') {
+                    referencesList = study.References.split('\n').filter(Boolean);
+                  } else if (Array.isArray(study.References)) {
+                    referencesList = study.References;
+                  }
+                  
+                  return referencesList.map((ref, index) => (
+                    <p key={index} className={styles.reference}>
+                      {typeof ref === 'string' ? ref.trim() : ref}
+                    </p>
+                  ));
+                })()}
               </div>
             </div>
           )}
