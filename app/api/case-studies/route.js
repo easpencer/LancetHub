@@ -31,6 +31,20 @@ export async function GET() {
       Description: record['Short Description'] || record.Description || '',
       Focus: record['Study Focus'] || record.Focus || '',
       Relevance: record['Relevance to Community/Societal Resilience'] || record.Relevance || '',
+      // New fields
+      Results: record.Results || record.results || record['Study Results'] || '',
+      Methods: record.Methods || record.methods || record.Methodology || record['Study Methods'] || '',
+      Insights: record.Insights || record.insights || record['Key Insights'] || '',
+      References: record.References || record.references || record['Study References'] || '',
+      Findings: record.Findings || record.findings || record['Key Findings'] || '',
+      Recommendations: record.Recommendations || record.recommendations || record['Study Recommendations'] || '',
+      Challenges: record.Challenges || record.challenges || record['Implementation Challenges'] || '',
+      Context: record.Context || record.context || record['Study Context'] || '',
+      Impact: record.Impact || record.impact || record['Potential Impact'] || '',
+      DataSources: record['Data Sources'] || record.DataSources || '',
+      Limitations: record.Limitations || record.limitations || record['Study Limitations'] || '',
+      FutureWork: record['Future Work'] || record.FutureWork || record['Next Steps'] || '',
+      // Keep existing fields
       Dimensions: (() => {
         const dims = record['Resilient Dimensions '] || record.Dimensions || [];
         if (Array.isArray(dims)) {

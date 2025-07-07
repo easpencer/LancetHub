@@ -205,13 +205,33 @@ export default function CaseStudyPage({ params }) {
             </div>
           )}
           
-          {study.Methodology && (
+          {study.Context && (
+            <div className={styles.contentSection}>
+              <div className={styles.sectionHeader}>
+                <FaBuilding className={styles.sectionIcon} />
+                <h2>Study Context</h2>
+              </div>
+              <p>{study.Context}</p>
+            </div>
+          )}
+          
+          {(study.Methods || study.Methodology) && (
             <div className={styles.contentSection}>
               <div className={styles.sectionHeader}>
                 <FaGraduationCap className={styles.sectionIcon} />
-                <h2>Methodology</h2>
+                <h2>Methods</h2>
               </div>
-              <p>{study.Methodology}</p>
+              <p>{study.Methods || study.Methodology}</p>
+            </div>
+          )}
+          
+          {study.Results && (
+            <div className={styles.contentSection}>
+              <div className={styles.sectionHeader}>
+                <FaChartLine className={styles.sectionIcon} />
+                <h2>Results</h2>
+              </div>
+              <p>{study.Results}</p>
             </div>
           )}
           
@@ -225,6 +245,36 @@ export default function CaseStudyPage({ params }) {
             </div>
           )}
           
+          {study.Insights && (
+            <div className={styles.contentSection}>
+              <div className={styles.sectionHeader}>
+                <FaLightbulb className={styles.sectionIcon} />
+                <h2>Key Insights</h2>
+              </div>
+              <p>{study.Insights}</p>
+            </div>
+          )}
+          
+          {study.Impact && (
+            <div className={styles.contentSection}>
+              <div className={styles.sectionHeader}>
+                <FaExclamationTriangle className={styles.sectionIcon} />
+                <h2>Potential Impact</h2>
+              </div>
+              <p>{study.Impact}</p>
+            </div>
+          )}
+          
+          {study.Challenges && (
+            <div className={styles.contentSection}>
+              <div className={styles.sectionHeader}>
+                <FaExclamationTriangle className={styles.sectionIcon} />
+                <h2>Implementation Challenges</h2>
+              </div>
+              <p>{study.Challenges}</p>
+            </div>
+          )}
+          
           {study.Recommendations && (
             <div className={styles.contentSection}>
               <div className={styles.sectionHeader}>
@@ -232,6 +282,42 @@ export default function CaseStudyPage({ params }) {
                 <h2>Recommendations</h2>
               </div>
               <p>{study.Recommendations}</p>
+            </div>
+          )}
+          
+          {study.Limitations && (
+            <div className={styles.contentSection}>
+              <div className={styles.sectionHeader}>
+                <FaExclamationTriangle className={styles.sectionIcon} />
+                <h2>Study Limitations</h2>
+              </div>
+              <p>{study.Limitations}</p>
+            </div>
+          )}
+          
+          {study.FutureWork && (
+            <div className={styles.contentSection}>
+              <div className={styles.sectionHeader}>
+                <FaChartLine className={styles.sectionIcon} />
+                <h2>Future Work</h2>
+              </div>
+              <p>{study.FutureWork}</p>
+            </div>
+          )}
+          
+          {study.References && (
+            <div className={styles.contentSection}>
+              <div className={styles.sectionHeader}>
+                <FaBookOpen className={styles.sectionIcon} />
+                <h2>References</h2>
+              </div>
+              <div className={styles.references}>
+                {study.References.split('\n').filter(Boolean).map((ref, index) => (
+                  <p key={index} className={styles.reference}>
+                    {ref.trim()}
+                  </p>
+                ))}
+              </div>
             </div>
           )}
         </div>
