@@ -41,8 +41,7 @@ export default function Navigation() {
     { href: '/case-studies', label: 'Case Studies' },
     { href: '/analysis-insights', label: 'Analysis & Insights' },
     { href: '/people', label: 'People' },
-    { href: '/bibliography', label: 'Bibliography' },
-    { href: '/references', label: 'References' },
+    { href: '/bibliography-documents', label: 'Bibliography & Documents' },
     { href: '/join-us', label: 'Join Us' }
   ];
 
@@ -67,7 +66,7 @@ export default function Navigation() {
               <li key={index} className={styles.navItem}>
                 <Link 
                   href={link.href} 
-                  className={`${styles.navLink} ${pathname === link.href ? styles.active : ''}`}
+                  className={`${styles.navLink} ${pathname === link.href || (link.href === '/bibliography-documents' && (pathname === '/bibliography' || pathname === '/references')) ? styles.active : ''}`}
                 >
                   {link.label}
                 </Link>
@@ -105,7 +104,7 @@ export default function Navigation() {
                 >
                   <Link 
                     href={link.href} 
-                    className={`${styles.mobileNavLink} ${pathname === link.href ? styles.active : ''}`}
+                    className={`${styles.mobileNavLink} ${pathname === link.href || (link.href === '/bibliography-documents' && (pathname === '/bibliography' || pathname === '/references')) ? styles.active : ''}`}
                   >
                     {link.label}
                   </Link>

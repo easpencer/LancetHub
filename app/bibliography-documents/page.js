@@ -29,6 +29,7 @@ export default function BibliographyDocuments() {
   const [filteredReferences, setFilteredReferences] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedPaper, setSelectedPaper] = useState(null);
   
   // Main tab state
   const [activeMainTab, setActiveMainTab] = useState('bibliography'); // 'bibliography' or 'documents'
@@ -65,7 +66,9 @@ export default function BibliographyDocuments() {
         throw new Error(`Failed to fetch bibliography: ${bibliographyRes.status}`);
       }
       const bibliographyData = await bibliographyRes.json();
+      console.log('Bibliography data received:', bibliographyData);
       const papersData = bibliographyData.papers || [];
+      console.log('Total papers:', papersData.length);
       setPapers(papersData);
       setFilteredPapers(papersData);
       
@@ -145,9 +148,11 @@ export default function BibliographyDocuments() {
     
     if (bibliographySearchTerm) {
       filtered = filtered.filter(paper =>
+        paper.Name?.toLowerCase().includes(bibliographySearchTerm.toLowerCase()) ||
         paper.Title?.toLowerCase().includes(bibliographySearchTerm.toLowerCase()) ||
         paper.Authors?.toLowerCase().includes(bibliographySearchTerm.toLowerCase()) ||
-        paper.Abstract?.toLowerCase().includes(bibliographySearchTerm.toLowerCase())
+        paper.Abstract?.toLowerCase().includes(bibliographySearchTerm.toLowerCase()) ||
+        paper.Keywords?.toLowerCase().includes(bibliographySearchTerm.toLowerCase())
       );
     }
     
@@ -198,7 +203,7 @@ export default function BibliographyDocuments() {
         case 'year-asc':
           return (a.Year || 0) - (b.Year || 0);
         case 'title':
-          return (a.Title || '').localeCompare(b.Title || '');
+          return (a.Name || a.Title || '').localeCompare(b.Name || b.Title || '');
         case 'author':
           return (a.Authors || '').localeCompare(b.Authors || '');
         default:
@@ -225,7 +230,7 @@ export default function BibliographyDocuments() {
   };
 
   if (loading) {
-    return <LoadingState message="Loading bibliography and documents..." />;
+    return <LoadingState message="Loading Bibliography and Documents..." />;
   }
 
   if (error) {
@@ -241,9 +246,10 @@ export default function BibliographyDocuments() {
   }
 
   return (
-    <ErrorBoundary>
+    // <ErrorBoundary>
       <div className={styles.container}>
-        <AnimatedSection>
+        <div style={{ color: 'white', padding: '1rem' }}>Debug: Page loaded, {papers.length} papers found</div>
+        {/* <AnimatedSection> */}
           <div className={styles.header}>
             <motion.h1 
               initial={{ opacity: 0, y: -20 }}
@@ -269,14 +275,14 @@ export default function BibliographyDocuments() {
               onClick={() => setActiveMainTab('bibliography')}
             >
               <FaBookOpen />
-              Bibliography ({filteredPapers.length})
+              Bibliography ({papers.length})
             </button>
             <button
               className={`${styles.mainTab} ${activeMainTab === 'documents' ? styles.activeMainTab : ''}`}
               onClick={() => setActiveMainTab('documents')}
             >
               <FaFileAlt />
-              Documents ({filteredReferences.length})
+              Documents ({references.length})
             </button>
           </div>
 
@@ -357,16 +363,22 @@ export default function BibliographyDocuments() {
               </div>
 
               <div className={styles.papersGrid}>
-                {filteredPapers.map((paper, index) => (
-                  <motion.div
-                    key={paper.id || index}
-                    className={styles.paperCard}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, delay: index * 0.05 }}
-                  >
+                {filteredPapers.map((paper, index) => {
+                  // Debug log for first paper
+                  if (index === 0) console.log('First paper structure:', paper);
+                  
+                  return (
+                    <motion.div
+                      key={paper.id || paper.Name || index}
+                      className={styles.paperCard}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3, delay: Math.min(index * 0.02, 1) }}
+                      onClick={() => setSelectedPaper(paper)}
+                      style={{ cursor: 'pointer' }}
+                    >
                     <div className={styles.paperHeader}>
-                      <h3 className={styles.paperTitle}>{paper.Title}</h3>
+                      <h3 className={styles.paperTitle}>{paper.Name || paper.Title}</h3>
                       <div className={styles.paperMeta}>
                         <span className={styles.paperYear}><FaCalendarAlt /> {paper.Year}</span>
                         {paper.Dimension && (
@@ -394,9 +406,9 @@ export default function BibliographyDocuments() {
                         </p>
                       )}
                       
-                      {paper.Journal && (
+                      {(paper.Journal || paper.Publication) && (
                         <p className={styles.paperJournal}>
-                          <em>{paper.Journal}</em>
+                          <em>{paper.Journal || paper.Publication}</em>
                         </p>
                       )}
                     </div>
@@ -408,6 +420,7 @@ export default function BibliographyDocuments() {
                           target="_blank"
                           rel="noopener noreferrer"
                           className={styles.paperLink}
+                          onClick={(e) => e.stopPropagation()}
                         >
                           <FaExternalLinkAlt /> View Paper
                         </a>
@@ -417,7 +430,8 @@ export default function BibliographyDocuments() {
                       </button>
                     </div>
                   </motion.div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           )}
@@ -481,7 +495,7 @@ export default function BibliographyDocuments() {
                     className={styles.documentCard}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, delay: index * 0.05 }}
+                    transition={{ duration: 0.3, delay: Math.min(index * 0.02, 1) }}
                   >
                     <div className={styles.documentHeader}>
                       <h3 className={styles.documentTitle}>{doc.title}</h3>
@@ -539,8 +553,75 @@ export default function BibliographyDocuments() {
               </div>
             </div>
           )}
-        </AnimatedSection>
+        {/* </AnimatedSection> */}
+
+        {/* Paper Detail Modal */}
+        {selectedPaper && (
+          <div className={styles.modalOverlay} onClick={() => setSelectedPaper(null)}>
+            <motion.div
+              className={styles.modalContent}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                className={styles.modalClose}
+                onClick={() => setSelectedPaper(null)}
+              >
+                &times;
+              </button>
+              
+              <h2>{selectedPaper.Name || selectedPaper.Title}</h2>
+              
+              <div className={styles.modalMeta}>
+                {selectedPaper.Authors && <p><strong>Authors:</strong> {selectedPaper.Authors}</p>}
+                {selectedPaper.Year && <p><strong>Year:</strong> {selectedPaper.Year}</p>}
+                {(selectedPaper.Journal || selectedPaper.Publication) && <p><strong>Publication:</strong> {selectedPaper.Journal || selectedPaper.Publication}</p>}
+                {selectedPaper.Dimension && <p><strong>Dimension:</strong> {selectedPaper.Dimension}</p>}
+                {selectedPaper.Type && <p><strong>Type:</strong> {selectedPaper.Type}</p>}
+              </div>
+              
+              {selectedPaper.Abstract && (
+                <div className={styles.modalAbstract}>
+                  <h3>Abstract</h3>
+                  <p>{selectedPaper.Abstract}</p>
+                </div>
+              )}
+              
+              {selectedPaper.Keywords && (
+                <div className={styles.modalKeywords}>
+                  <h3>Keywords</h3>
+                  <p>{selectedPaper.Keywords}</p>
+                </div>
+              )}
+              
+              <div className={styles.modalActions}>
+                {selectedPaper.URL && (
+                  <a
+                    href={selectedPaper.URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles.modalLink}
+                  >
+                    <FaExternalLinkAlt /> View Full Paper
+                  </a>
+                )}
+                {selectedPaper.DOI && (
+                  <a
+                    href={`https://doi.org/${selectedPaper.DOI}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles.modalLink}
+                  >
+                    DOI: {selectedPaper.DOI}
+                  </a>
+                )}
+              </div>
+            </motion.div>
+          </div>
+        )}
       </div>
-    </ErrorBoundary>
+    // </ErrorBoundary>
   );
 }
