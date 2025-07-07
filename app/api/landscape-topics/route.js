@@ -175,28 +175,40 @@ export async function GET() {
 
 // Process landscape data for frontend visualization
 function processLandscapeData(topics) {
+  // Return the topics with ALL original fields preserved
+  const processedTopics = topics.map((topic) => {
+    // If it's from Airtable, it might have the full field names
+    // If it's fallback data, it has simplified names
+    // We'll preserve whatever we get
+    return {
+      ...topic,
+      // Add normalized references for common field patterns
+      _normalized: {
+        topic: topic['Topic / Sub-Dimension'] || topic.Topic || '',
+        dimension: topic.Dimension || 'Other',
+        leadership: topic['People & Leadership'] || topic.Leadership || '',
+        teamwork: topic['Teamwork & Organizations'] || topic.Teamwork || '',
+        data: topic['Data & Knowledge'] || topic.Data || '',
+        resources: topic['Resources & Products'] || topic.Resources || ''
+      }
+    };
+  });
+  
+  // Get unique dimensions
+  const dimensionSet = new Set(processedTopics.map(item => item.Dimension || 'Other'));
+  const dimensions = Array.from(dimensionSet);
+  
   // Group topics by dimension
   const groupedByDimension = {};
   const dimensionCounts = {};
   
-  topics.forEach(topic => {
+  processedTopics.forEach(topic => {
     const dimension = topic.Dimension || 'Other';
     if (!groupedByDimension[dimension]) {
       groupedByDimension[dimension] = [];
       dimensionCounts[dimension] = 0;
     }
-    groupedByDimension[dimension].push({
-      id: topic.id,
-      topic: topic.Topic,
-      dimension: dimension,
-      context: topic.Context,
-      leadership: topic.Leadership,
-      teamwork: topic.Teamwork,
-      data: topic.Data,
-      resources: topic.Resources,
-      importance: topic.Importance,
-      category: topic.Category
-    });
+    groupedByDimension[dimension].push(topic);
     dimensionCounts[dimension]++;
   });
   
@@ -207,12 +219,9 @@ function processLandscapeData(topics) {
     keyThemes: extractKeyThemes(groupedByDimension[dimension])
   }));
   
-  // Get unique dimensions
-  const dimensions = Object.keys(groupedByDimension);
-  
   return {
-    landscapeTopics: topics,
-    totalTopics: topics.length,
+    landscapeTopics: processedTopics,
+    totalTopics: processedTopics.length,
     dimensions,
     dimensionStats,
     groupedByDimension

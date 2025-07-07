@@ -89,12 +89,18 @@ export default function LandscapeInteractivePage() {
         }
         
         const data = await res.json();
+        console.log('🔍 API Response:', data);
+        
         const landscapeData = data.landscapeTopics || [];
+        console.log('📊 Landscape Data:', landscapeData);
+        console.log('📊 First item:', landscapeData[0]);
+        
         setLandscape(landscapeData);
         setFilteredData(landscapeData);
         
         // Extract unique dimensions from the API response
         const uniqueDimensions = data.dimensions || [...new Set(landscapeData.map(item => item.Dimension).filter(Boolean))];
+        console.log('📊 Dimensions:', uniqueDimensions);
         setDimensions(uniqueDimensions);
         
         setLoading(false);
@@ -117,13 +123,13 @@ export default function LandscapeInteractivePage() {
     if (searchTerm) {
       const term = searchTerm.toLowerCase();
       results = results.filter(topic => 
-        (topic.Topic || '').toLowerCase().includes(term) ||
+        (topic['Topic / Sub-Dimension'] || topic.Topic || '').toLowerCase().includes(term) ||
         (topic.Dimension || '').toLowerCase().includes(term) ||
         (topic.Context || '').toLowerCase().includes(term) ||
-        (topic.Leadership || '').toLowerCase().includes(term) ||
-        (topic.Teamwork || '').toLowerCase().includes(term) ||
-        (topic.Data || '').toLowerCase().includes(term) ||
-        (topic.Resources || '').toLowerCase().includes(term) ||
+        (topic['People & Leadership'] || topic.Leadership || '').toLowerCase().includes(term) ||
+        (topic['Teamwork & Organizations'] || topic.Teamwork || '').toLowerCase().includes(term) ||
+        (topic['Data & Knowledge'] || topic.Data || '').toLowerCase().includes(term) ||
+        (topic['Resources & Products'] || topic.Resources || '').toLowerCase().includes(term) ||
         (topic.Description || '').toLowerCase().includes(term) ||
         (topic.Examples || '').toLowerCase().includes(term) ||
         (topic.Implementation || '').toLowerCase().includes(term) ||
@@ -146,6 +152,8 @@ export default function LandscapeInteractivePage() {
 
   // Create sunburst data
   const createSunburstData = useCallback(() => {
+    console.log('🎯 Creating sunburst data with:', filteredData);
+    
     const root = {
       name: 'Resilience Framework',
       children: []
@@ -164,13 +172,14 @@ export default function LandscapeInteractivePage() {
       }
 
       dimensionMap.get(dimension).children.push({
-        name: item.Topic,
+        name: item['Topic / Sub-Dimension'] || item.Topic || 'Unnamed Topic',
         value: 1,
         data: item
       });
     });
 
     root.children = Array.from(dimensionMap.values());
+    console.log('🎯 Sunburst root:', root);
     return root;
   }, [filteredData]);
 
@@ -194,11 +203,11 @@ export default function LandscapeInteractivePage() {
 
     filteredData.forEach(item => {
       const dimension = item.Dimension || 'Other';
-      labels.push(item.Topic);
+      labels.push(item['Topic / Sub-Dimension'] || item.Topic || 'Unnamed Topic');
       parents.push(dimension);
       values.push(1);
       colors.push(dimensionColors[dimension] || dimensionColors.default);
-      text.push(item.Topic);
+      text.push(item['Topic / Sub-Dimension'] || item.Topic || 'Unnamed Topic');
       customdata.push(item);
     });
 
@@ -238,7 +247,7 @@ export default function LandscapeInteractivePage() {
       const topicId = `topic-${index}`;
       nodes.push({
         id: topicId,
-        label: item.Topic,
+        label: item['Topic / Sub-Dimension'] || item.Topic || 'Unnamed Topic',
         size: 10,
         color: dimensionColors[dimension] || dimensionColors.default,
         data: item
@@ -261,18 +270,41 @@ export default function LandscapeInteractivePage() {
           if (!sunburstData || !sunburstData.children || sunburstData.children.length === 0) {
             return <div style={{ color: '#ffffff', textAlign: 'center' }}>No data available for visualization</div>;
           }
+          // Create proper sunburst data structure with root
+          const labels = [sunburstData.name];
+          const parents = [''];
+          const values = [1];  // Root should have a value
+          const colors = ['rgba(255, 255, 255, 0)'];
+          const customdata = [null];
+          
+          // Add dimensions and topics
+          sunburstData.children.forEach(dimension => {
+            labels.push(dimension.name);
+            parents.push(sunburstData.name);
+            values.push(1);  // Give dimensions a value too
+            colors.push(dimensionColors[dimension.name] || dimensionColors.default);
+            customdata.push(null);
+            
+            dimension.children.forEach(topic => {
+              labels.push(topic.name);
+              parents.push(dimension.name);
+              values.push(1);  // All leaves have value 1
+              colors.push(dimensionColors[dimension.name] || dimensionColors.default);
+              customdata.push(topic.data);
+            });
+          });
+          
+          console.log('🌟 Sunburst data structure:', { labels, parents, values });
+          
           return (
           <Plot
             data={[{
               type: 'sunburst',
-              labels: sunburstData.children.flatMap(d => [d.name, ...d.children.map(c => c.name)]),
-              parents: sunburstData.children.flatMap(d => ['', ...d.children.map(() => d.name)]),
-              values: sunburstData.children.flatMap(d => [0, ...d.children.map(() => 1)]),
+              labels: labels,
+              parents: parents,
+              values: values,
               marker: {
-                colors: sunburstData.children.flatMap(d => [
-                  dimensionColors[d.name] || dimensionColors.default,
-                  ...d.children.map(() => dimensionColors[d.name] || dimensionColors.default)
-                ]),
+                colors: colors,
                 line: {
                   color: 'rgba(255, 255, 255, 0.2)',
                   width: 2
@@ -293,8 +325,7 @@ export default function LandscapeInteractivePage() {
                 }
               },
               hovertemplate: '<b>%{label}</b><br>Click to view details<extra></extra>',
-              customdata: sunburstData.children.flatMap(d => [null, ...d.children.map(c => c.data)]),
-              branchvalues: 'total',
+              customdata: customdata,
               insidetextorientation: 'radial'
             }]}
             layout={{
@@ -445,7 +476,7 @@ export default function LandscapeInteractivePage() {
                         whileHover={{ scale: 1.02, boxShadow: '0 8px 16px rgba(0,0,0,0.1)' }}
                         onClick={() => setSelectedTopic(topic)}
                       >
-                        <h4>{topic.Topic}</h4>
+                        <h4>{topic['Topic / Sub-Dimension'] || topic.Topic || 'Unnamed Topic'}</h4>
                         <p className={styles.contextPreview}>
                           {topic.Context ? topic.Context.substring(0, 100) + '...' : ''}
                         </p>
@@ -582,7 +613,7 @@ export default function LandscapeInteractivePage() {
                   >
                     {selectedTopic.Dimension}
                   </span>
-                  <h2>{selectedTopic.Topic}</h2>
+                  <h2>{selectedTopic['Topic / Sub-Dimension'] || selectedTopic.Topic || 'Unnamed Topic'}</h2>
                 </div>
 
                 <div className={styles.modalBody}>
@@ -596,42 +627,42 @@ export default function LandscapeInteractivePage() {
                     </div>
                   )}
 
-                  {selectedTopic.Leadership && (
+                  {(selectedTopic['People & Leadership'] || selectedTopic.Leadership) && (
                     <div className={styles.modalSection}>
                       <FaUsers className={styles.modalIcon} />
                       <div>
-                        <h3>Leadership</h3>
-                        <p>{selectedTopic.Leadership}</p>
+                        <h3>People & Leadership</h3>
+                        <p>{selectedTopic['People & Leadership'] || selectedTopic.Leadership}</p>
                       </div>
                     </div>
                   )}
 
-                  {selectedTopic.Teamwork && (
+                  {(selectedTopic['Teamwork & Organizations'] || selectedTopic.Teamwork) && (
                     <div className={styles.modalSection}>
                       <FaHandshake className={styles.modalIcon} />
                       <div>
-                        <h3>Teamwork</h3>
-                        <p>{selectedTopic.Teamwork}</p>
+                        <h3>Teamwork & Organizations</h3>
+                        <p>{selectedTopic['Teamwork & Organizations'] || selectedTopic.Teamwork}</p>
                       </div>
                     </div>
                   )}
 
-                  {selectedTopic.Data && (
+                  {(selectedTopic['Data & Knowledge'] || selectedTopic.Data) && (
                     <div className={styles.modalSection}>
                       <FaDatabase className={styles.modalIcon} />
                       <div>
-                        <h3>Data</h3>
-                        <p>{selectedTopic.Data}</p>
+                        <h3>Data & Knowledge</h3>
+                        <p>{selectedTopic['Data & Knowledge'] || selectedTopic.Data}</p>
                       </div>
                     </div>
                   )}
 
-                  {selectedTopic.Resources && (
+                  {(selectedTopic['Resources & Products'] || selectedTopic.Resources) && (
                     <div className={styles.modalSection}>
                       <FaTools className={styles.modalIcon} />
                       <div>
-                        <h3>Resources</h3>
-                        <p>{selectedTopic.Resources}</p>
+                        <h3>Resources & Products</h3>
+                        <p>{selectedTopic['Resources & Products'] || selectedTopic.Resources}</p>
                       </div>
                     </div>
                   )}
@@ -739,7 +770,7 @@ export default function LandscapeInteractivePage() {
             <p>Topics</p>
           </div>
           <div className={styles.statCard}>
-            <h3>{filteredData.filter(t => t.Leadership).length}</h3>
+            <h3>{filteredData.filter(t => t['People & Leadership'] || t.Leadership).length}</h3>
             <p>Leadership Areas</p>
           </div>
         </div>

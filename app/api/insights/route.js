@@ -1,8 +1,13 @@
 import { NextResponse } from 'next/server';
 import { fetchCaseStudies, fetchPeopleData, fetchLandscapeData } from '../../../utils/airtable';
+import { createInsightsEngine } from '../../../utils/insights-engine';
+import { processCaseStudiesForInsights } from '../../../utils/insights-data-processor';
 
-export async function GET() {
+export async function GET(request) {
   try {
+    const { searchParams } = new URL(request.url);
+    const analysisType = searchParams.get('type') || 'comprehensive';
+    
     console.log('🔄 Generating insights from real data...');
     
     // Fetch data from multiple sources
@@ -14,6 +19,27 @@ export async function GET() {
 
     console.log(`📊 Analyzing ${caseStudies.length} case studies, ${people.length} people, ${landscapeData.length} landscape items`);
 
+    // Use the new insights engine for comprehensive analysis
+    if (analysisType === 'comprehensive' && caseStudies.length > 0) {
+      const engine = await createInsightsEngine(caseStudies);
+      const report = engine.generateInsightsReport();
+      const visualizationData = engine.getVisualizationData();
+      
+      return NextResponse.json({
+        success: true,
+        analysisType: 'comprehensive',
+        report,
+        visualizations: visualizationData,
+        metadata: {
+          caseStudiesAnalyzed: caseStudies.length,
+          peopleIncluded: people.length,
+          landscapeItems: landscapeData.length,
+          timestamp: new Date().toISOString()
+        }
+      });
+    }
+
+    // Original simple analysis for backward compatibility
     // Extract themes from case studies
     const dimensionCounts = {};
     const keywordCounts = {};
@@ -198,6 +224,8 @@ export async function GET() {
     console.log(`✅ Generated ${insights.length} insights and ${metrics.length} metrics from real data`);
 
     return NextResponse.json({ 
+      success: true,
+      analysisType: 'simple',
       insights,
       metrics,
       themes: {
@@ -252,6 +280,8 @@ export async function GET() {
     ];
 
     return NextResponse.json({ 
+      success: false,
+      analysisType: 'fallback',
       insights: fallbackInsights,
       metrics: fallbackMetrics,
       dataSource: 'fallback',

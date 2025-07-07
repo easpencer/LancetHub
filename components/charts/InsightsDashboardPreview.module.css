@@ -1,0 +1,105 @@
+.previewContainer {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.previewContainer h2 {
+  color: var(--text-color);
+  margin-bottom: 2rem;
+  text-align: center;
+  font-size: 2rem;
+}
+
+.featureGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.featureCard {
+  background-color: var(--highlight-bg);
+  border-radius: var(--border-radius-lg);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-md);
+  transition: transform 0.3s ease;
+}
+
+.featureCard:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+}
+
+.featureCard h3 {
+  color: var(--text-color);
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+}
+
+.featureCard ul {
+  list-style: none;
+  padding: 0;
+}
+
+.featureCard li {
+  padding: 0.5rem 0;
+  color: var(--light-text);
+  position: relative;
+  padding-left: 1.5rem;
+}
+
+.featureCard li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: var(--secondary-color);
+}
+
+.chartTypes {
+  margin-top: 3rem;
+}
+
+.chartTypes h3 {
+  color: var(--text-color);
+  margin-bottom: 1.5rem;
+  text-align: center;
+  font-size: 1.5rem;
+}
+
+.chartGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+}
+
+.chartType {
+  background-color: var(--card-background);
+  border-radius: var(--border-radius-md);
+  padding: 1.5rem;
+  text-align: center;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.chartType:hover {
+  transform: translateY(-3px);
+  border-color: var(--primary-color);
+}
+
+.chartIcon {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.chartType h4 {
+  color: var(--text-color);
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+.chartType p {
+  color: var(--light-text);
+  font-size: 0.85rem;
+  margin: 0;
+}
