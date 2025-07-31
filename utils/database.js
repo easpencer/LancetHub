@@ -8,7 +8,9 @@ const __dirname = path.dirname(__filename);
 
 // Database configuration
 const DB_PATH = path.join(__dirname, '../database/pandemic-resilience.db');
-const USE_AIRTABLE = process.env.USE_AIRTABLE === 'true';
+// In production, always use Airtable since SQLite database isn't deployed
+const isProduction = process.env.NODE_ENV === 'production';
+const USE_AIRTABLE = isProduction || process.env.USE_AIRTABLE === 'true';
 
 let db = null;
 

@@ -38,9 +38,15 @@
 [context.production.environment]
   # Use real Airtable data
   USE_MOCK_DATA = "false"
+  USE_AIRTABLE = "true"
+  NODE_ENV = "production"
 
 [context.deploy-preview.environment]
   USE_MOCK_DATA = "false"
+  USE_AIRTABLE = "true"
+  NODE_ENV = "production"
 
 [context.branch-deploy.environment]
   USE_MOCK_DATA = "false"
+  USE_AIRTABLE = "true"
+  NODE_ENV = "production"

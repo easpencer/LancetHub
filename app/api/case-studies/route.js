@@ -6,11 +6,29 @@ export const dynamic = 'force-dynamic';
 
 export async function GET(request) {
   try {
-    // Check if we should use SQLite or Airtable
-    const useDatabase = process.env.USE_AIRTABLE !== 'true';
+    // In production (Netlify), always use Airtable since SQLite database isn't deployed
+    const isProduction = process.env.NODE_ENV === 'production';
+    const useAirtable = isProduction || process.env.USE_AIRTABLE === 'true';
     
-    if (!useDatabase) {
+    if (useAirtable) {
       console.log('🔄 Fetching case studies from Airtable...');
+      
+      // Check for required environment variables
+      const apiKey = process.env.AIRTABLE_API_KEY;
+      const baseId = process.env.AIRTABLE_BASE_ID;
+      
+      if (!apiKey || !baseId) {
+        console.error('Missing Airtable credentials');
+        return NextResponse.json(
+          { 
+            error: 'Configuration Error', 
+            details: 'Airtable API credentials are not configured. Please set AIRTABLE_API_KEY and AIRTABLE_BASE_ID environment variables.',
+            source: 'configuration'
+          },
+          { status: 500 }
+        );
+      }
+      
       // Fallback to Airtable
       const { fetchCaseStudies, fetchPeopleData } = await import('../../../utils/airtable');
       
