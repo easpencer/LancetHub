@@ -200,6 +200,9 @@
   line-height: 1.7;
   color: var(--light-text);
   margin: 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .section {
@@ -292,6 +295,10 @@
   letter-spacing: 0.5px;
   margin-bottom: 0.75rem;
   border: 1px solid rgba(0, 102, 204, 0.3);
+}
+
+.additionalFields {
+  margin-top: 2rem;
 }
 
 .relatedMeta {
@@ -503,4 +510,288 @@
   .relatedGrid {
     grid-template-columns: 1fr;
   }
+  
+  .authorsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Authors Grid */
+.authorsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.authorCard {
+  background: var(--card-background);
+  border: 1px solid var(--card-border);
+  border-radius: var(--border-radius-lg);
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.authorCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 102, 204, 0.15);
+  border-color: var(--primary-color);
+}
+
+.authorCard .authorName {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-color);
+  margin-bottom: 0.5rem;
+}
+
+.authorCard .authorInstitution {
+  font-size: 0.9rem;
+  color: var(--primary-color);
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+}
+
+.authorCard .authorRole {
+  font-size: 0.85rem;
+  color: var(--accent-color);
+  font-weight: 500;
+  margin-bottom: 0.3rem;
+}
+
+.authorCard .authorExpertise {
+  font-size: 0.8rem;
+  color: var(--light-text);
+  line-height: 1.4;
+}
+
+/* Missing styles for case study detail page */
+.backButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: transparent;
+  color: var(--primary-color);
+  border: 2px solid var(--primary-color);
+  padding: 0.6rem 1.2rem;
+  border-radius: var(--border-radius-round);
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 2rem;
+}
+
+.backButton:hover {
+  background-color: var(--primary-color);
+  color: white;
+  transform: translateX(-5px);
+}
+
+/* Study Header */
+.studyHeader {
+  background: linear-gradient(135deg, rgba(44, 120, 115, 0.05), rgba(0, 102, 204, 0.05));
+  border-radius: var(--border-radius-lg);
+  padding: 2.5rem;
+  margin-bottom: 3rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.studyHeader::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, var(--primary-color) 0%, transparent 70%);
+  opacity: 0.05;
+  transform: translate(50%, -50%);
+}
+
+.headerTop {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.studyType {
+  background: var(--primary-light);
+  color: var(--primary-color);
+  padding: 0.4rem 1rem;
+  border-radius: var(--border-radius-round);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: 1px solid rgba(0, 102, 204, 0.3);
+}
+
+.statusBadge {
+  padding: 0.4rem 1rem;
+  border-radius: var(--border-radius-round);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.statusBadge.completed {
+  background: rgba(76, 175, 80, 0.15);
+  color: #4CAF50;
+  border: 1px solid rgba(76, 175, 80, 0.3);
+}
+
+.statusBadge.ongoing {
+  background: rgba(255, 193, 7, 0.15);
+  color: #FFC107;
+  border: 1px solid rgba(255, 193, 7, 0.3);
+}
+
+.statusBadge.planned {
+  background: rgba(33, 150, 243, 0.15);
+  color: #2196F3;
+  border: 1px solid rgba(33, 150, 243, 0.3);
+}
+
+.studyHeader h1 {
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  margin: 0 0 1.5rem 0;
+  line-height: 1.2;
+  color: var(--text-color);
+  font-weight: 700;
+}
+
+.studyMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.metaItem {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--light-text);
+  font-size: 0.95rem;
+}
+
+.metaItem svg {
+  color: var(--primary-color);
+  font-size: 1.1rem;
+}
+
+.authorInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.authorName {
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.authorInstitution {
+  font-size: 0.85rem;
+  color: var(--primary-color);
+  font-style: italic;
+}
+
+/* Dimension Tags Section */
+.dimensionTags {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.tagsIcon {
+  font-size: 1.2rem;
+  color: var(--accent-color);
+}
+
+.tagsList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.dimensionTag {
+  background: linear-gradient(135deg, rgba(44, 120, 115, 0.15), rgba(44, 120, 115, 0.25));
+  color: var(--accent-color);
+  padding: 0.5rem 1.2rem;
+  border-radius: 25px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  border: 1.5px solid rgba(44, 120, 115, 0.4);
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  cursor: default;
+  position: relative;
+  overflow: hidden;
+}
+
+.dimensionTag::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.6s ease;
+}
+
+.dimensionTag:hover {
+  background: linear-gradient(135deg, rgba(44, 120, 115, 0.25), rgba(44, 120, 115, 0.35));
+  transform: translateY(-2px) scale(1.05);
+  border-color: var(--accent-color);
+  box-shadow: 0 4px 15px rgba(44, 120, 115, 0.3);
+}
+
+.dimensionTag:hover::before {
+  left: 100%;
+}
+
+/* Study Content */
+.studyContent {
+  margin-bottom: 3rem;
+}
+
+.studySummary {
+  background: linear-gradient(135deg, rgba(0, 102, 204, 0.05), rgba(44, 120, 115, 0.05));
+  padding: 2rem;
+  border-radius: var(--border-radius-lg);
+  margin-bottom: 3rem;
+  position: relative;
+  border-left: 4px solid var(--primary-color);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+}
+
+.quoteIcon {
+  font-size: 2rem;
+  color: var(--primary-color);
+  opacity: 0.3;
+  flex-shrink: 0;
+}
+
+.studySummary p {
+  font-size: 1.15rem;
+  line-height: 1.7;
+  color: var(--text-color);
+  margin: 0;
+  font-style: italic;
 }
