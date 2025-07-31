@@ -18,19 +18,16 @@ export async function GET(request) {
       const baseId = process.env.AIRTABLE_BASE_ID;
       
       if (!apiKey || !baseId) {
-        console.warn('Missing Airtable credentials, using sample data');
-        
-        // In production, return sample data instead of error
-        if (isProduction) {
-          const { sampleResponse } = await import('../../../utils/sample-case-studies');
-          return NextResponse.json(sampleResponse);
-        }
+        console.error('Missing Airtable credentials');
+        console.error('AIRTABLE_API_KEY exists:', !!apiKey);
+        console.error('AIRTABLE_BASE_ID exists:', !!baseId);
         
         return NextResponse.json(
           { 
             error: 'Configuration Error', 
             details: 'Airtable API credentials are not configured. Please set AIRTABLE_API_KEY and AIRTABLE_BASE_ID environment variables.',
-            source: 'configuration'
+            hasApiKey: !!apiKey,
+            hasBaseId: !!baseId
           },
           { status: 500 }
         );

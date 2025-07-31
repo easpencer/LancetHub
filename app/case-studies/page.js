@@ -189,17 +189,6 @@ export default function CaseStudies() {
           </div>
         </AnimatedSection>
         
-        {dataSource === 'sample' && (
-          <AnimatedSection>
-            <div className={styles.sampleDataNotice}>
-              <FaExclamationTriangle className={styles.noticeIcon} />
-              <p>
-                <strong>Note:</strong> You are viewing sample case studies. 
-                To see real data, please configure Airtable credentials in your Netlify environment variables.
-              </p>
-            </div>
-          </AnimatedSection>
-        )}
         
         <div className={styles.filtersContainer}>
           <div className={styles.searchContainer}>
