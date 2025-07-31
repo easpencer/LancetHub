@@ -18,7 +18,14 @@ export async function GET(request) {
       const baseId = process.env.AIRTABLE_BASE_ID;
       
       if (!apiKey || !baseId) {
-        console.error('Missing Airtable credentials');
+        console.warn('Missing Airtable credentials, using sample data');
+        
+        // In production, return sample data instead of error
+        if (isProduction) {
+          const { sampleResponse } = await import('../../../utils/sample-case-studies');
+          return NextResponse.json(sampleResponse);
+        }
+        
         return NextResponse.json(
           { 
             error: 'Configuration Error', 
@@ -167,12 +174,27 @@ export async function GET(request) {
     });
   } catch (error) {
     console.error('🔴 Error in case studies route:', error);
-    return NextResponse.json(
-      { 
-        error: 'Failed to load case studies', 
-        details: error.message
-      },
-      { status: 500 }
-    );
+    
+    // Provide more detailed error information
+    const errorResponse = {
+      error: 'Failed to load case studies',
+      details: error.message,
+      type: error.name,
+      source: useAirtable ? 'airtable' : 'database',
+      environment: {
+        NODE_ENV: process.env.NODE_ENV,
+        USE_AIRTABLE: process.env.USE_AIRTABLE,
+        hasApiKey: !!process.env.AIRTABLE_API_KEY,
+        hasBaseId: !!process.env.AIRTABLE_BASE_ID
+      }
+    };
+    
+    // In production, don't expose full error details
+    if (process.env.NODE_ENV === 'production') {
+      delete errorResponse.environment;
+      errorResponse.details = 'An error occurred while loading case studies. Please check server logs.';
+    }
+    
+    return NextResponse.json(errorResponse, { status: 500 });
   }
 }

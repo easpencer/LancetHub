@@ -758,6 +758,35 @@
   box-shadow: var(--shadow-md);
 }
 
+/* Sample Data Notice */
+.sampleDataNotice {
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: var(--border-radius);
+  padding: 1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.sampleDataNotice .noticeIcon {
+  color: #f59e0b;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.sampleDataNotice p {
+  margin: 0;
+  color: var(--text-color);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.sampleDataNotice strong {
+  color: #f59e0b;
+}
+
 /* Mobile-first responsive design */
 /* Base mobile styles (320px and up) */
 @media (max-width: 480px) {

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { FaSearch, FaFilter, FaCalendarAlt, FaUser, FaTags, FaBuilding, FaGraduationCap, FaChartLine, FaBookOpen, FaExternalLinkAlt, FaClipboardList } from 'react-icons/fa';
+import { FaSearch, FaFilter, FaCalendarAlt, FaUser, FaTags, FaBuilding, FaGraduationCap, FaChartLine, FaBookOpen, FaExternalLinkAlt, FaClipboardList, FaExclamationTriangle } from 'react-icons/fa';
 import AnimatedSection from '../../components/AnimatedSection';
 import LoadingState from '../../components/LoadingState';
 import ErrorBoundary from '../../components/ErrorBoundary';
@@ -21,6 +21,7 @@ export default function CaseStudies() {
   const [types, setTypes] = useState([]);
   const [viewMode, setViewMode] = useState('grid'); // grid or detailed
   const [expandedStudy, setExpandedStudy] = useState(null);
+  const [dataSource, setDataSource] = useState(null);
 
   // Fetch case studies and dimensions
   useEffect(() => {
@@ -38,6 +39,7 @@ export default function CaseStudies() {
         
         console.log("Case studies data:", data);
         const studies = data.caseStudies || [];
+        setDataSource(data.source || null);
         
         // Log all available fields from first study to see what Airtable is providing
         if (studies.length > 0) {
@@ -186,6 +188,18 @@ export default function CaseStudies() {
             </div>
           </div>
         </AnimatedSection>
+        
+        {dataSource === 'sample' && (
+          <AnimatedSection>
+            <div className={styles.sampleDataNotice}>
+              <FaExclamationTriangle className={styles.noticeIcon} />
+              <p>
+                <strong>Note:</strong> You are viewing sample case studies. 
+                To see real data, please configure Airtable credentials in your Netlify environment variables.
+              </p>
+            </div>
+          </AnimatedSection>
+        )}
         
         <div className={styles.filtersContainer}>
           <div className={styles.searchContainer}>
