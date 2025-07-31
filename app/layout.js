@@ -2,6 +2,13 @@ import './globals.css';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
 
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+}
+
 export const metadata = {
   title: {
     default: 'Pandemic Resilience Hub - The Lancet Commission on US Societal Resilience in a Global Pandemic Age: Lessons for the Present from the Future',
@@ -10,6 +17,7 @@ export const metadata = {
   description: 'The official platform for The Lancet Commission on US Societal Resilience in a Global Pandemic Age: Lessons for the Present from the Future. Discover community resilience frameworks, case studies, and actionable strategies for pandemic preparedness.',
   keywords: ['Lancet Commission', 'US Societal Resilience', 'Pandemic Age', 'Community Resilience', 'Public Health', 'Pandemic Preparedness', 'Global Health'],
   author: 'The Lancet Commission on US Societal Resilience in a Global Pandemic Age',
+  metadataBase: new URL('https://pandemic-resilience-hub.org'),
   openGraph: {
     title: 'Pandemic Resilience Hub - The Lancet Commission on US Societal Resilience in a Global Pandemic Age: Lessons for the Present from the Future',
     description: 'Discover community resilience frameworks and pandemic preparedness strategies from The Lancet Commission.',
