@@ -10,12 +10,42 @@ export async function GET(request) {
     const role = searchParams.get('role');
     
     console.log(`🔄 Fetching people data${role ? ` for role: ${role}` : ''}...`);
+    console.log('Environment:', process.env.NODE_ENV);
+    console.log('API Key exists:', !!process.env.AIRTABLE_API_KEY);
+    console.log('Base ID exists:', !!process.env.AIRTABLE_BASE_ID);
+    
+    // Check credentials
+    if (!process.env.AIRTABLE_API_KEY || !process.env.AIRTABLE_BASE_ID) {
+      console.error('Missing Airtable credentials for people API');
+      return NextResponse.json(
+        { 
+          error: 'Configuration Error',
+          details: 'Airtable credentials not configured',
+          hasApiKey: !!process.env.AIRTABLE_API_KEY,
+          hasBaseId: !!process.env.AIRTABLE_BASE_ID
+        },
+        { status: 500 }
+      );
+    }
     
     // Fetch all people data from Airtable
-    let rawPeople = await fetchPeopleData({
-      maxRecords: 100,
-      view: 'Grid view'
-    });
+    let rawPeople;
+    try {
+      rawPeople = await fetchPeopleData({
+        maxRecords: 100,
+        view: 'Grid view'
+      });
+    } catch (fetchError) {
+      console.error('Failed to fetch people from Airtable:', fetchError);
+      return NextResponse.json(
+        { 
+          error: 'Airtable Fetch Error',
+          details: 'Failed to fetch people data',
+          errorMessage: fetchError.message
+        },
+        { status: 500 }
+      );
+    }
     
     console.log(`✅ Retrieved ${rawPeople.length} people from Airtable`);
     

@@ -12,10 +12,15 @@ export async function GET(request) {
     
     if (useAirtable) {
       console.log('🔄 Fetching case studies from Airtable...');
+      console.log('Environment:', process.env.NODE_ENV);
+      console.log('Is Netlify:', !!process.env.NETLIFY);
       
       // Check for required environment variables
       const apiKey = process.env.AIRTABLE_API_KEY;
       const baseId = process.env.AIRTABLE_BASE_ID;
+      
+      console.log('Credentials check - API Key length:', apiKey ? apiKey.length : 0);
+      console.log('Credentials check - Base ID:', baseId || 'missing');
       
       if (!apiKey || !baseId) {
         console.error('Missing Airtable credentials');
@@ -27,26 +32,62 @@ export async function GET(request) {
             error: 'Configuration Error', 
             details: 'Airtable API credentials are not configured. Please set AIRTABLE_API_KEY and AIRTABLE_BASE_ID environment variables.',
             hasApiKey: !!apiKey,
-            hasBaseId: !!baseId
+            hasBaseId: !!baseId,
+            environment: process.env.NODE_ENV,
+            isNetlify: !!process.env.NETLIFY
           },
           { status: 500 }
         );
       }
       
-      // Fallback to Airtable
-      const { fetchCaseStudies, fetchPeopleData } = await import('../../../utils/airtable');
+      console.log('Loading Airtable module...');
+      let fetchCaseStudies, fetchPeopleData;
       
-      // Fetch both case studies and people data
-      const [caseStudies, peopleData] = await Promise.all([
-        fetchCaseStudies({ 
-          maxRecords: 200,
-          view: 'Grid view'
-        }),
-        fetchPeopleData({
-          maxRecords: 100,
-          view: 'Grid view'
-        })
-      ]);
+      try {
+        const airtableModule = await import('../../../utils/airtable');
+        fetchCaseStudies = airtableModule.fetchCaseStudies;
+        fetchPeopleData = airtableModule.fetchPeopleData;
+        console.log('Airtable module loaded successfully');
+      } catch (importError) {
+        console.error('Failed to import Airtable module:', importError);
+        return NextResponse.json(
+          { 
+            error: 'Module Import Error',
+            details: 'Failed to load Airtable module',
+            errorMessage: importError.message
+          },
+          { status: 500 }
+        );
+      }
+      
+      console.log('Fetching data from Airtable...');
+      let caseStudies, peopleData;
+      
+      try {
+        // Fetch both case studies and people data
+        [caseStudies, peopleData] = await Promise.all([
+          fetchCaseStudies({ 
+            maxRecords: 200,
+            view: 'Grid view'
+          }),
+          fetchPeopleData({
+            maxRecords: 100,
+            view: 'Grid view'
+          })
+        ]);
+        console.log(`Fetched ${caseStudies?.length || 0} case studies and ${peopleData?.length || 0} people`);
+      } catch (fetchError) {
+        console.error('Failed to fetch from Airtable:', fetchError);
+        return NextResponse.json(
+          { 
+            error: 'Airtable Fetch Error',
+            details: 'Failed to fetch data from Airtable',
+            errorMessage: fetchError.message,
+            errorStack: process.env.NODE_ENV !== 'production' ? fetchError.stack : undefined
+          },
+          { status: 500 }
+        );
+      }
       
       // Create a map of people by ID for quick lookup
       const peopleMap = new Map();
