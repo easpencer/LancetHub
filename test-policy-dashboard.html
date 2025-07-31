@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Policy Investment Dashboard - Test Access</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .info-box {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #2196f3;
+        }
+        .steps {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .step {
+            margin: 15px 0;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+            border-left: 3px solid #4caf50;
+        }
+        code {
+            background: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+        .file-list {
+            background: #fff3e0;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #ff9800;
+        }
+        .file-list ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        .file-list li {
+            padding: 5px 0;
+            font-family: monospace;
+            font-size: 14px;
+        }
+        .success {
+            color: #4caf50;
+        }
+        .error {
+            color: #f44336;
+        }
+        a {
+            color: #2196f3;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 Policy Investment Dashboard - Setup Guide</h1>
+        
+        <div class="info-box">
+            <h2>✅ Components Successfully Created</h2>
+            <p>The Policy Investment Dashboard has been integrated into your Pandemic Vulnerability page with the following components:</p>
+        </div>
+
+        <div class="file-list">
+            <h3>📁 Created Files:</h3>
+            <ul>
+                <li class="success">✓ /app/pandemic-vulnerability/PolicyInvestmentDashboard.js</li>
+                <li class="success">✓ /app/pandemic-vulnerability/PolicyInvestmentDashboard.module.css</li>
+                <li class="success">✓ /app/api/policy-modeling/investment/route.js</li>
+                <li class="success">✓ /utils/data-sources-config.js</li>
+                <li class="success">✓ /utils/investment-data-fetcher.js</li>
+                <li class="success">✓ /utils/investment-resilience-models.js</li>
+                <li class="success">✓ /utils/fact-checker.js</li>
+                <li class="success">✓ /utils/citation-tracker.js</li>
+            </ul>
+        </div>
+
+        <div class="steps">
+            <h2>🚀 How to Access the Dashboard</h2>
+            
+            <div class="step">
+                <strong>Step 1:</strong> Make sure you're in the correct directory:
+                <br><code>cd /Users/eliah/Desktop/ResilientHubMaster/LancetHubCurrentBackup</code>
+            </div>
+            
+            <div class="step">
+                <strong>Step 2:</strong> Install dependencies (if not already done):
+                <br><code>npm install</code>
+                <br><small>Note: This might take a few minutes</small>
+            </div>
+            
+            <div class="step">
+                <strong>Step 3:</strong> Start the development server:
+                <br><code>npm run dev</code>
+                <br><small>The server will typically start on port 3000</small>
+            </div>
+            
+            <div class="step">
+                <strong>Step 4:</strong> Open your browser and navigate to:
+                <br><a href="http://localhost:3000/pandemic-vulnerability" target="_blank">http://localhost:3000/pandemic-vulnerability</a>
+            </div>
+            
+            <div class="step">
+                <strong>Step 5:</strong> Click on the <strong>"💰 Policy Investment"</strong> tab
+                <br><small>You'll see it alongside "🗺️ Interactive Map" and "📊 Deep Dive Analytics"</small>
+            </div>
+        </div>
+
+        <div class="info-box" style="background: #e8f5e9; border-left-color: #4caf50;">
+            <h3>🔧 Troubleshooting</h3>
+            <p>If you're having issues:</p>
+            <ol>
+                <li>Check if port 3000 is already in use: <code>lsof -i :3000</code></li>
+                <li>Clear Next.js cache: <code>rm -rf .next</code></li>
+                <li>Try a different port: <code>npm run dev -- -p 3001</code></li>
+                <li>Check for errors in the terminal where you ran <code>npm run dev</code></li>
+            </ol>
+        </div>
+
+        <div class="info-box" style="background: #fff3e0; border-left-color: #ff9800;">
+            <h3>📊 What You'll See</h3>
+            <p>The Policy Investment Dashboard includes:</p>
+            <ul>
+                <li>Total Investment metrics from federal spending data</li>
+                <li>ROI projections over 5 years</li>
+                <li>Resilience scores based on multiple dimensions</li>
+                <li>Optimal investment allocation recommendations</li>
+                <li>Foreign Direct Investment (FDI) impact analysis</li>
+                <li>Real-time data verification status</li>
+                <li>Complete citations for all data sources</li>
+            </ul>
+        </div>
+
+        <div class="info-box" style="background: #fce4ec; border-left-color: #e91e63;">
+            <h3>🔑 API Keys (Optional)</h3>
+            <p>For real federal data, add these to your <code>.env.local</code> file:</p>
+            <pre>BEA_API_KEY=your_bea_api_key_here
+CDC_API_KEY=your_cdc_api_key_here</pre>
+            <p>Get free API keys from:</p>
+            <ul>
+                <li>BEA: <a href="https://apps.bea.gov/API/signup/" target="_blank">https://apps.bea.gov/API/signup/</a></li>
+                <li>CDC: Most data is public, some endpoints may require registration</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Check if the server is running
+        fetch('http://localhost:3000/api/health')
+            .then(response => {
+                if (response.ok) {
+                    console.log('✅ Server is running!');
+                    document.body.insertAdjacentHTML('afterbegin', 
+                        '<div style="background: #4caf50; color: white; padding: 10px; text-align: center;">✅ Server is running on port 3000!</div>'
+                    );
+                }
+            })
+            .catch(error => {
+                console.log('Server not detected on port 3000');
+            });
+    </script>
+</body>
+</html>

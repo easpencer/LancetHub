@@ -14,11 +14,13 @@
     "init-airtable": "node scripts/init-airtable.js",
     "verify-airtable": "node scripts/verify-airtable.js",
     "prepare-images": "bash scripts/create-placeholders.sh",
-    "create-favicon": "node scripts/create-favicon.js"
+    "create-favicon": "node scripts/create-favicon.js",
+    "migrate-db": "node scripts/migrate-to-sqlite.js"
   },
   "dependencies": {
     "@vercel/analytics": "^1.5.0",
     "airtable": "^0.12.2",
+    "better-sqlite3": "^12.2.0",
     "chart.js": "^4.2.1",
     "csv-parse": "^5.3.6",
     "d3": "^7.9.0",
@@ -29,6 +31,7 @@
     "leaflet": "^1.9.4",
     "next": "latest",
     "next-auth": "^4.24.5",
+    "node-fetch": "^3.3.2",
     "plotly.js": "^2.20.0",
     "plotly.js-dist-min": "^2.20.0",
     "react": "latest",
@@ -43,6 +46,10 @@
   },
   "devDependencies": {
     "eslint": "latest",
-    "eslint-config-next": "latest"
+    "eslint-config-next": "latest",
+    "postcss": "^8.5.6",
+    "postcss-loader": "^8.1.1",
+    "postcss-modules": "^6.0.1",
+    "source-map-js": "^1.2.1"
   }
 }

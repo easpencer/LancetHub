@@ -89,6 +89,25 @@
   font-weight: 500;
 }
 
+.searchButton {
+  background: none;
+  border: none;
+  color: #f0f2f5;
+  font-size: 1.25rem;
+  cursor: pointer;
+  padding: 0.75rem;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  margin-left: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.searchButton:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
 .mobileMenuButton {
   display: none;
   background: none;

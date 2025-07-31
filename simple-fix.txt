@@ -1,0 +1,48 @@
+Manual Fix Instructions for caniuse-lite Error
+===========================================
+
+Since the automated script isn't working, here are simple manual steps:
+
+1. Open Terminal
+
+2. Copy and paste these commands ONE AT A TIME:
+
+   cd /Users/eliah/Documents/GitHub/Lancet/LancetHubCurrentBackup
+   
+   rm -rf node_modules
+   
+   rm package-lock.json
+   
+   npm install
+   
+3. If npm install fails, try:
+
+   npm install --legacy-peer-deps
+
+4. Once installation completes, run:
+
+   npm run dev
+
+5. If you still get errors, try updating npm first:
+
+   npm install -g npm@latest
+   
+   Then repeat steps 2-4.
+
+Alternative Solution:
+====================
+If nothing above works, copy the working node_modules from Desktop location:
+
+1. First, stop any running servers (Ctrl+C)
+
+2. In Terminal:
+
+   cd /Users/eliah/Documents/GitHub/Lancet/LancetHubCurrentBackup
+   
+   rm -rf node_modules
+   
+   cp -r /Users/eliah/Desktop/ResilientHubMaster/LancetHubCurrentBackup/node_modules .
+   
+   npm run dev
+
+This copies the working node_modules from your Desktop location where it's already working.

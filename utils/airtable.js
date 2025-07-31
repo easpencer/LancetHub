@@ -65,6 +65,7 @@ export const fetchRecords = async (tableName, options = {}) => {
     const query = { 
       maxRecords: options.maxRecords || 100,
       view: options.view || 'Grid view',
+      fields: options.fields || [], // Empty array means ALL fields
       ...options
     };
     
@@ -89,7 +90,42 @@ export const fetchRecords = async (tableName, options = {}) => {
 // Table-specific functions
 export const fetchCaseStudies = async (options = {}) => {
   // Note: The actual table name in Airtable is "Case study forms" (lowercase 's')
-  return fetchRecords('Case study forms', options);
+  // Specify all available fields to ensure we get everything
+  const allFields = [
+    'Case Study Title',
+    'Name',
+    'Section',
+    'Study Focus',
+    'Short Description',
+    'Relevance to Community/Societal Resilience',
+    'Study Type ',
+    'Resilient Dimensions ',
+    'Key Words ',
+    'Keywords (other)',
+    'Date',
+    'Lanscape topics',
+    'References',
+    'Key authors (from References)',
+    'Add Reference',
+    'Results',
+    'Insights',
+    'Next steps',
+    'People',
+    'Reviewers',
+    'Reviewer Notes',
+    'Resilience Factors (positive and negative)',
+    'Initial Lessons (What kind of actions do we need to be taking now)',
+    'Audience (who are the people these lessons are directed to)',
+    'Potential next steps (expansion) of the topic',
+    'Documents',
+    'Links',
+    'Methods'
+  ];
+  
+  return fetchRecords('Case study forms', {
+    ...options,
+    fields: allFields
+  });
 };
 
 export const fetchPeopleData = async (options = {}) => {

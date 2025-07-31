@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, use } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { 
@@ -22,7 +22,7 @@ import LoadingState from '../../../components/LoadingState';
 import styles from './case-study.module.css';
 
 export default function CaseStudyPage({ params }) {
-  const slug = params.slug;
+  const slug = use(params).slug;
   const router = useRouter();
   const pathname = usePathname();
   
@@ -56,28 +56,79 @@ export default function CaseStudyPage({ params }) {
         // Enrich the study data with formatted fields
         const enrichedStudy = {
           ...foundStudy,
+          // Map fields for easier access
+          Title: foundStudy['Case Study Title'] || foundStudy.Title || 'Untitled',
+          Author: foundStudy.Name || foundStudy.People || foundStudy.Author || '',
+          AuthorNames: foundStudy.AuthorNames || foundStudy.Name || foundStudy.People || foundStudy.Author || '',
+          AuthorInstitutions: foundStudy.AuthorInstitutions || '',
+          Authors: foundStudy.Authors || [],
+          Description: foundStudy['Short Description'] || foundStudy.Description || '',
+          Focus: foundStudy['Study Focus'] || foundStudy.StudyFocus || foundStudy.Focus || '',
+          Type: foundStudy['Study Type '] || foundStudy.Type || 'Research', // Note the trailing space!
+          Relevance: foundStudy['Relevance to Community/Societal Resilience'] || foundStudy.Relevance || '',
+          Dimensions: foundStudy['Resilient Dimensions '] || foundStudy.Dimensions || '', // Note the trailing space!
+          Keywords: foundStudy['Key Words '] || foundStudy.Keywords || '', // Note the trailing space!
+          // Rich text fields
+          Results: foundStudy.Results || foundStudy.findings || '',
+          Insights: foundStudy.Insights || foundStudy.recommendations || '',
+          Methods: foundStudy.Methods || foundStudy.methodology || '',
+          ResilienceFactors: foundStudy['Resilience Factors (positive and negative)'] || '',
+          InitialLessons: foundStudy['Initial Lessons (What kind of actions do we need to be taking now)'] || '',
+          Audience: foundStudy['Audience (who are the people these lessons are directed to)'] || '',
+          NextSteps: foundStudy['Next steps'] || foundStudy['Potential next steps (expansion) of the topic'] || '',
           formattedDate: foundStudy.Date ? new Date(foundStudy.Date).toLocaleDateString('en-US', {
             year: 'numeric',
             month: 'long',
             day: 'numeric'
           }) : null,
-          dimensionsList: (foundStudy.Dimensions || '').split(',').map(d => d.trim()).filter(Boolean),
-          keywordsList: (foundStudy.Keywords || '').split(',').map(k => k.trim()).filter(Boolean)
+          dimensionsList: (() => {
+            const dims = foundStudy['Resilient Dimensions '] || foundStudy.Dimensions || [];
+            if (Array.isArray(dims)) {
+              return dims.map(d => d.trim()).filter(Boolean);
+            }
+            return (dims || '').split(',').map(d => d.trim()).filter(Boolean);
+          })(),
+          keywordsList: (() => {
+            const kw = foundStudy['Key Words '] || foundStudy.Keywords || [];
+            if (Array.isArray(kw)) {
+              return kw.map(k => k.trim()).filter(Boolean);
+            }
+            return (kw || '').split(',').map(k => k.trim()).filter(Boolean);
+          })()
         };
         
         setStudy(enrichedStudy);
         
         // Find related studies by dimensions
         if (foundStudy.Dimensions) {
-          const dimensions = foundStudy.Dimensions.split(',').map(d => d.trim());
+          let dimensions;
+          if (Array.isArray(foundStudy.Dimensions)) {
+            dimensions = foundStudy.Dimensions.map(d => d.trim());
+          } else {
+            dimensions = (foundStudy.Dimensions || '').split(',').map(d => d.trim());
+          }
           
           // Filter for studies that share at least one dimension but aren't the same study
           const related = allStudies
-            .filter(s => 
-              s.id !== foundStudy.id && 
-              s.Dimensions && 
-              dimensions.some(dim => s.Dimensions.includes(dim))
-            )
+            .filter(s => {
+              const sDimensions = s['Resilient Dimensions '] || s.Dimensions || [];
+              let sDimensionsArray;
+              if (Array.isArray(sDimensions)) {
+                sDimensionsArray = sDimensions;
+              } else {
+                sDimensionsArray = (sDimensions || '').split(',').map(d => d.trim());
+              }
+              return s.id !== foundStudy.id && 
+                sDimensionsArray.length > 0 && 
+                dimensions.some(dim => sDimensionsArray.includes(dim));
+            })
+            .map(s => ({
+              ...s,
+              Title: s['Case Study Title'] || s.Title || 'Untitled',
+              Author: s.Name || s.People || s.Author || '',
+              Description: s['Short Description'] || s.Description || '',
+              Type: s['Study Type '] || s.Type || 'Research'
+            }))
             .slice(0, 4); // Get up to 4 related studies
           
           setRelatedStudies(related);
@@ -141,8 +192,20 @@ export default function CaseStudyPage({ params }) {
         <div className={styles.studyMeta}>
           <div className={styles.metaItem}>
             <FaUser />
-            <span>{study.Author || 'Unknown Author'}</span>
+            <div className={styles.authorInfo}>
+              <span className={styles.authorName}>{study.AuthorNames || study.Author || 'Unknown Author'}</span>
+              {study.AuthorInstitutions && (
+                <span className={styles.authorInstitution}>{study.AuthorInstitutions}</span>
+              )}
+            </div>
           </div>
+          
+          {study.section && (
+            <div className={styles.metaItem}>
+              <FaBookOpen />
+              <span>{study.section}</span>
+            </div>
+          )}
           
           {study.Institution && (
             <div className={styles.metaItem}>
@@ -225,35 +288,16 @@ export default function CaseStudyPage({ params }) {
             </div>
           )}
           
-          {study.Results && (
+          {(study.Results || study.Findings) && (
             <div className={styles.contentSection}>
               <div className={styles.sectionHeader}>
                 <FaChartLine className={styles.sectionIcon} />
-                <h2>Results</h2>
+                <h2>{study.Results ? 'Results' : 'Key Findings'}</h2>
               </div>
-              <p>{study.Results}</p>
+              <p>{study.Results || study.Findings}</p>
             </div>
           )}
           
-          {study.Findings && (
-            <div className={styles.contentSection}>
-              <div className={styles.sectionHeader}>
-                <FaChartLine className={styles.sectionIcon} />
-                <h2>Key Findings</h2>
-              </div>
-              <p>{study.Findings}</p>
-            </div>
-          )}
-          
-          {study.Insights && (
-            <div className={styles.contentSection}>
-              <div className={styles.sectionHeader}>
-                <FaLightbulb className={styles.sectionIcon} />
-                <h2>Key Insights</h2>
-              </div>
-              <p>{study.Insights}</p>
-            </div>
-          )}
           
           {study.Impact && (
             <div className={styles.contentSection}>
@@ -275,13 +319,43 @@ export default function CaseStudyPage({ params }) {
             </div>
           )}
           
-          {study.Recommendations && (
+          {(study.Recommendations || study.Insights) && (
             <div className={styles.contentSection}>
               <div className={styles.sectionHeader}>
                 <FaClipboardList className={styles.sectionIcon} />
-                <h2>Recommendations</h2>
+                <h2>{study.Insights ? 'Insights & Recommendations' : 'Recommendations'}</h2>
               </div>
-              <p>{study.Recommendations}</p>
+              <p>{study.Insights || study.Recommendations}</p>
+            </div>
+          )}
+          
+          {study.ResilienceFactors && (
+            <div className={styles.contentSection}>
+              <div className={styles.sectionHeader}>
+                <FaLightbulb className={styles.sectionIcon} />
+                <h2>Resilience Factors</h2>
+              </div>
+              <p>{study.ResilienceFactors}</p>
+            </div>
+          )}
+          
+          {study.InitialLessons && (
+            <div className={styles.contentSection}>
+              <div className={styles.sectionHeader}>
+                <FaBookOpen className={styles.sectionIcon} />
+                <h2>Initial Lessons</h2>
+              </div>
+              <p>{study.InitialLessons}</p>
+            </div>
+          )}
+          
+          {study.Audience && (
+            <div className={styles.contentSection}>
+              <div className={styles.sectionHeader}>
+                <FaUser className={styles.sectionIcon} />
+                <h2>Target Audience</h2>
+              </div>
+              <p>{study.Audience}</p>
             </div>
           )}
           
@@ -370,6 +444,63 @@ export default function CaseStudyPage({ params }) {
             </div>
           </div>
         )}
+        
+        {/* Authors section */}
+        {study.Authors && study.Authors.length > 0 && (
+          <div className={styles.contentSection}>
+            <div className={styles.sectionHeader}>
+              <FaUser className={styles.sectionIcon} />
+              <h2>Authors & Contributors</h2>
+            </div>
+            <div className={styles.authorsGrid}>
+              {study.Authors.map((author, index) => (
+                <div key={index} className={styles.authorCard}>
+                  <div className={styles.authorName}>{author.name}</div>
+                  {author.institution && (
+                    <div className={styles.authorInstitution}>{author.institution}</div>
+                  )}
+                  {author.role && (
+                    <div className={styles.authorRole}>{author.role}</div>
+                  )}
+                  {author.expertise && (
+                    <div className={styles.authorExpertise}>{author.expertise}</div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Display all other fields that don't have specific sections */}
+        <div className={styles.additionalFields}>
+          {Object.entries(study).map(([key, value]) => {
+            // Skip fields we've already displayed or internal fields
+            const displayedFields = [
+              'id', 'Title', 'Author', 'Description', 'Focus', 'Type', 'Relevance', 
+              'Dimensions', 'Keywords', 'formattedDate', 'dimensionsList', 'keywordsList',
+              'Context', 'Methods', 'Methodology', 'Results', 'Findings', 'Insights',
+              'Impact', 'Challenges', 'Recommendations', 'Limitations', 'FutureWork',
+              'References', 'URL', 'DOI', 'Status', 'Institution', 'section', 'Date',
+              'Case Study Title', 'Short Description', 'Study Focus', 'Study Type ',
+              'Relevance to Community/Societal Resilience', 'Resilient Dimensions ',
+              'Key Words ', 'Name', 'People', 'Authors', 'AuthorNames', 'AuthorInstitutions'
+            ];
+            
+            if (displayedFields.includes(key) || !value || value === '') {
+              return null;
+            }
+            
+            return (
+              <div key={key} className={styles.contentSection}>
+                <div className={styles.sectionHeader}>
+                  <FaBookOpen className={styles.sectionIcon} />
+                  <h2>{key.replace(/_/g, ' ').replace(/([A-Z])/g, ' $1').trim()}</h2>
+                </div>
+                <p>{typeof value === 'object' ? JSON.stringify(value, null, 2) : value}</p>
+              </div>
+            );
+          })}
+        </div>
       </motion.div>
       
       {relatedStudies.length > 0 && (

@@ -1,7 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  swcMinify: true,
   images: {
     domains: [
       'localhost',
@@ -58,7 +57,7 @@ const nextConfig = {
       },
     ];
   },
-  // Webpack config to handle Leaflet
+  // Webpack config to handle Leaflet and source maps
   webpack: (config) => {
     config.resolve.fallback = { 
       ...config.resolve.fallback,
@@ -67,6 +66,12 @@ const nextConfig = {
       tls: false,
       crypto: false,
     };
+    
+    // Disable source maps in development to avoid source-map-js issues
+    if (config.mode === 'development') {
+      config.devtool = false;
+    }
+    
     return config;
   }
 };

@@ -4,13 +4,15 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaBars, FaTimes } from 'react-icons/fa';
+import { FaBars, FaTimes, FaSearch } from 'react-icons/fa';
 import { LancetHubLogoSmall } from './LancetHubLogo';
+import GlobalSearch from './GlobalSearch';
 import styles from './Navigation.module.css';
 
 export default function Navigation() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const pathname = usePathname();
 
   // Handle scroll effect for nav bar
@@ -37,7 +39,7 @@ export default function Navigation() {
     { href: '/', label: 'Home' },
     { href: '/landscape', label: 'Resilience Framework' },
     { href: '/landscape-interactive', label: 'Interactive Visualization' },
-    { href: '/pandemic-vulnerability', label: 'Pandemic Map' },
+    { href: '/pandemic-vulnerability', label: 'Pandemic Intelligence & Policy' },
     { href: '/case-studies', label: 'Case Studies' },
     { href: '/analysis-insights', label: 'Analysis & Insights' },
     { href: '/people', label: 'People' },
@@ -74,6 +76,14 @@ export default function Navigation() {
             ))}
           </ul>
         </nav>
+        
+        <button 
+          className={styles.searchButton}
+          onClick={() => setSearchOpen(true)}
+          aria-label="Search"
+        >
+          <FaSearch />
+        </button>
         
         <button 
           className={styles.mobileMenuButton}
@@ -114,6 +124,8 @@ export default function Navigation() {
           </motion.div>
         )}
       </AnimatePresence>
+      
+      <GlobalSearch isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
     </motion.header>
   );
 }

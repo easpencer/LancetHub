@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import { fetchCaseStudies, fetchPeopleData, fetchLandscapeData } from '../../../utils/airtable';
-import { createInsightsEngine } from '../../../utils/insights-engine';
+import { dataSource } from '../../../utils/database';
+import { InsightsEngine } from '../../../utils/insights-engine';
 import { processCaseStudiesForInsights } from '../../../utils/insights-data-processor';
 
 export async function GET(request) {
@@ -8,20 +8,40 @@ export async function GET(request) {
     const { searchParams } = new URL(request.url);
     const analysisType = searchParams.get('type') || 'comprehensive';
     
-    console.log('🔄 Generating insights from real data...');
+    console.log('🔄 Generating insights from data...');
     
-    // Fetch data from multiple sources
-    const [caseStudies, people, landscapeData] = await Promise.all([
-      fetchCaseStudies({ maxRecords: 100 }).catch(() => []),
-      fetchPeopleData({ maxRecords: 100 }).catch(() => []),
-      fetchLandscapeData({ maxRecords: 100 }).catch(() => [])
-    ]);
+    // Check if we should use SQLite or Airtable
+    const useDatabase = process.env.USE_AIRTABLE !== 'true';
+    
+    let caseStudies, people, landscapeData;
+    
+    if (useDatabase) {
+      // Fetch from SQLite database
+      const [dbCaseStudies, dbPeople, dbDimensions] = await Promise.all([
+        dataSource.fetchCaseStudies({ maxRecords: 1000 }),
+        dataSource.fetchPeople({ maxRecords: 1000 }),
+        dataSource.fetchDimensions()
+      ]);
+      
+      caseStudies = dbCaseStudies;
+      people = dbPeople;
+      landscapeData = dbDimensions;
+    } else {
+      // Fetch from Airtable
+      const { fetchCaseStudies, fetchPeopleData, fetchLandscapeData } = await import('../../../utils/airtable');
+      [caseStudies, people, landscapeData] = await Promise.all([
+        fetchCaseStudies({ maxRecords: 100 }).catch(() => []),
+        fetchPeopleData({ maxRecords: 100 }).catch(() => []),
+        fetchLandscapeData({ maxRecords: 100 }).catch(() => [])
+      ]);
+    }
 
     console.log(`📊 Analyzing ${caseStudies.length} case studies, ${people.length} people, ${landscapeData.length} landscape items`);
 
     // Use the new insights engine for comprehensive analysis
     if (analysisType === 'comprehensive' && caseStudies.length > 0) {
-      const engine = await createInsightsEngine(caseStudies);
+      const engine = new InsightsEngine();
+      await engine.initialize(caseStudies);
       const report = engine.generateInsightsReport();
       const visualizationData = engine.getVisualizationData();
       

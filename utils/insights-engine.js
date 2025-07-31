@@ -92,6 +92,162 @@ export class InsightsEngine {
   }
 
   /**
+   * Generate insights report
+   */
+  generateInsightsReport() {
+    return {
+      summary: {
+        totalStudies: this.caseStudies.length,
+        keyFindings: this.generateKeyFindings(),
+        recommendations: generateRecommendations(this.themes, this.patterns, this.outcomes)
+      },
+      themes: this.themes,
+      patterns: this.patterns,
+      outcomes: this.outcomes,
+      clusters: this.clusters,
+      knowledgeGraph: {
+        nodes: this.knowledgeGraph.nodes.length,
+        edges: this.knowledgeGraph.edges.length
+      }
+    };
+  }
+
+  /**
+   * Get visualization data
+   */
+  getVisualizationData() {
+    return {
+      dimensionChart: this.getDimensionChartData(),
+      networkGraph: this.knowledgeGraph,
+      clusterMap: this.getClusterMapData(),
+      trendChart: this.getTrendChartData(),
+      outcomeMetrics: this.outcomes
+    };
+  }
+
+  /**
+   * Generate key findings
+   */
+  generateKeyFindings() {
+    const findings = [];
+    
+    // Finding 1: Most common themes
+    if (this.themes.topThemes && this.themes.topThemes.length > 0) {
+      findings.push({
+        type: 'theme',
+        title: 'Dominant Research Themes',
+        description: `The most prevalent themes are ${this.themes.topThemes.slice(0, 3).map(t => t.theme).join(', ')}`,
+        confidence: 0.9
+      });
+    }
+    
+    // Finding 2: Pattern insights
+    if (this.patterns.correlations && this.patterns.correlations.length > 0) {
+      const topCorrelation = this.patterns.correlations[0];
+      findings.push({
+        type: 'pattern',
+        title: 'Strong Correlations Detected',
+        description: `Studies combining ${topCorrelation.dimensions.join(' and ')} show ${Math.round(topCorrelation.correlation * 100)}% higher success rates`,
+        confidence: topCorrelation.correlation
+      });
+    }
+    
+    // Finding 3: Cluster insights
+    if (this.clusters.length > 0) {
+      findings.push({
+        type: 'cluster',
+        title: 'Research Clusters Identified',
+        description: `Case studies naturally group into ${this.clusters.length} distinct clusters, indicating specialized research areas`,
+        confidence: 0.85
+      });
+    }
+    
+    // Finding 4: Outcome trends
+    if (this.outcomes.trends && this.outcomes.trends.length > 0) {
+      const positiveTrend = this.outcomes.trends.find(t => t.direction === 'positive');
+      if (positiveTrend) {
+        findings.push({
+          type: 'trend',
+          title: 'Positive Outcome Trends',
+          description: `${positiveTrend.metric} shows consistent improvement over time`,
+          confidence: 0.8
+        });
+      }
+    }
+    
+    return findings;
+  }
+
+  /**
+   * Get dimension chart data
+   */
+  getDimensionChartData() {
+    const dimensionCounts = {};
+    
+    this.caseStudies.forEach(cs => {
+      if (cs.Dimensions) {
+        const dims = cs.Dimensions.split(',').map(d => d.trim());
+        dims.forEach(dim => {
+          dimensionCounts[dim] = (dimensionCounts[dim] || 0) + 1;
+        });
+      }
+    });
+    
+    return Object.entries(dimensionCounts)
+      .map(([dimension, count]) => ({ dimension, count }))
+      .sort((a, b) => b.count - a.count);
+  }
+
+  /**
+   * Get cluster map data
+   */
+  getClusterMapData() {
+    return this.clusters.map(cluster => ({
+      id: cluster.id,
+      name: `Cluster ${cluster.id + 1}`,
+      size: cluster.size,
+      center: cluster.centroid,
+      characteristics: cluster.characteristics,
+      studies: cluster.studies.map(s => ({
+        id: s.id,
+        title: s.Title,
+        position: s.vector
+      }))
+    }));
+  }
+
+  /**
+   * Get trend chart data
+   */
+  getTrendChartData() {
+    const yearlyData = {};
+    
+    this.caseStudies.forEach(cs => {
+      if (cs.Date) {
+        const year = new Date(cs.Date).getFullYear();
+        if (!yearlyData[year]) {
+          yearlyData[year] = {
+            year,
+            count: 0,
+            dimensions: {},
+            outcomes: []
+          };
+        }
+        yearlyData[year].count++;
+        
+        if (cs.Dimensions) {
+          const dims = cs.Dimensions.split(',').map(d => d.trim());
+          dims.forEach(dim => {
+            yearlyData[year].dimensions[dim] = (yearlyData[year].dimensions[dim] || 0) + 1;
+          });
+        }
+      }
+    });
+    
+    return Object.values(yearlyData).sort((a, b) => a.year - b.year);
+  }
+
+  /**
    * Build knowledge graph from case studies
    */
   buildKnowledgeGraph() {

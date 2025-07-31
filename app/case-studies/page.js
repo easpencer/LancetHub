@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { FaSearch, FaFilter, FaCalendarAlt, FaUser, FaTags, FaBuilding, FaGraduationCap, FaChartLine, FaBookOpen, FaExternalLinkAlt } from 'react-icons/fa';
+import { FaSearch, FaFilter, FaCalendarAlt, FaUser, FaTags, FaBuilding, FaGraduationCap, FaChartLine, FaBookOpen, FaExternalLinkAlt, FaClipboardList } from 'react-icons/fa';
 import AnimatedSection from '../../components/AnimatedSection';
 import LoadingState from '../../components/LoadingState';
 import ErrorBoundary from '../../components/ErrorBoundary';
@@ -48,13 +48,31 @@ export default function CaseStudies() {
         // Sort by date (newest first) and add computed fields
         const enrichedStudies = studies.map(study => ({
           ...study, // Keep ALL original fields from Airtable
+          // Map fields for easier access
+          Title: study['Case Study Title'] || study.Title || study.title || 'Untitled',
+          Author: study.Name || study.People || study.Author || '',
+          AuthorNames: study.AuthorNames || study.Name || study.People || study.Author || '',
+          AuthorInstitutions: study.AuthorInstitutions || '',
+          Authors: study.Authors || [],
+          Description: study['Short Description'] || study.Description || '',
+          Focus: study['Study Focus'] || study.StudyFocus || study.Focus || '',
+          Type: study['Study Type '] || study.Type || 'Research', // Note the trailing space!
+          Relevance: study['Relevance to Community/Societal Resilience'] || study.Relevance || '',
+          Dimensions: study['Resilient Dimensions '] || study.Dimensions || '', // Note the trailing space!
+          Keywords: study['Key Words '] || study.Keywords || '', // Note the trailing space!
           formattedDate: study.Date ? new Date(study.Date).toLocaleDateString('en-US', {
             year: 'numeric',
             month: 'long',
             day: 'numeric'
           }) : null,
           hasFullData: !!(study.Methodology || study.Findings || study.Recommendations || study['Key Findings'] || study['Research Methods']),
-          dimensionsList: (study.Dimensions || study['Resilient Dimensions'] || study['Resilience Dimensions'] || '').split(',').map(d => d.trim()).filter(Boolean)
+          dimensionsList: (() => {
+            const dims = study['Resilient Dimensions '] || study.Dimensions || [];
+            if (Array.isArray(dims)) {
+              return dims.map(d => d.trim()).filter(Boolean);
+            }
+            return (dims || '').split(',').map(d => d.trim()).filter(Boolean);
+          })()
         })).sort((a, b) => {
           const dateA = a.Date ? new Date(a.Date) : new Date(0);
           const dateB = b.Date ? new Date(b.Date) : new Date(0);
@@ -69,9 +87,13 @@ export default function CaseStudies() {
         setTypes(['all', ...Array.from(typeSet)]);
         
         // Get dimensions from all case studies and create a unique list
-        const allDimensions = studies.flatMap(study => 
-          (study.Dimensions || '').split(',').map(d => d.trim())
-        ).filter(Boolean);
+        const allDimensions = studies.flatMap(study => {
+          const dims = study.Dimensions || [];
+          if (Array.isArray(dims)) {
+            return dims.map(d => d.trim());
+          }
+          return (dims || '').split(',').map(d => d.trim());
+        }).filter(Boolean);
         const dimensionSet = new Set(allDimensions);
         setDimensions(['all', ...Array.from(dimensionSet)]);
         
@@ -111,7 +133,13 @@ export default function CaseStudies() {
     // Apply dimension filter
     if (filterDimension !== 'all') {
       results = results.filter(study => {
-        const studyDimensions = (study.Dimensions || '').split(',').map(d => d.trim());
+        const dims = study.Dimensions || [];
+        let studyDimensions;
+        if (Array.isArray(dims)) {
+          studyDimensions = dims.map(d => d.trim());
+        } else {
+          studyDimensions = (dims || '').split(',').map(d => d.trim());
+        }
         return studyDimensions.includes(filterDimension);
       });
     }
@@ -248,60 +276,88 @@ export default function CaseStudies() {
                   className={styles.caseStudyCard}
                 >
                   <div className={styles.cardContent}>
-                    <div className={styles.cardHeader}>
-                      <span className={styles.studyType}>{study.Type || 'Research'}</span>
-                      {study.hasFullData && <span className={styles.fullDataBadge}>Full Study</span>}
-                    </div>
-                    
-                    <h2 className={styles.studyTitle}>{study.Title}</h2>
-                    <p className={styles.studyDescription}>{study.Description}</p>
-                    
-                    {study.Focus && (
-                      <div className={styles.studyFocus}>
-                        <FaChartLine className={styles.focusIcon} />
-                        <p>{study.Focus.substring(0, 150)}...</p>
+                    {study.section && (
+                      <div className={styles.sectionBadge}>
+                        <span>{study.section}</span>
                       </div>
                     )}
                     
-                    <div className={styles.studyMeta}>
-                      <div className={styles.metaItem}>
-                        <FaUser />
-                        <span>{study.Author || 'Unknown Author'}</span>
-                      </div>
-                      
-                      {study.Institution && (
+                    <h2 className={styles.studyTitle}>{study.Title}</h2>
+                    
+                    <div className={styles.cardMeta}>
+                      {(study.AuthorNames || study.Author) && (
                         <div className={styles.metaItem}>
-                          <FaBuilding />
-                          <span>{study.Institution}</span>
+                          <FaUser className={styles.metaIcon} />
+                          <div className={styles.authorInfo}>
+                            <span className={styles.authorName}>{study.AuthorNames || study.Author}</span>
+                            {study.AuthorInstitutions && (
+                              <span className={styles.authorInstitution}>{study.AuthorInstitutions}</span>
+                            )}
+                          </div>
                         </div>
                       )}
                       
                       {study.formattedDate && (
                         <div className={styles.metaItem}>
-                          <FaCalendarAlt />
+                          <FaCalendarAlt className={styles.metaIcon} />
                           <span>{study.formattedDate}</span>
                         </div>
                       )}
                     </div>
                     
-                    {study.dimensionsList.length > 0 && (
-                      <div className={styles.dimensionTags}>
-                        {study.dimensionsList.map((dimension, i) => (
-                          <span key={i} className={styles.dimensionTag}>{dimension}</span>
-                        ))}
+                    {study.Focus && (
+                      <div className={styles.studyFocusSection}>
+                        <h4>Study Focus</h4>
+                        <p>{study.Focus}</p>
                       </div>
                     )}
                     
-                    <div className={styles.cardFooter}>
-                      <div className={styles.readMore}>View Full Study</div>
-                      {study.hasFullData && (
-                        <div className={styles.dataIndicators}>
-                          {study.Methodology && <FaGraduationCap title="Methodology available" />}
-                          {study.Findings && <FaChartLine title="Findings available" />}
-                          {study.Recommendations && <FaBookOpen title="Recommendations available" />}
+                    {study.Description && (
+                      <div className={styles.shortDescription}>
+                        <p>{study.Description}</p>
+                      </div>
+                    )}
+                    
+                    {study.dimensionsList.length > 0 && (
+                      <div className={styles.dimensionsSection}>
+                        <h4>Resilient Dimensions</h4>
+                        <div className={styles.dimensionTags}>
+                          {study.dimensionsList.map((dimension, i) => (
+                            <span 
+                              key={i} 
+                              className={styles.dimensionTag}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                setFilterDimension(dimension);
+                              }}
+                              title={`Filter by ${dimension}`}
+                            >
+                              {dimension}
+                            </span>
+                          ))}
                         </div>
-                      )}
-                    </div>
+                      </div>
+                    )}
+                    
+                    {(study.Keywords && (Array.isArray(study.Keywords) ? study.Keywords.length > 0 : study.Keywords.trim())) && (
+                      <div className={styles.keywordsSection}>
+                        <h4>Keywords</h4>
+                        <div className={styles.keywordsList}>
+                          {(() => {
+                            const kw = study.Keywords || '';
+                            if (Array.isArray(kw)) {
+                              return kw.map((keyword, i) => (
+                                <span key={i} className={styles.keywordTag}>{keyword.trim()}</span>
+                              ));
+                            }
+                            return kw.split(',').map((keyword, i) => (
+                              <span key={i} className={styles.keywordTag}>{keyword.trim()}</span>
+                            ));
+                          })()}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </Link>
               </AnimatedSection>
@@ -322,7 +378,13 @@ export default function CaseStudies() {
                     <h2 className={styles.detailedTitle}>{study.Title}</h2>
                     <div className={styles.detailedMeta}>
                       <span className={styles.author}>
-                        <FaUser /> {study.Author || 'Unknown Author'}
+                        <FaUser /> 
+                        <div className={styles.authorInfo}>
+                          <span className={styles.authorName}>{study.AuthorNames || study.Author || 'Unknown Author'}</span>
+                          {study.AuthorInstitutions && (
+                            <span className={styles.authorInstitution}>{study.AuthorInstitutions}</span>
+                          )}
+                        </div>
                       </span>
                       {study.Institution && (
                         <span className={styles.institution}>
@@ -367,22 +429,36 @@ export default function CaseStudies() {
                   
                   {study.Methodology && (
                     <div className={styles.detailedSection}>
-                      <h3>Methodology</h3>
+                      <h3><FaGraduationCap /> Methodology</h3>
                       <p>{study.Methodology}</p>
                     </div>
                   )}
                   
                   {study.Findings && (
                     <div className={styles.detailedSection}>
-                      <h3>Key Findings</h3>
+                      <h3><FaChartLine /> Key Findings</h3>
                       <p>{study.Findings}</p>
                     </div>
                   )}
                   
                   {study.Recommendations && (
                     <div className={styles.detailedSection}>
-                      <h3>Recommendations</h3>
+                      <h3><FaClipboardList /> Recommendations</h3>
                       <p>{study.Recommendations}</p>
+                    </div>
+                  )}
+                  
+                  {(study.Country || study.Region) && (
+                    <div className={styles.detailedSection}>
+                      <h3>Location</h3>
+                      <p>{[study.Country, study.Region].filter(Boolean).join(', ')}</p>
+                    </div>
+                  )}
+                  
+                  {study.People && study.People.length > 0 && (
+                    <div className={styles.detailedSection}>
+                      <h3>Associated People</h3>
+                      <p>{Array.isArray(study.People) ? study.People.join(', ') : study.People}</p>
                     </div>
                   )}
                   
@@ -392,7 +468,18 @@ export default function CaseStudies() {
                         <h4>Resilience Dimensions:</h4>
                         <div className={styles.dimensionTags}>
                           {study.dimensionsList.map((dimension, i) => (
-                            <span key={i} className={styles.dimensionTag}>{dimension}</span>
+                            <span 
+                              key={i} 
+                              className={styles.dimensionTag}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                setFilterDimension(dimension);
+                              }}
+                              title={`Filter by ${dimension}`}
+                            >
+                              {dimension}
+                            </span>
                           ))}
                         </div>
                       </div>
@@ -402,9 +489,17 @@ export default function CaseStudies() {
                       <div className={styles.keywordsList}>
                         <h4>Keywords:</h4>
                         <div className={styles.keywords}>
-                          {study.Keywords.split(',').map((keyword, i) => (
-                            <span key={i} className={styles.keyword}>{keyword.trim()}</span>
-                          ))}
+                          {(() => {
+                            const kw = study.Keywords || '';
+                            if (Array.isArray(kw)) {
+                              return kw.map((keyword, i) => (
+                                <span key={i} className={styles.keyword}>{keyword.trim()}</span>
+                              ));
+                            }
+                            return kw.split(',').map((keyword, i) => (
+                              <span key={i} className={styles.keyword}>{keyword.trim()}</span>
+                            ));
+                          })()}
                         </div>
                       </div>
                     )}

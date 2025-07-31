@@ -1,0 +1,286 @@
+.graphContainer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 700px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.graph {
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+}
+
+.graph:active {
+  cursor: grabbing;
+}
+
+.node {
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.node:hover {
+  filter: brightness(1.1);
+}
+
+.nodeLabel {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  fill: #2c3e50;
+  user-select: none;
+  pointer-events: none;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+.link {
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.link:hover {
+  stroke-width: 3px !important;
+  stroke-opacity: 1 !important;
+}
+
+.controls {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  max-width: 250px;
+  z-index: 10;
+}
+
+.controlGroup {
+  margin-bottom: 20px;
+}
+
+.controlGroup h4 {
+  margin: 0 0 10px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #34495e;
+}
+
+.controlGroup label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 13px;
+  color: #555;
+  cursor: pointer;
+}
+
+.controlGroup input[type="checkbox"] {
+  margin-right: 8px;
+}
+
+.controlGroup input[type="range"] {
+  width: 100%;
+  margin-bottom: 5px;
+}
+
+.controlGroup select {
+  width: 100%;
+  padding: 6px 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 13px;
+  background: white;
+  cursor: pointer;
+}
+
+.controls button {
+  width: 100%;
+  padding: 8px 16px;
+  background: #3498db;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  margin-top: 10px;
+}
+
+.controls button:hover {
+  background: #2980b9;
+}
+
+.stats {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.stats p {
+  margin: 5px 0;
+  font-size: 12px;
+  color: #666;
+}
+
+.legend {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 13px;
+  color: #555;
+}
+
+.legendDot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-right: 8px;
+  border: 1px solid white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.nodeDetails {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.98);
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  max-width: 350px;
+  max-height: 80vh;
+  overflow-y: auto;
+  z-index: 20;
+}
+
+.nodeDetails h3 {
+  margin: 0 0 15px 0;
+  font-size: 18px;
+  color: #2c3e50;
+  padding-right: 30px;
+}
+
+.closeButton {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #999;
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.closeButton:hover {
+  background: #f0f0f0;
+  color: #333;
+}
+
+.detailsContent p {
+  margin: 10px 0;
+  font-size: 14px;
+  color: #555;
+  line-height: 1.6;
+}
+
+.detailsContent strong {
+  color: #333;
+  font-weight: 600;
+}
+
+.detailsContent div {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #eee;
+}
+
+/* Tooltip styles */
+.tooltip {
+  position: absolute;
+  text-align: left;
+  padding: 0;
+  font-size: 14px;
+  background: rgba(255, 255, 255, 0.98);
+  border-radius: 8px;
+  pointer-events: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  max-width: 300px;
+  z-index: 100;
+  overflow: hidden;
+}
+
+.tooltipContent {
+  padding: 15px;
+}
+
+.tooltipContent h4 {
+  margin: 0 0 8px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.tooltipContent p {
+  margin: 5px 0;
+  font-size: 13px;
+  color: #555;
+  line-height: 1.5;
+}
+
+.tooltipContent strong {
+  color: #333;
+  font-weight: 600;
+}
+
+.nodeType {
+  font-size: 12px !important;
+  color: #777 !important;
+  font-style: italic;
+}
+
+.description {
+  margin-top: 10px;
+  padding: 10px;
+  background: #f8f9fa;
+  border-radius: 4px;
+  font-size: 12px;
+  line-height: 1.6;
+  color: #666;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .controls {
+    position: static;
+    max-width: 100%;
+    margin-bottom: 20px;
+    border-radius: 0;
+  }
+  
+  .nodeDetails {
+    position: static;
+    max-width: 100%;
+    margin-top: 20px;
+    border-radius: 0;
+  }
+  
+  .graphContainer {
+    min-height: 500px;
+  }
+}

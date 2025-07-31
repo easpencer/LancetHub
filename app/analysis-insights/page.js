@@ -7,9 +7,9 @@ import mlInsightsEngine from '../../utils/ml-insights-engine';
 import styles from './analysis-insights.module.css';
 
 // Dynamic imports for heavy components
-const KnowledgeGraph = dynamic(() => import('../../components/KnowledgeGraph'), { 
+const EnhancedNetworkGraph = dynamic(() => import('../../components/EnhancedNetworkGraph'), { 
   ssr: false,
-  loading: () => <div className={styles.loading}>Loading knowledge graph...</div>
+  loading: () => <div className={styles.loading}>Loading enhanced network graph...</div>
 });
 
 export default function AnalysisInsightsPage() {
@@ -35,10 +35,16 @@ export default function AnalysisInsightsPage() {
       const response = await fetch('/api/case-studies');
       const data = await response.json();
       const studies = data.caseStudies || data || [];
+      
+      console.log('Analysis page - received studies:', studies.length);
+      if (studies.length > 0) {
+        console.log('First study:', studies[0]);
+      }
+      
       setCaseStudies(studies);
       setLoading(false);
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Error fetching case studies:', error);
       setCaseStudies([]);
       setLoading(false);
     }
@@ -596,15 +602,22 @@ export default function AnalysisInsightsPage() {
 
         {analysisMode === 'advanced' && activeTab === 'network' && (
           <div className={styles.networkSection}>
-            <h2>Knowledge Graph</h2>
+            <h2>Enhanced Knowledge Graph</h2>
             <p className={styles.description}>
-              Interactive network showing relationships between case studies, dimensions, institutions, keywords, and people
+              Interactive network visualization showing complex relationships between case studies, dimensions, institutions, keywords, and people. 
+              Use the controls to filter, change layout, and explore connections.
             </p>
             <div className={styles.networkContainer}>
-              <KnowledgeGraph 
+              <EnhancedNetworkGraph 
                 caseStudies={caseStudies} 
                 width={1200} 
-                height={700} 
+                height={700}
+                onNodeClick={(node) => {
+                  console.log('Node clicked:', node);
+                }}
+                onLinkClick={(link) => {
+                  console.log('Link clicked:', link);
+                }}
               />
             </div>
           </div>
