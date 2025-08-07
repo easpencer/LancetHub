@@ -173,6 +173,37 @@
   color: white;
 }
 
+.downloadAllButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  color: white;
+  border: none;
+  border-radius: var(--border-radius-md);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  white-space: nowrap;
+}
+
+.downloadAllButton:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.downloadAllButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.downloadAllButton svg {
+  font-size: 1.1rem;
+}
+
 /* Grid View */
 .caseStudiesGrid {
   display: grid;

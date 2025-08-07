@@ -3,10 +3,11 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { FaSearch, FaFilter, FaCalendarAlt, FaUser, FaTags, FaBuilding, FaGraduationCap, FaChartLine, FaBookOpen, FaExternalLinkAlt, FaClipboardList, FaExclamationTriangle } from 'react-icons/fa';
+import { FaSearch, FaFilter, FaCalendarAlt, FaUser, FaTags, FaBuilding, FaGraduationCap, FaChartLine, FaBookOpen, FaExternalLinkAlt, FaClipboardList, FaExclamationTriangle, FaDownload } from 'react-icons/fa';
 import AnimatedSection from '../../components/AnimatedSection';
 import LoadingState from '../../components/LoadingState';
 import ErrorBoundary from '../../components/ErrorBoundary';
+import { downloadAllCaseStudies } from '../../utils/pdfGenerator';
 import styles from './case-studies.module.css';
 
 export default function CaseStudies() {
@@ -22,6 +23,7 @@ export default function CaseStudies() {
   const [viewMode, setViewMode] = useState('grid'); // grid or detailed
   const [expandedStudy, setExpandedStudy] = useState(null);
   const [dataSource, setDataSource] = useState(null);
+  const [downloadingAll, setDownloadingAll] = useState(false);
 
   // Fetch case studies and dimensions
   useEffect(() => {
@@ -149,6 +151,22 @@ export default function CaseStudies() {
     setFilteredStudies(results);
   }, [searchTerm, filterType, filterDimension, caseStudies]);
 
+  const handleDownloadAll = async () => {
+    setDownloadingAll(true);
+    try {
+      const studiesToDownload = filteredStudies.length > 0 ? filteredStudies : caseStudies;
+      const success = await downloadAllCaseStudies(studiesToDownload);
+      if (!success) {
+        alert('Failed to download all case studies. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error downloading all case studies:', error);
+      alert('An error occurred while downloading. Please try again.');
+    } finally {
+      setDownloadingAll(false);
+    }
+  };
+
   if (loading) {
     return <LoadingState message="Loading Case Studies" submessage="Fetching research and case studies..." />;
   }
@@ -258,6 +276,16 @@ export default function CaseStudies() {
                 </svg>
               </button>
             </div>
+            
+            <button 
+              className={styles.downloadAllButton}
+              onClick={handleDownloadAll}
+              disabled={downloadingAll || filteredStudies.length === 0}
+              title={`Download ${filteredStudies.length || caseStudies.length} case studies as PDF`}
+            >
+              <FaDownload />
+              {downloadingAll ? 'Downloading...' : `Download All (${filteredStudies.length || caseStudies.length})`}
+            </button>
           </div>
         </div>
         

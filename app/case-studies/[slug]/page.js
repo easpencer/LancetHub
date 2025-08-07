@@ -16,9 +16,11 @@ import {
   FaLightbulb,
   FaClipboardList,
   FaExternalLinkAlt,
-  FaBookOpen
+  FaBookOpen,
+  FaDownload
 } from 'react-icons/fa';
 import LoadingState from '../../../components/LoadingState';
+import { downloadCaseStudyPDF } from '../../../utils/pdfGenerator';
 import styles from './case-study.module.css';
 
 export default function CaseStudyPage({ params }) {
@@ -148,6 +150,15 @@ export default function CaseStudyPage({ params }) {
   const goBack = () => {
     router.back();
   };
+
+  const handleDownloadPDF = async () => {
+    if (study) {
+      const success = await downloadCaseStudyPDF(study);
+      if (!success) {
+        alert('Failed to download PDF. Please try again.');
+      }
+    }
+  };
   
   if (loading) {
     return <LoadingState message="Loading Case Study" />;
@@ -168,9 +179,14 @@ export default function CaseStudyPage({ params }) {
   
   return (
     <div className={styles.container}>
-      <button onClick={goBack} className={styles.backButton}>
-        <FaArrowLeft /> Back to Case Studies
-      </button>
+      <div className={styles.topActions}>
+        <button onClick={goBack} className={styles.backButton}>
+          <FaArrowLeft /> Back to Case Studies
+        </button>
+        <button onClick={handleDownloadPDF} className={styles.downloadButton}>
+          <FaDownload /> Download PDF
+        </button>
+      </div>
       
       <motion.div 
         className={styles.studyHeader}

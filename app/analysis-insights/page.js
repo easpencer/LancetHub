@@ -1,206 +1,395 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
+import { 
+  FaNetworkWired, 
+  FaBook, 
+  FaProjectDiagram,
+  FaBrain, 
+  FaDownload, 
+  FaSearch,
+  FaLightbulb,
+  FaExclamationTriangle,
+  FaArrowUp,
+  FaClipboard,
+  FaSyncAlt,
+  FaChartLine,
+  FaChartBar,
+  FaMicroscope
+} from 'react-icons/fa';
 import dynamic from 'next/dynamic';
-import advancedNLP from '../../utils/advanced-nlp';
-import mlInsightsEngine from '../../utils/ml-insights-engine';
 import styles from './analysis-insights.module.css';
+import CaseStudyAnalyzer from '../../utils/case-study-analyzer';
 
-// Dynamic imports for heavy components
-const EnhancedNetworkGraph = dynamic(() => import('../../components/EnhancedNetworkGraph'), { 
-  ssr: false,
-  loading: () => <div className={styles.loading}>Loading enhanced network graph...</div>
-});
+// Dynamic import for network visualization
+const NetworkVisualization = dynamic(() => import('../../components/charts/NetworkVisualization'), { ssr: false });
 
-export default function AnalysisInsightsPage() {
+export default function ResearchIntelligenceHub() {
   const [caseStudies, setCaseStudies] = useState([]);
+  const [bibliography, setBibliography] = useState([]);
+  const [networkGraph, setNetworkGraph] = useState(null);
+  const [insights, setInsights] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [analysisMode, setAnalysisMode] = useState('basic'); // 'basic' or 'advanced'
-  const [activeTab, setActiveTab] = useState('overview');
-  const [mlInsights, setMlInsights] = useState(null);
-  const [processing, setProcessing] = useState(false);
+  const [activeView, setActiveView] = useState('overview');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedDimension, setSelectedDimension] = useState('all');
+  const [crossReferences, setCrossReferences] = useState([]);
+  const [knowledgeGaps, setKnowledgeGaps] = useState([]);
+  const [patternAnalysis, setPatternAnalysis] = useState(null);
 
   useEffect(() => {
-    fetchData();
+    loadResearchData();
   }, []);
 
   useEffect(() => {
-    if (analysisMode === 'advanced' && caseStudies.length > 0 && !mlInsights) {
-      runMLAnalysis();
+    if (caseStudies.length > 0 && bibliography.length > 0) {
+      analyzeResearchLandscape();
     }
-  }, [analysisMode, caseStudies]);
+  }, [caseStudies, bibliography, selectedDimension]);
 
-  const fetchData = async () => {
+  const loadResearchData = async () => {
     try {
-      const response = await fetch('/api/case-studies');
-      const data = await response.json();
-      const studies = data.caseStudies || data || [];
+      setLoading(true);
       
-      console.log('Analysis page - received studies:', studies.length);
-      if (studies.length > 0) {
-        console.log('First study:', studies[0]);
+      // Load case studies, bibliography, and network graph in parallel
+      const [studiesRes, bibRes, insightsRes] = await Promise.all([
+        fetch('/api/case-studies'),
+        fetch('/api/bibliography'),
+        fetch('/api/insights?type=comprehensive')
+      ]);
+      
+      // Check for authentication errors
+      if (studiesRes.status === 401 || bibRes.status === 401 || insightsRes.status === 401) {
+        console.log('Authentication required - some features may be limited');
       }
       
-      setCaseStudies(studies);
-      setLoading(false);
-    } catch (error) {
-      console.error('Error fetching case studies:', error);
-      setCaseStudies([]);
-      setLoading(false);
-    }
-  };
-
-  const runMLAnalysis = async () => {
-    if (mlInsights || processing) return;
-    
-    try {
-      setProcessing(true);
+      const [studiesData, bibData, insightsData] = await Promise.all([
+        studiesRes.ok ? studiesRes.json() : { caseStudies: [] },
+        bibRes.ok ? bibRes.json() : { papers: [] },
+        insightsRes.ok ? insightsRes.json() : { insights: [] }
+      ]);
       
-      // Initialize ML engine
-      await mlInsightsEngine.initialize(caseStudies);
-      
-      // Generate insights
-      const insights = mlInsightsEngine.generateInsights();
-      
-      // Process NLP insights
-      const nlpInsights = processNLPInsights(caseStudies);
-      
-      setMlInsights({
-        ...insights,
-        nlp: nlpInsights,
-        summary: generateExecutiveSummary(insights, nlpInsights, caseStudies)
+      // Process case studies
+      const processedStudies = (studiesData.caseStudies || []).map(study => {
+        const resilientDims = study['Resilient Dimensions '] || study.Dimensions || [];
+        const keywords = study['Key Words '] || study.Keywords || [];
+        
+        return {
+          ...study,
+          Title: study['Case Study Title'] || study.Title || 'Untitled',
+          Description: study['Short Description'] || study.Description || '',
+          Dimensions: Array.isArray(resilientDims) ? resilientDims.join(', ') : resilientDims,
+          Keywords: Array.isArray(keywords) ? keywords.join(', ') : keywords,
+          dimensionsList: Array.isArray(resilientDims) ? resilientDims : 
+                        typeof resilientDims === 'string' ? resilientDims.split(',').map(d => d.trim()).filter(Boolean) : [],
+          keywordsList: Array.isArray(keywords) ? keywords :
+                       typeof keywords === 'string' ? keywords.split(',').map(k => k.trim()).filter(Boolean) : [],
+          type: 'case-study'
+        };
       });
       
-      setProcessing(false);
+      // Process bibliography
+      const processedBib = (bibData.papers || []).map(paper => ({
+        ...paper,
+        Title: paper.Name || paper.Title || 'Untitled Paper',
+        dimensionsList: paper.Dimension ? [paper.Dimension] : [],
+        keywordsList: paper.Keywords ? 
+          (typeof paper.Keywords === 'string' ? paper.Keywords.split(',').map(k => k.trim()).filter(Boolean) : []) : [],
+        type: 'paper'
+      }));
+      
+      setCaseStudies(processedStudies);
+      setBibliography(processedBib);
+      setInsights(insightsData);
+      
+      // Build network graph from our data
+      const networkData = buildNetworkGraph(processedStudies, processedBib);
+      setNetworkGraph(networkData);
+      
+      // Run pattern extraction on case studies
+      if (processedStudies.length > 0) {
+        const analyzer = new CaseStudyAnalyzer(processedStudies);
+        const analysis = analyzer.runComprehensiveAnalysis();
+        setPatternAnalysis(analysis);
+      }
+      
     } catch (error) {
-      console.error('ML Analysis error:', error);
-      setProcessing(false);
+      console.error('Error loading research data:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const processNLPInsights = (studies) => {
-    const allTexts = studies.map(s => 
-      `${s.Title || ''} ${s.Description || ''} ${s.Focus || ''}`
-    );
+  const buildNetworkGraph = (studies, papers) => {
+    const nodes = [];
+    const edges = [];
+    const nodeMap = new Map();
     
-    const topics = advancedNLP.extractTopics(allTexts, 5, 8);
-    
-    const allEntities = {
-      organizations: new Set(),
-      people: new Set(),
-      methodologies: new Set()
-    };
-    
+    // Add case study nodes
     studies.forEach(study => {
-      const text = `${study.Title || ''} ${study.Description || ''} ${study.Institution || ''}`;
-      const entities = advancedNLP.extractEntities(text);
+      const nodeId = `study_${study.id || Math.random()}`;
+      const node = {
+        id: nodeId,
+        label: study.Title.substring(0, 30) + (study.Title.length > 30 ? '...' : ''),
+        type: 'case_study',
+        group: 'case_study',
+        title: study.Title,
+        degree: 0
+      };
+      nodes.push(node);
+      nodeMap.set(nodeId, node);
       
-      entities.organizations.forEach(org => allEntities.organizations.add(org));
-      entities.people.forEach(person => allEntities.people.add(person));
-      entities.methodologies.forEach(method => allEntities.methodologies.add(method));
+      // Connect to dimensions
+      study.dimensionsList.forEach(dim => {
+        const dimId = `dim_${dim}`;
+        if (!nodeMap.has(dimId)) {
+          const dimNode = {
+            id: dimId,
+            label: dim.substring(0, 20),
+            type: 'dimension',
+            group: 'dimension',
+            title: dim,
+            degree: 0
+          };
+          nodes.push(dimNode);
+          nodeMap.set(dimId, dimNode);
+        }
+        
+        edges.push({
+          source: nodeId,
+          target: dimId,
+          weight: 2,
+          type: 'has_dimension'
+        });
+        
+        nodeMap.get(nodeId).degree++;
+        nodeMap.get(dimId).degree++;
+      });
+      
+      // Connect to keywords
+      study.keywordsList.forEach(keyword => {
+        const keyId = `key_${keyword}`;
+        if (!nodeMap.has(keyId)) {
+          const keyNode = {
+            id: keyId,
+            label: keyword.substring(0, 15),
+            type: 'keyword',
+            group: 'keyword',
+            title: keyword,
+            degree: 0
+          };
+          nodes.push(keyNode);
+          nodeMap.set(keyId, keyNode);
+        }
+        
+        edges.push({
+          source: nodeId,
+          target: keyId,
+          weight: 1,
+          type: 'has_keyword'
+        });
+        
+        nodeMap.get(nodeId).degree++;
+        nodeMap.get(keyId).degree++;
+      });
     });
     
-    const tfidfResults = advancedNLP.calculateEnhancedTFIDF(allTexts, {
-      ngramRange: [1, 3],
-      maxFeatures: 50
+    // Add paper nodes and connect them
+    papers.forEach(paper => {
+      const nodeId = `paper_${paper.id || Math.random()}`;
+      const node = {
+        id: nodeId,
+        label: (paper.Title || '').substring(0, 30) + ((paper.Title || '').length > 30 ? '...' : ''),
+        type: 'paper',
+        group: 'paper',
+        title: paper.Title,
+        degree: 0
+      };
+      nodes.push(node);
+      nodeMap.set(nodeId, node);
+      
+      // Connect to dimensions
+      paper.dimensionsList.forEach(dim => {
+        const dimId = `dim_${dim}`;
+        if (nodeMap.has(dimId)) {
+          edges.push({
+            source: nodeId,
+            target: dimId,
+            weight: 2,
+            type: 'addresses_dimension'
+          });
+          
+          nodeMap.get(nodeId).degree++;
+          nodeMap.get(dimId).degree++;
+        }
+      });
+      
+      // Connect papers to keywords
+      paper.keywordsList.forEach(keyword => {
+        const keyId = `key_${keyword}`;
+        if (nodeMap.has(keyId)) {
+          edges.push({
+            source: nodeId,
+            target: keyId,
+            weight: 1,
+            type: 'has_keyword'
+          });
+          
+          nodeMap.get(nodeId).degree++;
+          nodeMap.get(keyId).degree++;
+        }
+      });
     });
+    
+    // Calculate stats
+    const stats = {
+      totalNodes: nodes.length,
+      totalEdges: edges.length,
+      caseStudies: studies.length,
+      papers: papers.length,
+      dimensions: nodes.filter(n => n.type === 'dimension').length,
+      keywords: nodes.filter(n => n.type === 'keyword').length,
+      avgDegree: nodes.reduce((sum, n) => sum + n.degree, 0) / nodes.length
+    };
     
     return {
-      topics,
-      entities: {
-        organizations: Array.from(allEntities.organizations),
-        people: Array.from(allEntities.people),
-        methodologies: Array.from(allEntities.methodologies)
-      },
-      keywords: tfidfResults
+      graph: { nodes, edges },
+      stats
     };
   };
 
-  const generateExecutiveSummary = (mlInsights, nlpInsights, studies) => {
-    const summary = {
-      totalStudies: studies.length,
-      keyFindings: [],
-      recommendations: []
-    };
+  const analyzeResearchLandscape = () => {
+    // Cross-reference case studies with bibliography
+    const references = findCrossReferences(caseStudies, bibliography);
+    setCrossReferences(references);
     
-    if (mlInsights.clusters && mlInsights.clusters.length > 0) {
-      summary.keyFindings.push(
-        `Research naturally groups into ${mlInsights.clusters.length} distinct clusters`
-      );
+    // Identify knowledge gaps
+    const gaps = identifyKnowledgeGaps(caseStudies, bibliography);
+    setKnowledgeGaps(gaps);
+    
+    // Update network if we have data
+    if (caseStudies.length > 0 || bibliography.length > 0) {
+      const networkData = buildNetworkGraph(caseStudies, bibliography);
+      setNetworkGraph(networkData);
     }
-    
-    if (mlInsights.anomalies && mlInsights.anomalies.length > 0) {
-      summary.keyFindings.push(
-        `${mlInsights.anomalies.length} studies show unusual patterns`
-      );
-    }
-    
-    if (mlInsights.patterns && mlInsights.patterns.length > 0) {
-      const dimPattern = mlInsights.patterns.find(p => p.type === 'dimension_combinations');
-      if (dimPattern && dimPattern.data.length > 0) {
-        summary.keyFindings.push(
-          `Most common dimension combination: ${dimPattern.data[0].combination}`
-        );
-      }
-    }
-    
-    if (mlInsights.recommendations) {
-      summary.recommendations = mlInsights.recommendations;
-    }
-    
-    return summary;
   };
-
-  // Calculate basic metrics
-  const totalStudies = caseStudies.length;
   
-  const studyTypes = {};
-  caseStudies.forEach(study => {
-    const type = study.Type || 'Unknown';
-    studyTypes[type] = (studyTypes[type] || 0) + 1;
-  });
-
-  const dimensions = {};
-  caseStudies.forEach(study => {
-    if (study.Dimensions) {
-      const dims = study.Dimensions.split(',').map(d => d.trim());
-      dims.forEach(dim => {
-        if (dim) dimensions[dim] = (dimensions[dim] || 0) + 1;
+  const findCrossReferences = (studies, papers) => {
+    const refs = [];
+    
+    studies.forEach(study => {
+      const relatedPapers = papers.filter(paper => {
+        // Check for keyword overlap
+        const studyKeywords = study.keywordsList.map(k => k.toLowerCase());
+        const paperKeywords = paper.keywordsList.map(k => k.toLowerCase());
+        const keywordOverlap = studyKeywords.some(sk => 
+          paperKeywords.some(pk => pk.includes(sk) || sk.includes(pk))
+        );
+        
+        // Check for dimension match
+        const dimensionMatch = study.dimensionsList.some(d => 
+          paper.dimensionsList.includes(d)
+        );
+        
+        return keywordOverlap || dimensionMatch;
       });
+      
+      if (relatedPapers.length > 0) {
+        refs.push({
+          study: study.Title,
+          studyType: 'Case Study',
+          relatedPapers: relatedPapers.slice(0, 3),
+          connectionStrength: relatedPapers.length
+        });
+      }
+    });
+    
+    return refs.sort((a, b) => b.connectionStrength - a.connectionStrength).slice(0, 10);
+  };
+  
+  const identifyKnowledgeGaps = (studies, papers) => {
+    const studyDimensions = new Set();
+    const paperDimensions = new Set();
+    
+    studies.forEach(s => s.dimensionsList.forEach(d => studyDimensions.add(d)));
+    papers.forEach(p => p.dimensionsList.forEach(d => paperDimensions.add(d)));
+    
+    // Find dimensions with limited case study coverage
+    const gaps = [];
+    paperDimensions.forEach(dim => {
+      const studyCount = studies.filter(s => s.dimensionsList.includes(dim)).length;
+      const paperCount = papers.filter(p => p.dimensionsList.includes(dim)).length;
+      
+      if (paperCount > studyCount && studyCount < 3) {
+        gaps.push({
+          dimension: dim,
+          paperCount,
+          studyCount,
+          gapScore: paperCount - studyCount,
+          description: `${dim} has strong theoretical foundation (${paperCount} papers) but limited practical validation (${studyCount} case studies)`
+        });
+      }
+    });
+    
+    return gaps.sort((a, b) => b.gapScore - a.gapScore).slice(0, 8);
+  };
+
+  const getFilteredData = () => {
+    let filteredStudies = caseStudies;
+    let filteredPapers = bibliography;
+    
+    if (searchTerm) {
+      const term = searchTerm.toLowerCase();
+      filteredStudies = filteredStudies.filter(s => 
+        s.Title.toLowerCase().includes(term) ||
+        s.Description.toLowerCase().includes(term)
+      );
+      filteredPapers = filteredPapers.filter(p =>
+        p.Title.toLowerCase().includes(term) ||
+        (p.Abstract || '').toLowerCase().includes(term)
+      );
     }
-  });
-
-  const keywords = {};
-  caseStudies.forEach(study => {
-    if (study.Keywords) {
-      const kws = study.Keywords.split(',').map(k => k.trim());
-      kws.forEach(kw => {
-        if (kw) keywords[kw] = (keywords[kw] || 0) + 1;
-      });
+    
+    if (selectedDimension !== 'all') {
+      filteredStudies = filteredStudies.filter(s => 
+        s.dimensionsList.includes(selectedDimension)
+      );
+      filteredPapers = filteredPapers.filter(p =>
+        p.dimensionsList.includes(selectedDimension)
+      );
     }
-  });
+    
+    return { filteredStudies, filteredPapers };
+  };
+  
+  const { filteredStudies, filteredPapers } = getFilteredData();
+  
+  const dimensions = [
+    'Environmental Stewardship & Resource Security',
+    'Social Equity & Well-being',
+    'Healthcare System Capacity & Integration',
+    'Economic Stability & Crisis Protection',
+    'Governance Coordination & Community Leadership',
+    'Information Infrastructure & Communication',
+    'Scientific Knowledge & Innovation Systems'
+  ];
 
-  const institutions = {};
-  caseStudies.forEach(study => {
-    const inst = study.Institution || 'Unknown';
-    institutions[inst] = (institutions[inst] || 0) + 1;
-  });
+  const refreshData = async () => {
+    await loadResearchData();
+  };
 
-  const topDimensions = Object.entries(dimensions).sort((a, b) => b[1] - a[1]).slice(0, 10);
-  const topKeywords = Object.entries(keywords).sort((a, b) => b[1] - a[1]).slice(0, 20);
-  const topInstitutions = Object.entries(institutions).sort((a, b) => b[1] - a[1]).slice(0, 10);
+  const exportReport = () => {
+    console.log('Generating comprehensive research report...');
+    // TODO: Implement PDF export of research synthesis
+  };
 
   if (loading) {
-    return <div className={styles.loading}>Loading analysis...</div>;
-  }
-
-  if (!caseStudies || caseStudies.length === 0) {
     return (
-      <div className={styles.container}>
-        <h1>Analysis & Insights</h1>
-        <div className={styles.noData}>
-          <p>No case studies found. Please check your data connection.</p>
-        </div>
+      <div className={styles.loading}>
+        <div className={styles.spinner}></div>
+        <p>Loading research intelligence...</p>
+        <p className={styles.loadingSubtext}>Synthesizing case studies with comprehensive bibliography</p>
       </div>
     );
   }
@@ -208,419 +397,586 @@ export default function AnalysisInsightsPage() {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <h1>Analysis & Insights</h1>
-        <p className={styles.subtitle}>
-          Comprehensive analysis of {totalStudies} case studies
-        </p>
-      </div>
-
-      <div className={styles.modeSelector}>
-        <button 
-          className={analysisMode === 'basic' ? styles.modeActive : styles.modeButton}
-          onClick={() => setAnalysisMode('basic')}
-        >
-          Basic Analysis
-        </button>
-        <button 
-          className={analysisMode === 'advanced' ? styles.modeActive : styles.modeButton}
-          onClick={() => setAnalysisMode('advanced')}
-        >
-          Advanced ML Analysis
-        </button>
-      </div>
-
-      {processing && (
-        <div className={styles.processingBar}>
-          <div className={styles.processingMessage}>
-            Running machine learning analysis...
-          </div>
-          <div className={styles.progressBar}>
-            <div className={styles.progressFill}></div>
-          </div>
+        <div className={styles.headerContent}>
+          <h1>Research Intelligence Hub</h1>
+          <p className={styles.subtitle}>
+            Comprehensive synthesis of {caseStudies.length} case studies and {bibliography.length} research papers
+          </p>
         </div>
-      )}
+        
+        <div className={styles.headerActions}>
+          <button className={styles.refreshButton} onClick={refreshData}>
+            <FaSyncAlt /> Refresh
+          </button>
+          <button className={styles.exportButton} onClick={exportReport}>
+            <FaDownload /> Export Report
+          </button>
+        </div>
+      </div>
+      
+      <div className={styles.controls}>
+        <div className={styles.searchBox}>
+          <FaSearch />
+          <input 
+            type="text"
+            placeholder="Search across case studies and bibliography..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+        
+        <select 
+          value={selectedDimension}
+          onChange={(e) => setSelectedDimension(e.target.value)}
+          className={styles.dimensionFilter}
+        >
+          <option value="all">All Dimensions</option>
+          {dimensions.map(dim => (
+            <option key={dim} value={dim}>{dim}</option>
+          ))}
+        </select>
+      </div>
 
-      <div className={styles.tabs}>
-        <button 
-          className={activeTab === 'overview' ? styles.activeTab : styles.tab}
-          onClick={() => setActiveTab('overview')}
-        >
-          Overview
-        </button>
-        <button 
-          className={activeTab === 'dimensions' ? styles.activeTab : styles.tab}
-          onClick={() => setActiveTab('dimensions')}
-        >
-          Dimensions
-        </button>
-        <button 
-          className={activeTab === 'keywords' ? styles.activeTab : styles.tab}
-          onClick={() => setActiveTab('keywords')}
-        >
-          Keywords
-        </button>
-        <button 
-          className={activeTab === 'institutions' ? styles.activeTab : styles.tab}
-          onClick={() => setActiveTab('institutions')}
-        >
-          Institutions
-        </button>
-        {analysisMode === 'advanced' && (
-          <>
-            <button 
-              className={activeTab === 'clusters' ? styles.activeTab : styles.tab}
-              onClick={() => setActiveTab('clusters')}
-            >
-              Clusters
-            </button>
-            <button 
-              className={activeTab === 'patterns' ? styles.activeTab : styles.tab}
-              onClick={() => setActiveTab('patterns')}
-            >
-              Patterns
-            </button>
-            <button 
-              className={activeTab === 'predictions' ? styles.activeTab : styles.tab}
-              onClick={() => setActiveTab('predictions')}
-            >
-              Predictions
-            </button>
-            <button 
-              className={activeTab === 'nlp' ? styles.activeTab : styles.tab}
-              onClick={() => setActiveTab('nlp')}
-            >
-              NLP Insights
-            </button>
-            <button 
-              className={activeTab === 'network' ? styles.activeTab : styles.tab}
-              onClick={() => setActiveTab('network')}
-            >
-              Knowledge Graph
-            </button>
-          </>
-        )}
+      <div className={styles.viewTabs}>
+        {[
+          { id: 'overview', label: 'Research Overview', icon: FaClipboard },
+          { id: 'network', label: 'Knowledge Network', icon: FaNetworkWired },
+          { id: 'patterns', label: 'Pattern Analysis', icon: FaMicroscope },
+          { id: 'synthesis', label: 'Research Synthesis', icon: FaBook },
+          { id: 'gaps', label: 'Knowledge Gaps', icon: FaExclamationTriangle },
+          { id: 'insights', label: 'AI Insights', icon: FaBrain }
+        ].map(tab => (
+          <button
+            key={tab.id}
+            className={`${styles.viewTab} ${activeView === tab.id ? styles.active : ''}`}
+            onClick={() => setActiveView(tab.id)}
+          >
+            <tab.icon />
+            <span>{tab.label}</span>
+          </button>
+        ))}
       </div>
 
       <div className={styles.content}>
-        {activeTab === 'overview' && (
-          <div className={styles.overviewSection}>
-            {analysisMode === 'advanced' && mlInsights && (
-              <div className={styles.executiveSummary}>
-                <h2>Executive Summary</h2>
-                <div className={styles.summaryGrid}>
-                  <div className={styles.summaryCard}>
-                    <h3>Key ML Findings</h3>
-                    <ul>
-                      {mlInsights.summary.keyFindings.map((finding, idx) => (
-                        <li key={idx}>{finding}</li>
-                      ))}
-                    </ul>
-                  </div>
-                  {mlInsights.summary.recommendations.length > 0 && (
-                    <div className={styles.summaryCard}>
-                      <h3>Recommendations</h3>
-                      {mlInsights.summary.recommendations.slice(0, 3).map((rec, idx) => (
-                        <div key={idx} className={styles.recommendation}>
-                          <h4>{rec.title}</h4>
-                          <p>{rec.description}</p>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-
-            <div className={styles.statsGrid}>
-              <div className={styles.statCard}>
-                <h3>{totalStudies}</h3>
-                <p>Total Case Studies</p>
-              </div>
-              <div className={styles.statCard}>
-                <h3>{Object.keys(dimensions).length}</h3>
-                <p>Resilience Dimensions</p>
-              </div>
-              <div className={styles.statCard}>
-                <h3>{Object.keys(keywords).length}</h3>
-                <p>Unique Keywords</p>
-              </div>
-              <div className={styles.statCard}>
-                <h3>{Object.keys(institutions).length}</h3>
-                <p>Contributing Institutions</p>
-              </div>
-              {analysisMode === 'advanced' && mlInsights && (
-                <>
-                  <div className={styles.statCard}>
-                    <h3>{mlInsights.clusters.length}</h3>
-                    <p>Research Clusters</p>
-                  </div>
-                  <div className={styles.statCard}>
-                    <h3>{mlInsights.patterns.length}</h3>
-                    <p>Patterns Detected</p>
-                  </div>
-                </>
-              )}
-            </div>
-
-            <div className={styles.section}>
-              <h2>Study Types Distribution</h2>
-              <div className={styles.barChart}>
-                {Object.entries(studyTypes).map(([type, count]) => (
-                  <div key={type} className={styles.barItem}>
-                    <div className={styles.barLabel}>{type}</div>
-                    <div className={styles.barContainer}>
-                      <div 
-                        className={styles.bar} 
-                        style={{ width: `${(count / totalStudies) * 100}%` }}
-                      >
-                        {count}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {activeTab === 'dimensions' && (
-          <div className={styles.dimensionsSection}>
-            <h2>Resilience Dimensions Analysis</h2>
-            <p className={styles.description}>
-              Distribution of case studies across different resilience dimensions
-            </p>
-            <div className={styles.dimensionsList}>
-              {topDimensions.map(([dimension, count]) => (
-                <div key={dimension} className={styles.dimensionItem}>
-                  <div className={styles.dimensionName}>{dimension}</div>
-                  <div className={styles.dimensionBar}>
-                    <div 
-                      className={styles.dimensionFill}
-                      style={{ width: `${(count / topDimensions[0][1]) * 100}%` }}
-                    />
-                  </div>
-                  <div className={styles.dimensionCount}>{count} studies</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {activeTab === 'keywords' && (
-          <div className={styles.keywordsSection}>
-            <h2>Keyword Analysis</h2>
-            <p className={styles.description}>
-              Most common keywords and themes across all case studies
-            </p>
-            <div className={styles.keywordCloud}>
-              {topKeywords.map(([keyword, count]) => (
-                <span 
-                  key={keyword} 
-                  className={styles.keyword}
-                  style={{ 
-                    fontSize: `${Math.max(0.8, Math.min(2, count / 5))}rem`,
-                    opacity: Math.max(0.6, Math.min(1, count / 10))
-                  }}
-                >
-                  {keyword} ({count})
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {activeTab === 'institutions' && (
-          <div className={styles.institutionsSection}>
-            <h2>Contributing Institutions</h2>
-            <p className={styles.description}>
-              Organizations contributing case studies to the research
-            </p>
-            <div className={styles.institutionsList}>
-              {topInstitutions.map(([institution, count]) => (
-                <div key={institution} className={styles.institutionItem}>
-                  <div className={styles.institutionName}>{institution}</div>
-                  <div className={styles.institutionCount}>{count} studies</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {analysisMode === 'advanced' && mlInsights && activeTab === 'clusters' && (
-          <div className={styles.clustersSection}>
-            <h2>Study Clusters</h2>
-            <p className={styles.description}>
-              Machine learning has identified {mlInsights.clusters.length} distinct groups of studies
-            </p>
-            <div className={styles.clusterGrid}>
-              {mlInsights.clusters.map((cluster, idx) => (
-                <div key={idx} className={styles.clusterCard}>
-                  <h3>Cluster {cluster.id + 1}</h3>
-                  <div className={styles.clusterStats}>
-                    <span>{cluster.size} studies</span>
-                    <span>Sentiment: {cluster.characteristics.avgSentiment.toFixed(2)}</span>
-                  </div>
-                  <div className={styles.clusterCharacteristics}>
-                    <h4>Common Dimensions:</h4>
-                    <div className={styles.tagList}>
-                      {cluster.characteristics.commonDimensions.map((dim, i) => (
-                        <span key={i} className={styles.tag}>{dim}</span>
-                      ))}
-                    </div>
-                  </div>
-                  <div className={styles.clusterStudies}>
-                    <h4>Sample Studies:</h4>
-                    {cluster.studies.slice(0, 3).map((study, i) => (
-                      <div key={i} className={styles.studyItem}>
-                        {study.Title}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {analysisMode === 'advanced' && mlInsights && activeTab === 'patterns' && (
-          <div className={styles.patternsSection}>
-            <h2>Patterns & Trends</h2>
-            {mlInsights.patterns.map((pattern, idx) => (
-              <div key={idx} className={styles.patternCard}>
-                <h3>{pattern.title}</h3>
-                <p>{pattern.description}</p>
-                {pattern.type === 'dimension_combinations' && (
-                  <div className={styles.combinationList}>
-                    {pattern.data.map((item, i) => (
-                      <div key={i} className={styles.combinationItem}>
-                        <span className={styles.combination}>{item.combination}</span>
-                        <span className={styles.count}>{item.count} occurrences</span>
-                      </div>
-                    ))}
-                  </div>
-                )}
-                {pattern.type === 'temporal_trends' && (
-                  <div className={styles.trendChart}>
-                    {pattern.data.map((year, i) => (
-                      <div key={i} className={styles.yearData}>
-                        <span className={styles.year}>{year.year}</span>
-                        <div className={styles.yearBar}>
-                          <div 
-                            className={styles.yearFill}
-                            style={{ width: `${(year.count / 10) * 100}%` }}
-                          />
-                        </div>
-                        <span className={styles.yearCount}>{year.count} studies</span>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        )}
-
-        {analysisMode === 'advanced' && mlInsights && activeTab === 'predictions' && (
-          <div className={styles.predictionsSection}>
-            <h2>Success Predictions</h2>
-            <p className={styles.description}>
-              ML-based predictions of intervention success probability
-            </p>
-            <div className={styles.predictionList}>
-              {mlInsights.predictions
-                .sort((a, b) => b.prediction.probability - a.prediction.probability)
-                .slice(0, 10)
-                .map((item, idx) => (
-                  <div key={idx} className={styles.predictionCard}>
-                    <h4>{item.study.Title}</h4>
-                    <div className={styles.probabilityBar}>
-                      <div 
-                        className={styles.probabilityFill}
-                        style={{ 
-                          width: `${item.prediction.probability * 100}%`,
-                          backgroundColor: item.prediction.probability > 0.7 ? '#4CAF50' : 
-                                         item.prediction.probability > 0.4 ? '#FFC107' : '#F44336'
-                        }}
-                      />
-                      <span className={styles.probabilityText}>
-                        {Math.round(item.prediction.probability * 100)}%
-                      </span>
-                    </div>
-                    <div className={styles.factors}>
-                      {item.prediction.factors.map((factor, i) => (
-                        <span key={i} className={styles.factor}>
-                          {factor.factor}: {factor.impact}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-            </div>
-          </div>
-        )}
-
-        {analysisMode === 'advanced' && mlInsights && activeTab === 'nlp' && (
-          <div className={styles.nlpSection}>
-            <h2>Natural Language Processing Analysis</h2>
-            <div className={styles.nlpGrid}>
-              <div className={styles.nlpCard}>
-                <h3>Discovered Topics</h3>
-                {mlInsights.nlp.topics.map((topic, idx) => (
-                  <div key={idx} className={styles.topic}>
-                    <h4>Topic {topic.id + 1}</h4>
-                    <div className={styles.topicWords}>
-                      {topic.words.map((word, i) => (
-                        <span key={i} className={styles.topicWord}>{word}</span>
-                      ))}
-                    </div>
-                  </div>
-                ))}
+        {activeView === 'overview' && (
+          <motion.div 
+            className={styles.overviewContent}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            {/* Research Portfolio Metrics */}
+            <div className={styles.metricsGrid}>
+              <div className={styles.metricCard}>
+                <div className={styles.metricValue}>{filteredStudies.length}</div>
+                <div className={styles.metricLabel}>Case Studies</div>
+                <div className={styles.metricSubtext}>Practical implementations</div>
               </div>
               
-              <div className={styles.nlpCard}>
-                <h3>Key Entities</h3>
-                <div className={styles.entitySection}>
-                  <h4>Organizations ({mlInsights.nlp.entities.organizations.length})</h4>
-                  <div className={styles.entityList}>
-                    {mlInsights.nlp.entities.organizations.slice(0, 10).map((org, i) => (
-                      <span key={i} className={styles.entity}>{org}</span>
-                    ))}
-                  </div>
+              <div className={styles.metricCard}>
+                <div className={styles.metricValue}>{filteredPapers.length}</div>
+                <div className={styles.metricLabel}>Research Papers</div>
+                <div className={styles.metricSubtext}>Theoretical foundation</div>
+              </div>
+              
+              <div className={styles.metricCard}>
+                <div className={styles.metricValue}>{crossReferences.length}</div>
+                <div className={styles.metricLabel}>Cross-References</div>
+                <div className={styles.metricSubtext}>Theory-practice links</div>
+              </div>
+              
+              <div className={styles.metricCard}>
+                <div className={styles.metricValue}>{knowledgeGaps.length}</div>
+                <div className={styles.metricLabel}>Knowledge Gaps</div>
+                <div className={styles.metricSubtext}>Research opportunities</div>
+              </div>
+            </div>
+
+            {/* Research Synthesis Summary */}
+            <div className={styles.synthesisOverview}>
+              <h2><FaBook /> Research Landscape Overview</h2>
+              <div className={styles.landscapeGrid}>
+                <div className={styles.landscapeCard}>
+                  <h3>Theoretical Foundation</h3>
+                  <p>
+                    Our knowledge base includes <strong>{bibliography.length} peer-reviewed papers</strong> spanning 
+                    all 7 resilience dimensions, providing comprehensive theoretical grounding from leading 
+                    researchers and institutions worldwide.
+                  </p>
                 </div>
-                <div className={styles.entitySection}>
-                  <h4>People ({mlInsights.nlp.entities.people.length})</h4>
-                  <div className={styles.entityList}>
-                    {mlInsights.nlp.entities.people.slice(0, 10).map((person, i) => (
-                      <span key={i} className={styles.entity}>{person}</span>
-                    ))}
-                  </div>
+
+                <div className={styles.landscapeCard}>
+                  <h3>Practical Implementation</h3>
+                  <p>
+                    <strong>{caseStudies.length} case studies</strong> demonstrate real-world applications 
+                    of resilience principles, offering evidence of what works in practice across diverse 
+                    contexts and communities.
+                  </p>
+                </div>
+
+                <div className={styles.landscapeCard}>
+                  <h3>Research Integration</h3>
+                  <p>
+                    <strong>{crossReferences.length} cross-references</strong> identified between theoretical 
+                    papers and practical case studies, highlighting areas where research translates 
+                    effectively into action.
+                  </p>
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
         )}
 
-        {analysisMode === 'advanced' && activeTab === 'network' && (
-          <div className={styles.networkSection}>
-            <h2>Enhanced Knowledge Graph</h2>
-            <p className={styles.description}>
-              Interactive network visualization showing complex relationships between case studies, dimensions, institutions, keywords, and people. 
-              Use the controls to filter, change layout, and explore connections.
+        {activeView === 'patterns' && patternAnalysis && (
+          <motion.div 
+            className={styles.patternsContent}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <h2><FaMicroscope /> Pattern Analysis: Factual Extraction from {patternAnalysis.metadata.totalStudies} Case Studies</h2>
+            <p className={styles.methodNote}>
+              All patterns extracted using transparent, reproducible methods without interpretation
+            </p>
+
+            <div className={styles.analysisGrid}>
+              {/* Research Questions */}
+              <div className={styles.analysisCard}>
+                <h3>Research Questions Identified</h3>
+                <div className={styles.questionTypes}>
+                  <div className={styles.stat}>
+                    <span className={styles.statLabel}>Descriptive:</span>
+                    <span className={styles.statValue}>{patternAnalysis.researchQuestions.questionTypes.descriptive}</span>
+                  </div>
+                  <div className={styles.stat}>
+                    <span className={styles.statLabel}>Evaluative:</span>
+                    <span className={styles.statValue}>{patternAnalysis.researchQuestions.questionTypes.evaluative}</span>
+                  </div>
+                  <div className={styles.stat}>
+                    <span className={styles.statLabel}>Analytical:</span>
+                    <span className={styles.statValue}>{patternAnalysis.researchQuestions.questionTypes.analytical}</span>
+                  </div>
+                  <div className={styles.stat}>
+                    <span className={styles.statLabel}>Measurement:</span>
+                    <span className={styles.statValue}>{patternAnalysis.researchQuestions.questionTypes.measurement}</span>
+                  </div>
+                </div>
+                <p className={styles.note}>
+                  {patternAnalysis.researchQuestions.totalWithExplicitQuestion} studies contain explicit research questions
+                </p>
+              </div>
+
+              {/* Methodologies */}
+              <div className={styles.analysisCard}>
+                <h3>Research Methods Detected</h3>
+                <div className={styles.methodsList}>
+                  {Object.entries(patternAnalysis.methodologies.aggregateStats)
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 8)
+                    .map(([method, count]) => (
+                      <div key={method} className={styles.methodItem}>
+                        <span className={styles.methodName}>{method.replace(/([A-Z])/g, ' $1').trim()}</span>
+                        <span className={styles.methodCount}>{count} studies</span>
+                      </div>
+                    ))}
+                </div>
+                <p className={styles.note}>
+                  Average methods per study: {patternAnalysis.methodologies.averageMethodsPerStudy}
+                </p>
+              </div>
+
+              {/* Study Populations */}
+              <div className={styles.analysisCard}>
+                <h3>Study Populations</h3>
+                <div className={styles.populationsList}>
+                  {Object.entries(patternAnalysis.populations.aggregateStats)
+                    .filter(([_, count]) => count > 0)
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 8)
+                    .map(([population, count]) => (
+                      <div key={population} className={styles.populationItem}>
+                        <span className={styles.populationName}>{population.replace(/([A-Z])/g, ' $1').trim()}</span>
+                        <div className={styles.populationBar}>
+                          <div 
+                            className={styles.populationFill} 
+                            style={{width: `${(count / patternAnalysis.metadata.totalStudies) * 100}%`}}
+                          />
+                          <span className={styles.populationCount}>{count}</span>
+                        </div>
+                      </div>
+                    ))}
+                </div>
+              </div>
+
+              {/* Resilience Mechanisms */}
+              <div className={styles.analysisCard}>
+                <h3>Resilience Mechanisms</h3>
+                <div className={styles.mechanismsList}>
+                  {Object.entries(patternAnalysis.resilienceMechanisms.aggregateStats)
+                    .sort((a, b) => b[1] - a[1])
+                    .map(([mechanism, count]) => (
+                      <div key={mechanism} className={styles.mechanismItem}>
+                        <span className={styles.mechanismName}>{mechanism.replace(/([A-Z])/g, ' $1').trim()}</span>
+                        <span className={styles.mechanismPercent}>
+                          {Math.round((count / patternAnalysis.metadata.totalStudies) * 100)}%
+                        </span>
+                      </div>
+                    ))}
+                </div>
+                <p className={styles.note}>
+                  {patternAnalysis.resilienceMechanisms.studiesWithExplicitRelevance} studies provide explicit resilience relevance
+                </p>
+              </div>
+
+              {/* Co-occurrence Patterns */}
+              <div className={styles.analysisCard}>
+                <h3>Dimension Co-occurrences</h3>
+                <div className={styles.coOccurrenceList}>
+                  {patternAnalysis.coOccurrences.dimensionPairs.slice(0, 6).map((pair, idx) => (
+                    <div key={idx} className={styles.coOccurrenceItem}>
+                      <span className={styles.pairName}>{pair.pair}</span>
+                      <span className={styles.pairStats}>
+                        {pair.count} studies ({pair.percentage}%)
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Data Completeness */}
+              <div className={styles.analysisCard}>
+                <h3>Data Completeness</h3>
+                <div className={styles.completenessList}>
+                  {Object.entries(patternAnalysis.descriptiveStats.dataCompleteness).map(([field, stats]) => (
+                    <div key={field} className={styles.completenessItem}>
+                      <span className={styles.fieldName}>{field}</span>
+                      <div className={styles.completenessBar}>
+                        <div 
+                          className={styles.completenessFill} 
+                          style={{
+                            width: `${stats.percentComplete}%`,
+                            backgroundColor: stats.percentComplete > 80 ? '#4caf50' : 
+                                           stats.percentComplete > 60 ? '#ff9800' : '#f44336'
+                          }}
+                        />
+                        <span className={styles.completenessPercent}>{stats.percentComplete}%</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Temporal Patterns */}
+              <div className={styles.analysisCard}>
+                <h3>Temporal Distribution</h3>
+                <div className={styles.temporalList}>
+                  {Object.entries(patternAnalysis.temporalPatterns.studiesByYear)
+                    .sort((a, b) => b[0] - a[0])
+                    .slice(0, 5)
+                    .map(([year, count]) => (
+                      <div key={year} className={styles.temporalItem}>
+                        <span className={styles.year}>{year}</span>
+                        <span className={styles.yearCount}>{count} studies</span>
+                      </div>
+                    ))}
+                </div>
+                <p className={styles.note}>
+                  Average: {patternAnalysis.temporalPatterns.averageStudiesPerYear} studies/year
+                </p>
+              </div>
+
+              {/* Study Types Distribution */}
+              <div className={styles.analysisCard}>
+                <h3>Study Type Distribution</h3>
+                <div className={styles.typesList}>
+                  {patternAnalysis.descriptiveStats.studyTypes.map(type => (
+                    <div key={type.item} className={styles.typeItem}>
+                      <span className={styles.typeName}>{type.item || 'Unspecified'}</span>
+                      <span className={styles.typeStats}>
+                        {type.count} ({type.percentage}%)
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+
+        {activeView === 'network' && networkGraph && (
+          <motion.div 
+            className={styles.networkContent}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <h2><FaNetworkWired /> Knowledge Network</h2>
+            <p className={styles.networkDescription}>
+              Interactive network showing relationships between case studies, dimensions, people, and research themes.
+              Node size indicates connection strength, colors represent different entity types.
             </p>
             <div className={styles.networkContainer}>
-              <EnhancedNetworkGraph 
-                caseStudies={caseStudies} 
-                width={1200} 
-                height={700}
-                onNodeClick={(node) => {
-                  console.log('Node clicked:', node);
-                }}
-                onLinkClick={(link) => {
-                  console.log('Link clicked:', link);
-                }}
-              />
+              <NetworkVisualization graph={networkGraph} />
             </div>
-          </div>
+            
+            <div className={styles.networkStats}>
+              <div className={styles.networkStat}>
+                <span className={styles.statValue}>{networkGraph.stats?.totalNodes || 0}</span>
+                <span className={styles.statLabel}>Nodes</span>
+              </div>
+              <div className={styles.networkStat}>
+                <span className={styles.statValue}>{networkGraph.stats?.totalEdges || 0}</span>
+                <span className={styles.statLabel}>Connections</span>
+              </div>
+              <div className={styles.networkStat}>
+                <span className={styles.statValue}>{networkGraph.stats?.avgDegree || 0}</span>
+                <span className={styles.statLabel}>Avg Connections</span>
+              </div>
+            </div>
+          </motion.div>
+        )}
+
+        {activeView === 'synthesis' && (
+          <motion.div 
+            className={styles.synthesisContent}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <h2><FaProjectDiagram /> Theory-Practice Integration</h2>
+            
+            <div className={styles.crossReferencesSection}>
+              <h3>Strongest Research Connections</h3>
+              <div className={styles.crossRefList}>
+                {crossReferences.slice(0, 6).map((ref, idx) => (
+                  <div key={idx} className={styles.crossRefCard}>
+                    <div className={styles.crossRefHeader}>
+                      <h4>{ref.study}</h4>
+                      <span className={styles.connectionBadge}>
+                        {ref.connectionStrength} connections
+                      </span>
+                    </div>
+                    <div className={styles.relatedPapers}>
+                      {ref.relatedPapers.map((paper, pidx) => (
+                        <div key={pidx} className={styles.paperRef}>
+                          <strong>{paper.Name}</strong>
+                          <span>{paper.Authors} ({paper.Year})</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        )}
+
+        {activeView === 'gaps' && (
+          <motion.div 
+            className={styles.gapsContent}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <h2><FaExclamationTriangle /> Knowledge Gaps & Research Opportunities</h2>
+            
+            <div className={styles.gapsGrid}>
+              {knowledgeGaps.map((gap, idx) => (
+                <div key={idx} className={styles.gapCard}>
+                  <div className={styles.gapHeader}>
+                    <h3>{gap.dimension}</h3>
+                    <div className={styles.gapScore}>
+                      Gap Score: {gap.gapScore}
+                    </div>
+                  </div>
+                  
+                  <div className={styles.gapStats}>
+                    <div className={styles.gapStat}>
+                      <span className={styles.gapValue}>{gap.paperCount}</span>
+                      <span className={styles.gapLabel}>Research Papers</span>
+                    </div>
+                    <div className={styles.gapStat}>
+                      <span className={styles.gapValue}>{gap.studyCount}</span>
+                      <span className={styles.gapLabel}>Case Studies</span>
+                    </div>
+                  </div>
+                  
+                  <p className={styles.gapDescription}>{gap.description}</p>
+                  
+                  <div className={styles.gapActions}>
+                    <span className={styles.researchOpportunity}>Research Opportunity</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        )}
+
+        {activeView === 'insights' && (
+          <motion.div 
+            className={styles.aiInsightsContent}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <div className={styles.insightsHeader}>
+              <h2><FaBrain /> AI-Powered Research Insights</h2>
+              <p>Comprehensive analysis of research patterns and opportunities</p>
+            </div>
+
+            <div className={styles.insightsGrid}>
+              {/* Deep Case Study Analysis */}
+              <div className={styles.insightCard}>
+                <h3>Case Study Coverage Analysis</h3>
+                <p>
+                  Analyzing {caseStudies.length} case studies across {new Set(caseStudies.flatMap(s => s.dimensionsList)).size} resilience dimensions.
+                </p>
+                <ul style={{listStyle: 'none', padding: 0, marginTop: '1rem'}}>
+                  {(() => {
+                    const dimCounts = {};
+                    caseStudies.forEach(s => {
+                      s.dimensionsList.forEach(d => {
+                        dimCounts[d] = (dimCounts[d] || 0) + 1;
+                      });
+                    });
+                    return Object.entries(dimCounts)
+                      .sort((a, b) => b[1] - a[1])
+                      .slice(0, 5)
+                      .map(([dim, count]) => (
+                        <li key={dim} style={{padding: '0.5rem 0', borderBottom: '1px solid rgba(255,255,255,0.1)'}}>
+                          <strong>{dim}:</strong> {count} studies ({Math.round(count/caseStudies.length * 100)}%)
+                        </li>
+                      ));
+                  })()}
+                </ul>
+              </div>
+
+              {/* Research Methods Distribution */}
+              <div className={styles.insightCard}>
+                <h3>Research Methodology Patterns</h3>
+                <p>
+                  Study types represented in the portfolio:
+                </p>
+                <ul style={{listStyle: 'none', padding: 0, marginTop: '1rem'}}>
+                  {(() => {
+                    const typeCounts = {};
+                    caseStudies.forEach(s => {
+                      const type = s['Study Type '] || 'Unspecified';
+                      typeCounts[type] = (typeCounts[type] || 0) + 1;
+                    });
+                    return Object.entries(typeCounts)
+                      .sort((a, b) => b[1] - a[1])
+                      .map(([type, count]) => (
+                        <li key={type} style={{padding: '0.5rem 0'}}>
+                          <strong>{type}:</strong> {count} studies
+                        </li>
+                      ));
+                  })()}
+                </ul>
+              </div>
+
+              {/* Geographic Distribution */}
+              <div className={styles.insightCard}>
+                <h3>Geographic Coverage</h3>
+                <p>
+                  Research spans multiple regions with focus areas:
+                </p>
+                <ul style={{listStyle: 'none', padding: 0, marginTop: '1rem'}}>
+                  {(() => {
+                    const geoCounts = {};
+                    caseStudies.forEach(s => {
+                      s.keywordsList.forEach(k => {
+                        if (k.includes('States') || k.includes('Africa') || k.includes('Asia') || 
+                            k.includes('Europe') || k.includes('America')) {
+                          geoCounts[k] = (geoCounts[k] || 0) + 1;
+                        }
+                      });
+                    });
+                    return Object.entries(geoCounts)
+                      .sort((a, b) => b[1] - a[1])
+                      .slice(0, 5)
+                      .map(([region, count]) => (
+                        <li key={region} style={{padding: '0.5rem 0'}}>
+                          <strong>{region}:</strong> {count} studies
+                        </li>
+                      ));
+                  })()}
+                </ul>
+              </div>
+
+              {/* Network Density Analysis */}
+              {networkGraph && (
+                <div className={styles.insightCard}>
+                  <h3>Knowledge Network Density</h3>
+                  <p>
+                    Network analysis reveals research interconnections:
+                  </p>
+                  <ul style={{listStyle: 'none', padding: 0, marginTop: '1rem'}}>
+                    <li style={{padding: '0.5rem 0'}}>
+                      <strong>Network Density:</strong> {(networkGraph.stats.totalEdges / (networkGraph.stats.totalNodes * (networkGraph.stats.totalNodes - 1) / 2) * 100).toFixed(2)}%
+                    </li>
+                    <li style={{padding: '0.5rem 0'}}>
+                      <strong>Average Connections:</strong> {networkGraph.stats.avgDegree?.toFixed(1) || 0} per node
+                    </li>
+                    <li style={{padding: '0.5rem 0'}}>
+                      <strong>Most Connected Dimensions:</strong> {networkGraph.stats.dimensions} dimension nodes linking {networkGraph.stats.caseStudies + networkGraph.stats.papers} research items
+                    </li>
+                  </ul>
+                </div>
+              )}
+
+              {/* Theory-Practice Integration */}
+              <div className={styles.insightCard}>
+                <h3>Theory-Practice Integration</h3>
+                <p>
+                  Cross-reference analysis shows:
+                </p>
+                <ul style={{listStyle: 'none', padding: 0, marginTop: '1rem'}}>
+                  <li style={{padding: '0.5rem 0'}}>
+                    <strong>{crossReferences.length}</strong> case studies have direct theoretical foundations
+                  </li>
+                  <li style={{padding: '0.5rem 0'}}>
+                    <strong>{Math.round(crossReferences.length / caseStudies.length * 100)}%</strong> of case studies linked to published research
+                  </li>
+                  <li style={{padding: '0.5rem 0'}}>
+                    <strong>Average connections:</strong> {crossReferences.length > 0 ? 
+                      (crossReferences.reduce((sum, r) => sum + r.connectionStrength, 0) / crossReferences.length).toFixed(1) : 0} papers per case study
+                  </li>
+                </ul>
+              </div>
+
+              {/* Research Opportunities */}
+              <div className={styles.insightCard}>
+                <h3>Strategic Research Opportunities</h3>
+                <p>
+                  Based on gap analysis and network patterns:
+                </p>
+                <ul style={{listStyle: 'none', padding: 0, marginTop: '1rem'}}>
+                  {knowledgeGaps.slice(0, 3).map((gap, idx) => (
+                    <li key={idx} style={{padding: '0.5rem 0', borderBottom: '1px solid rgba(255,255,255,0.1)'}}>
+                      <strong>{gap.dimension}:</strong> Gap score of {gap.gapScore} 
+                      <br />
+                      <span style={{fontSize: '0.9em', opacity: 0.8}}>
+                        {gap.paperCount} papers but only {gap.studyCount} case studies
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+            
+            <div className={styles.strategicRecommendations}>
+              <h3><FaChartLine /> Strategic Research Recommendations</h3>
+              <div className={styles.recommendationsList}>
+                <div className={styles.recommendationCard}>
+                  <h4>Prioritize Gap Areas</h4>
+                  <p>Focus new case study development in dimensions with strong theoretical foundations but limited practical validation.</p>
+                </div>
+                <div className={styles.recommendationCard}>
+                  <h4>Strengthen Cross-References</h4>
+                  <p>Enhance connections between existing papers and case studies through comparative analysis.</p>
+                </div>
+                <div className={styles.recommendationCard}>
+                  <h4>Expand Network Analysis</h4>
+                  <p>Leverage the knowledge network to identify collaboration opportunities and research synergies.</p>
+                </div>
+              </div>
+            </div>
+          </motion.div>
         )}
       </div>
     </div>
