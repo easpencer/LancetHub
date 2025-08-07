@@ -49,14 +49,21 @@ export async function GET(request) {
     
     console.log(`✅ Retrieved ${rawPeople.length} people from Airtable`);
     
+    // Log available fields from first record for debugging
+    if (rawPeople.length > 0) {
+      console.log('Available fields in People table:', Object.keys(rawPeople[0]));
+    }
+    
     // Process and normalize fields
     const processedPeople = rawPeople.map((record) => ({
       id: record.id || `person-${Date.now()}-${Math.random()}`,
       ...record,
-      Name: record.Name || record['Full Name'] || 'Unknown',
-      Role: record.Role || record.Position || '',
-      Affiliation: record.Affiliation || record.Institution || '',
+      Name: record.Name || record['Full Name'] || record['name'] || 'Unknown',
+      Role: record.Role || record.Position || record['role'] || '',
+      Affiliation: record.Affiliation || record.Institution || record['affiliation'] || '',
       Order: record.Order || 999,
+      // Handle email field variations
+      Email: record.Email || record['Email Address'] || record.email || record['email address'] || record.EmailAddress || '',
       // Handle image field properly
       Image: record.Image && record.Image.length > 0 ? record.Image[0].url : null,
       imageUrl: record.Image && record.Image.length > 0 ? record.Image[0].url : null
