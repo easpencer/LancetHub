@@ -21,6 +21,7 @@ export async function middleware(request) {
   // Allow APIs needed for public pages
   const isPublicAPI = pathname === '/api/case-studies' || 
                       pathname === '/api/landscape' || 
+                      pathname === '/api/landscape-topics' ||
                       pathname === '/api/insights';
   
   // Check if the current path is public
