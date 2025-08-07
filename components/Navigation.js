@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaBars, FaTimes, FaSearch } from 'react-icons/fa';
+import { FaBars, FaTimes, FaSearch, FaSignInAlt, FaSignOutAlt } from 'react-icons/fa';
+import { useSession, signOut } from 'next-auth/react';
 import { LancetHubLogoSmall } from './LancetHubLogo';
 import GlobalSearch from './GlobalSearch';
 import styles from './Navigation.module.css';
@@ -14,6 +15,7 @@ export default function Navigation() {
   const [scrolled, setScrolled] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const pathname = usePathname();
+  const { data: session, status } = useSession();
 
   // Handle scroll effect for nav bar
   useEffect(() => {
@@ -35,10 +37,15 @@ export default function Navigation() {
     setMobileMenuOpen(false);
   }, [pathname]);
 
-  const navLinks = [
+  // Public links - always visible
+  const publicLinks = [
     { href: '/', label: 'Home' },
+    { href: '/landscape-interactive', label: 'Interactive Visualization' }
+  ];
+
+  // Protected links - only visible when logged in
+  const protectedLinks = [
     { href: '/landscape', label: 'Resilience Framework' },
-    { href: '/landscape-interactive', label: 'Interactive Visualization' },
     { href: '/pandemic-vulnerability', label: 'Pandemic Intelligence & Policy' },
     { href: '/case-studies', label: 'Case Studies' },
     { href: '/analysis-insights', label: 'Analysis & Insights' },
@@ -46,6 +53,9 @@ export default function Navigation() {
     { href: '/bibliography-documents', label: 'Bibliography & Documents' },
     { href: '/join-us', label: 'Join Us' }
   ];
+
+  // Combine links based on authentication status
+  const navLinks = session ? [...publicLinks, ...protectedLinks] : publicLinks;
 
   return (
     <motion.header 
@@ -84,6 +94,23 @@ export default function Navigation() {
         >
           <FaSearch />
         </button>
+        
+        {/* Login/Logout button */}
+        {session ? (
+          <button
+            className={styles.authButton}
+            onClick={() => signOut()}
+            aria-label="Sign out"
+          >
+            <FaSignOutAlt />
+            <span className={styles.authText}>Sign Out</span>
+          </button>
+        ) : (
+          <Link href="/login" className={styles.authButton}>
+            <FaSignInAlt />
+            <span className={styles.authText}>Sign In</span>
+          </Link>
+        )}
         
         <button 
           className={styles.mobileMenuButton}

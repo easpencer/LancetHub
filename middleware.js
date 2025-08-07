@@ -15,6 +15,14 @@ export async function middleware(request) {
     '/public'
   ];
   
+  // Allow landing page and interactive visualization to be public
+  const isPublicPage = pathname === '/' || pathname === '/landscape-interactive';
+  
+  // Allow APIs needed for public pages
+  const isPublicAPI = pathname === '/api/case-studies' || 
+                      pathname === '/api/landscape' || 
+                      pathname === '/api/insights';
+  
   // Check if the current path is public
   const isPublicPath = publicPaths.some(path => pathname.startsWith(path));
   
@@ -32,7 +40,7 @@ export async function middleware(request) {
   }
   
   // Check authentication for protected routes
-  if (!isPublicPath) {
+  if (!isPublicPath && !isPublicPage && !isPublicAPI) {
     const token = await getToken({ 
       req: request, 
       secret: process.env.NEXTAUTH_SECRET || 'your-secret-key-here' 

@@ -1,0 +1,19 @@
+# Netlify Environment Variables
+# Copy these into your Netlify dashboard under Site Settings > Environment Variables
+
+# Airtable Credentials (from your .env.local file)
+AIRTABLE_API_KEY=patOz0B8b7UhtCQSf.f7cacd483e619621c541ee06e214871d68441d1cec0a5e3cbd0a651f45f846a1
+AIRTABLE_BASE_ID=appyi4hm7RK1inUnq
+
+# Force Airtable usage in production
+USE_AIRTABLE=true
+
+# Set production environment
+NODE_ENV=production
+
+# Optional: NextAuth configuration (if you need authentication)
+NEXTAUTH_URL=https://your-site-name.netlify.app
+NEXTAUTH_SECRET=lancethub_secure_nextauth_secret_key_replace_this
+
+# Optional: Site URL
+NEXT_PUBLIC_SITE_URL=https://your-site-name.netlify.app
