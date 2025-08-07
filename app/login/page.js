@@ -82,12 +82,12 @@ function LoginForm() {
               Email Address
             </label>
             <input
-              type="email"
+              type="text"
               id="email"
               name="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your team email"
+              placeholder="Enter your team email or ResilientUser@lancethub.org"
               required
               disabled={loading}
               className={styles.input}

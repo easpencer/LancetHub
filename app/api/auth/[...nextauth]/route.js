@@ -24,14 +24,16 @@ export const authOptions = {
             return null;
           }
 
-          // Allow ResilientUser as a special login (email field can be "ResilientUser")
+          // Allow ResilientUser as a special login
           if (
-            credentials.email.toLowerCase() === 'resilientuser' && 
+            (credentials.email.toLowerCase() === 'resilientuser@lancethub.org' || 
+             credentials.email.toLowerCase() === 'resilientuser@example.com' ||
+             credentials.email.toLowerCase() === 'resilientuser') && 
             credentials.password === TEAM_PASSWORD
           ) {
             return {
               id: 'resilient-user',
-              email: 'resilientuser',
+              email: 'resilientuser@lancethub.org',
               name: 'Resilient User',
               role: 'member'
             };
