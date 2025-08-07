@@ -12,7 +12,9 @@ export async function middleware(request) {
     '/_next',
     '/favicon',
     '/images',
-    '/public'
+    '/public',
+    '/site.webmanifest',
+    '/apple-touch-icon.png'
   ];
   
   // Allow landing page and interactive visualization to be public
