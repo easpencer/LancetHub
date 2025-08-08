@@ -23,6 +23,8 @@ function LoginForm() {
     setLoading(true);
 
     try {
+      console.log('Attempting login with:', { email, callbackUrl });
+      
       const result = await signIn('credentials', {
         email,
         password,
@@ -30,11 +32,17 @@ function LoginForm() {
         callbackUrl
       });
 
+      console.log('Login result:', result);
+
       if (result?.error) {
         setError('Invalid email or password. Please ensure you are a team member and using the correct password.');
       } else if (result?.ok) {
-        router.push(callbackUrl);
-        router.refresh();
+        // Wait a moment for session to be established
+        setTimeout(() => {
+          // Use router.push for better SPA navigation
+          router.push(callbackUrl);
+          router.refresh();
+        }, 100);
       }
     } catch (err) {
       console.error('Login error:', err);

@@ -7,10 +7,11 @@ import { FaSearch, FaFilter, FaCalendarAlt, FaUser, FaTags, FaBuilding, FaGradua
 import AnimatedSection from '../../components/AnimatedSection';
 import LoadingState from '../../components/LoadingState';
 import ErrorBoundary from '../../components/ErrorBoundary';
+import ProtectedPage from '../../components/ProtectedPage';
 import { downloadAllCaseStudies } from '../../utils/pdfGenerator';
 import styles from './case-studies.module.css';
 
-export default function CaseStudies() {
+function CaseStudiesContent() {
   const [caseStudies, setCaseStudies] = useState([]);
   const [filteredStudies, setFilteredStudies] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -571,5 +572,13 @@ export default function CaseStudies() {
         )}
       </div>
     </ErrorBoundary>
+  );
+}
+
+export default function CaseStudies() {
+  return (
+    <ProtectedPage>
+      <CaseStudiesContent />
+    </ProtectedPage>
   );
 }

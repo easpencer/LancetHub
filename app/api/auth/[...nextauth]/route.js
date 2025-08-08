@@ -1,5 +1,6 @@
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
+import { authConfig, getAuthUrl } from '../../../../utils/auth-config';
 
 // Hardcoded password for all team members
 const TEAM_PASSWORD = 'WeAreResilient1s';
@@ -92,12 +93,11 @@ export const authOptions = {
     signIn: '/login',
     error: '/login'
   },
-  session: {
-    strategy: 'jwt',
-    maxAge: 30 * 24 * 60 * 60, // 30 days
-  },
+  session: authConfig.session,
+  jwt: authConfig.jwt,
+  cookies: authConfig.cookies,
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, account }) {
       if (user) {
         token.id = user.id;
         token.email = user.email;
@@ -116,9 +116,16 @@ export const authOptions = {
         affiliation: token.affiliation
       };
       return session;
+    },
+    async redirect({ url, baseUrl }) {
+      // Handle redirects properly
+      if (url.startsWith('/')) return `${baseUrl}${url}`;
+      else if (new URL(url).origin === baseUrl) return url;
+      return baseUrl;
     }
   },
-  secret: process.env.NEXTAUTH_SECRET || 'your-secret-key-here',
+  secret: authConfig.secret,
+  trustHost: authConfig.trustHost,
   debug: process.env.NODE_ENV === 'development'
 };
 

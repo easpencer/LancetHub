@@ -1,15 +1,23 @@
 import { NextResponse } from 'next/server';
 import { getToken } from 'next-auth/jwt';
+import { getAuthSecret } from './utils/auth-config';
 
 export async function middleware(request) {
   const pathname = request.nextUrl.pathname;
   
+  // Skip middleware for static files and Next.js internals
+  if (
+    pathname.includes('_next') ||
+    pathname.includes('/api/auth') ||
+    pathname.includes('.') // static files
+  ) {
+    return NextResponse.next();
+  }
+  
   // Public paths that don't require authentication
   const publicPaths = [
     '/login',
-    '/api/auth',
     '/api/people', // Needed for login validation
-    '/_next',
     '/favicon',
     '/images',
     '/public',
@@ -44,13 +52,25 @@ export async function middleware(request) {
   
   // Check authentication for protected routes
   if (!isPublicPath && !isPublicPage && !isPublicAPI) {
-    const token = await getToken({ 
-      req: request, 
-      secret: process.env.NEXTAUTH_SECRET || 'your-secret-key-here' 
-    });
-    
-    if (!token) {
-      // Redirect to login if not authenticated
+    try {
+      const token = await getToken({ 
+        req: request, 
+        secret: getAuthSecret(),
+        secureCookie: process.env.NODE_ENV === 'production',
+        cookieName: process.env.NODE_ENV === 'production'
+          ? '__Secure-next-auth.session-token'
+          : 'next-auth.session-token'
+      });
+      
+      if (!token) {
+        // Redirect to login if not authenticated
+        const loginUrl = new URL('/login', request.url);
+        loginUrl.searchParams.set('callbackUrl', pathname);
+        return NextResponse.redirect(loginUrl);
+      }
+    } catch (error) {
+      console.error('Middleware auth error:', error);
+      // On error, redirect to login
       const loginUrl = new URL('/login', request.url);
       loginUrl.searchParams.set('callbackUrl', pathname);
       return NextResponse.redirect(loginUrl);
@@ -59,13 +79,22 @@ export async function middleware(request) {
   
   // If user is authenticated and trying to access login, redirect to home
   if (pathname === '/login') {
-    const token = await getToken({ 
-      req: request, 
-      secret: process.env.NEXTAUTH_SECRET || 'your-secret-key-here' 
-    });
-    
-    if (token) {
-      return NextResponse.redirect(new URL('/', request.url));
+    try {
+      const token = await getToken({ 
+        req: request, 
+        secret: getAuthSecret(),
+        secureCookie: process.env.NODE_ENV === 'production',
+        cookieName: process.env.NODE_ENV === 'production'
+          ? '__Secure-next-auth.session-token'
+          : 'next-auth.session-token'
+      });
+      
+      if (token) {
+        return NextResponse.redirect(new URL('/', request.url));
+      }
+    } catch (error) {
+      // If there's an error checking auth, allow access to login page
+      console.error('Login page auth check error:', error);
     }
   }
 
