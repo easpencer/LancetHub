@@ -57,9 +57,7 @@ export async function middleware(request) {
         req: request, 
         secret: getAuthSecret(),
         secureCookie: process.env.NODE_ENV === 'production',
-        cookieName: process.env.NODE_ENV === 'production'
-          ? '__Secure-next-auth.session-token'
-          : 'next-auth.session-token'
+        cookieName: 'next-auth.session-token'
       });
       
       if (!token) {
@@ -84,9 +82,7 @@ export async function middleware(request) {
         req: request, 
         secret: getAuthSecret(),
         secureCookie: process.env.NODE_ENV === 'production',
-        cookieName: process.env.NODE_ENV === 'production'
-          ? '__Secure-next-auth.session-token'
-          : 'next-auth.session-token'
+        cookieName: 'next-auth.session-token'
       });
       
       if (token) {

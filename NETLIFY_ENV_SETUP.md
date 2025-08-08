@@ -1,36 +1,39 @@
-# Netlify Environment Variables Setup
+# CRITICAL: Netlify Environment Variables Setup
 
-To ensure the case studies and other data load correctly on Netlify, you need to set up the following environment variables in your Netlify dashboard:
+## You MUST set these environment variables in Netlify for authentication to work\!
 
-## Required Environment Variables
-
-1. **AIRTABLE_API_KEY**
-   - Your Airtable API key
-   - Get it from: https://airtable.com/account
-
-2. **AIRTABLE_BASE_ID**
-   - Your Airtable base ID
-   - Find it in your Airtable base URL or API documentation
-
-## How to Add Environment Variables in Netlify
-
-1. Go to your Netlify dashboard
+### Step 1: Go to Netlify Dashboard
+1. Log into Netlify
 2. Select your site
-3. Go to Site Settings > Environment Variables
-4. Click "Add variable"
-5. Add each variable with its value
-6. Save and redeploy
+3. Go to **Site configuration** → **Environment variables**
 
-## Additional Configuration
+### Step 2: Add These Variables
 
-The following variables are already set in netlify.toml but can be overridden:
-- `USE_AIRTABLE=true` (ensures Airtable is used in production)
-- `NODE_ENV=production` (automatically set by Netlify)
-- `USE_MOCK_DATA=false` (ensures real data is used)
+Click "Add a variable" and add each of these:
 
-## Testing
+#### 1. NEXTAUTH_URL
+- **Key**: `NEXTAUTH_URL`
+- **Value**: Your exact Netlify URL (e.g., `https://your-site-name.netlify.app`)
+- **Scopes**: All (Production, Preview, Branch deploys)
 
-After setting up the environment variables:
-1. Trigger a new deploy
-2. Check the deploy logs for any errors
-3. Visit /case-studies to verify data is loading
+#### 2. NEXTAUTH_SECRET
+- **Key**: `NEXTAUTH_SECRET`
+- **Value**: Generate a secure secret using:
+  ```bash
+  openssl rand -base64 32
+  ```
+  Example output: `Thpu0oUe7O/4ZhSjeF6zXwPuSHGYVKqTS7DaLkqKHBY=`
+- **Scopes**: All (Production, Preview, Branch deploys)
+
+### Step 3: Redeploy
+After adding the variables:
+1. Go to **Deploys** tab
+2. Click **Trigger deploy** → **Deploy site**
+
+### Test with this endpoint:
+Visit: `https://your-site.netlify.app/api/auth-debug`
+
+Should show:
+- environment.hasSecret: true
+- environment.NEXTAUTH_URL: your URL
+EOF < /dev/null

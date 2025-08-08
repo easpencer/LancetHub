@@ -1,23 +1,12 @@
+# Netlify configuration file
 [build]
   command = "npm run build"
   publish = ".next"
 
 [build.environment]
-  # Set Node version - matching .nvmrc
-  NODE_VERSION = "18.19.0"
-  # Increase timeout for build
-  AWS_LAMBDA_JS_RUNTIME = "nodejs18.x"
-  # Next.js specific settings
-  NEXT_TELEMETRY_DISABLED = "1"
-  # Disable SSG/ISR tracing that might load Airtable at build time
-  NETLIFY_SKIP_FUNCTIONS_CACHE = "true"
+  NODE_VERSION = "18"
 
-[[plugins]]
-  package = "@netlify/plugin-nextjs"
-
-# Remove functions config - let Netlify handle it automatically
-
-# Headers for security and performance
+# Headers for better security and cookie handling
 [[headers]]
   for = "/*"
   [headers.values]
@@ -25,28 +14,15 @@
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
 
-# Redirect from Netlify URL to custom domain (if applicable)
-[[redirects]]
-  from = "https://pancemic-resilience-hub.netlify.app/*"
-  to = "https://pandemic-resilience-hub.org/:splat"
-  status = 301
-  force = true
+# Function configuration for Next.js
+[functions]
+  node_bundler = "esbuild"
 
-# API routes and image optimization are handled automatically by @netlify/plugin-nextjs
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
 
-# Environment-specific build settings
-[context.production.environment]
-  # Use real Airtable data
-  USE_MOCK_DATA = "false"
-  USE_AIRTABLE = "true"
-  NODE_ENV = "production"
-
-[context.deploy-preview.environment]
-  USE_MOCK_DATA = "false"
-  USE_AIRTABLE = "true"
-  NODE_ENV = "production"
-
-[context.branch-deploy.environment]
-  USE_MOCK_DATA = "false"
-  USE_AIRTABLE = "true"
-  NODE_ENV = "production"
+# Environment variable hints (actual values should be set in Netlify dashboard)
+# NEXTAUTH_URL = "https://your-site.netlify.app"
+# NEXTAUTH_SECRET = "your-32-character-secret-key"
+# NODE_ENV = "production"
+EOF < /dev/null
